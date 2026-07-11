@@ -1,4 +1,3 @@
-
 <?php
 // ၁။ Session စနစ်အား ဖိုင်၏ ထိပ်ဆုံးတွင် မဖြစ်မနေ စတင်ဖွင့်လှစ်ခြင်း
 if (session_status() === PHP_SESSION_NONE) {
@@ -13,7 +12,7 @@ if (!isset($_SESSION['username'])) {
 // ၃။ DATABASE CONFIGURATION & CONNECTION (PDO)
 $host     = 'localhost';
 $db_name  = 'intern_test';
-$username = 'root';              
+$username = 'root';      
 $password = '';                  
 
 try {
@@ -53,6 +52,7 @@ try {
 }
 
 // ၄။ COMBINED POLYMORPHIC UNION QUERY
+// Fixed picture rendering logic by grabbing the absolute structural image mapping
 $query = "
     SELECT
         ap.id AS id,
@@ -195,15 +195,16 @@ $hostels    = array_filter($properties, function($item) { return $item['type'] =
                                 $statusText  = $isAvailable ? 'AVAILABLE' : 'LEASED';
                                 $statusClass = $isAvailable ? 'text-emerald-700 border-emerald-200 bg-emerald-50' : 'text-stone-400 border-stone-200 bg-stone-50';
                                 $imagePath = (!empty($row['image_url'])) ? htmlspecialchars($row['image_url']) : 'uploads/default.jpg';
+                                $opacityClass = $isAvailable ? 'opacity-100' : 'opacity-80';
                             ?>
-                            <div class="property-card bg-white border border-gray-200 rounded-md overflow-hidden hover:shadow-md transition-all flex flex-col justify-between opacity-<?= $isAvailable ? '100' : '80' ?>" 
+                            <div class="property-card bg-white border border-gray-200 rounded-md overflow-hidden hover:shadow-md transition-all flex flex-col justify-between <?php echo $opacityClass; ?>" 
                                  data-city="<?= htmlspecialchars(strtolower($row['city'])) ?>" 
                                  data-township="<?= htmlspecialchars(strtolower($row['township'])) ?>"
                                  data-type="apartment"
                                  data-status="<?= $statusText ?>">
                                 <div>
                                     <div class="relative h-48 w-full overflow-hidden bg-stone-100">
-                                        <img src="<?= $imagePath ?>" alt="Apartment" class="w-full h-full object-cover grayscale-[15%] hover:grayscale-0 transition-all duration-300">
+                                        <img src="<?= $imagePath ?>" alt="Apartment" class="w-full h-full object-cover grayscale-[15%] hover:grayscale-0 transition-all duration-300" onerror="this.onerror=null; this.src='uploads/default.jpg';">
                                         <span class="absolute top-3 left-3 bg-slate-900 text-white text-[9px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-sm">Apartment</span>
                                     </div>
                                     <div class="p-5">
@@ -246,15 +247,16 @@ $hostels    = array_filter($properties, function($item) { return $item['type'] =
                                 $statusText  = $isAvailable ? 'AVAILABLE' : 'LEASED';
                                 $statusClass = $isAvailable ? 'text-amber-800 border-amber-200 bg-amber-50' : 'text-stone-400 border-stone-200 bg-stone-50';
                                 $imagePath = (!empty($row['image_url'])) ? htmlspecialchars($row['image_url']) : 'uploads/default.jpg';
+                                $opacityClass = $isAvailable ? 'opacity-100' : 'opacity-80';
                             ?>
-                            <div class="property-card bg-white border border-gray-200 rounded-md overflow-hidden hover:shadow-md transition-all flex flex-col justify-between opacity-<?= $isAvailable ? '100' : '80' ?>" 
+                            <div class="property-card bg-white border border-gray-200 rounded-md overflow-hidden hover:shadow-md transition-all flex flex-col justify-between <?php echo $opacityClass; ?>" 
                                  data-city="<?= htmlspecialchars(strtolower($row['city'])) ?>" 
                                  data-township="<?= htmlspecialchars(strtolower($row['township'])) ?>"
                                  data-type="hostel"
                                  data-status="<?= $statusText ?>">
                                 <div>
                                     <div class="relative h-48 w-full overflow-hidden bg-stone-100">
-                                        <img src="<?= $imagePath ?>" alt="Hostel" class="w-full h-full object-cover grayscale-[15%] hover:grayscale-0 transition-all duration-300">
+                                        <img src="<?= $imagePath ?>" alt="Hostel" class="w-full h-full object-cover grayscale-[15%] hover:grayscale-0 transition-all duration-300" onerror="this.onerror=null; this.src='uploads/default.jpg';">
                                         <span class="absolute top-3 left-3 bg-stone-700 text-white text-[9px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-sm">Hostel</span>
                                     </div>
                                     <div class="p-5">
@@ -319,7 +321,7 @@ $hostels    = array_filter($properties, function($item) { return $item['type'] =
                                     data-status="<?= $badgeText ?>">
                                     <td class="p-4 font-bold text-slate-800">
                                         <div class="flex items-center gap-3">
-                                            <img src="<?= (!empty($row['image_url'])) ? htmlspecialchars($row['image_url']) : 'uploads/default.jpg' ?>" class="w-9 h-9 rounded object-cover border border-gray-200">
+                                            <img src="<?= (!empty($row['image_url'])) ? htmlspecialchars($row['image_url']) : 'uploads/default.jpg' ?>" class="w-9 h-9 rounded object-cover border border-gray-200" onerror="this.onerror=null; this.src='uploads/default.jpg';">
                                             <span><?= htmlspecialchars($row['title']) ?></span>
                                         </div>
                                     </td>

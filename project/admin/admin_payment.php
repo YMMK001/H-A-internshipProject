@@ -87,13 +87,13 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="mb-6 pb-4 border-b-2 border-gray-800 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
                     <div>
                         <span class="text-xs font-bold uppercase tracking-widest text-gray-600 block mb-1">Owner Portal</span>
-                        <h1 class="text-3xl font-bold tracking-tight text-gray-900 font-sans">ဝင်ရောက်လာသော ငွေပေးချေမှုများ စစ်ဆေးခြင်း</h1>
-                        <p class="text-xs text-gray-600 mt-1 italic">Review incoming transactions and authorize tenant lease installments.</p>
+                        <h1 class="text-3xl font-bold tracking-tight text-gray-900 font-sans">Verifying/Checking Incoming Payments</h1>
+                       </div>
+                    
+                       <div class="bg-slate-800 border border-slate-700 text-white font-medium text-xs uppercase tracking-wider px-4 py-2.5 rounded shadow-sm font-sans self-start sm:self-auto">
+                        Total of <?= count($payments) ?> Transaction</span> 
                     </div>
-                    <div class="bg-white p-4 border border-gray-300 shadow-sm border-l-4 border-l-slate-800">
-                        <span class="text-xs uppercase font-bold tracking-wider text-gray-500 block">စုစုပေါင်း လွှဲပြောင်းမှု</span>
-                        <span class="text-2xl font-bold text-gray-800 mt-2 block"><?= count($payments) ?> ကြိမ်</span>
-                    </div>
+                
                 </div>
 
                 <?php if(!empty($message)): ?>
@@ -107,13 +107,13 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <table class="w-full text-left border-collapse whitespace-nowrap table-fixed border-gray-300">
                             <thead class="bg-gray-800 text-white text-xs font-semibold uppercase tracking-wider sticky top-0 z-10">
                                 <tr>
-                                    <th class="p-3 pl-4 w-[20%] border border-gray-700">အိမ်ငှားအမည်</th>
-                                    <th class="p-3 w-[15%] border border-gray-700">အရစ်ကျလ</th>
-                                    <th class="p-3 w-[15%] border border-gray-700">လွှဲအပ်ငွေ</th>
-                                    <th class="p-3 w-[15%] border border-gray-700">ငွေလွှဲစနစ်</th>
-                                    <th class="p-3 w-[15%] border border-gray-700">ပြေစာ (Slip)</th>
-                                    <th class="p-3 w-[10%] border border-gray-700">အခြေအနေ</th>
-                                    <th class="p-3 w-[10%] border border-gray-700 text-center">လုပ်ဆောင်ချက်</th>
+                                    <th class="p-3 pl-4 w-[20%] border border-gray-700">Renter Name</th>
+                                    <th class="p-3 w-[15%] border border-gray-700">Installment Month</th>
+                                    <th class="p-3 w-[15%] border border-gray-700">Transferrd Amount</th>
+                                    <th class="p-3 w-[15%] border border-gray-700">Payment Method</th>
+                                    <th class="p-3 w-[15%] border border-gray-700">Slip</th>
+                                    <th class="p-3 w-[10%] border border-gray-700">Status</th>
+                                    <th class="p-3 w-[10%] border border-gray-700 text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-300 text-xs text-gray-800 bg-white">

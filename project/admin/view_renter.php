@@ -90,12 +90,11 @@ try {
                 <div class="mb-6 pb-4 border-b-2 border-slate-800 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
                     <div>
                         <span class="text-xs font-bold uppercase tracking-widest text-slate-600 block mb-1">Internal Management Console</span>
-                        <h1 class="text-3xl font-bold tracking-tight text-slate-900 font-sans">အိမ်ငှားများစာရင်း စီမံခန့်ခွဲမှု</h1>
-                        <p class="text-xs text-slate-600 mt-1 italic">စနစ်အတွင်း စာရင်းသွင်းထားသော အိမ်ငှားအချက်အလက်များကို စစ်ဆေးပြင်ဆင်ရန် နေရာဖြစ်ပါသည်။</p>
-                    </div>
+                        <h1 class="text-3xl font-bold tracking-tight text-slate-900 font-sans">Renters List Management</h1>
+                        </div>
                     
                     <div class="bg-slate-800 border border-slate-700 text-white font-medium text-xs uppercase tracking-wider px-4 py-2.5 rounded shadow-sm font-sans self-start sm:self-auto">
-                        စုစုပေါင်းအိမ်ငှား: <?= count($renters) ?> ဦး
+                        Total Renters <?= count($renters) ?>
                     </div>
                 </div>
 
@@ -107,10 +106,10 @@ try {
                                 <thead class="bg-slate-800 text-white text-xs font-semibold uppercase tracking-wider sticky top-0 z-10">
                                     <tr>
                                         <th class="p-3 pl-4 w-[10%] border border-slate-700">ID</th>
-                                        <th class="p-3 w-[25%] border border-slate-700">အိမ်ငှားအမည်</th> 
-                                        <th class="p-3 w-[30%] border border-slate-700">ဆက်သွယ်ရန် အချက်အလက်</th>
-                                        <th class="p-3 w-[20%] border border-slate-700">မှတ်ပုံတင်အမှတ် (NRC)</th>
-                                        <th class="p-3 text-center w-[15%] border border-slate-700">စနစ်အခန်းကဏ္ဍ</th>
+                                        <th class="p-3 w-[25%] border border-slate-700">Renter Name</th> 
+                                        <th class="p-3 w-[30%] border border-slate-700">Ph-No</th>
+                                        <th class="p-3 w-[20%] border border-slate-700"> NRC</th>
+                                        <th class="p-3 text-center w-[15%] border border-slate-700">Role</th>
                                     </tr>
                                 </thead> 
                                 <tbody class="divide-y divide-gray-300 text-xs text-gray-800 bg-white">

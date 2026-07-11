@@ -214,41 +214,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-800 flex">
+<body class="bg-slate-50 h-screen overflow-hidden text-slate-800 flex">
 
-    <!-- Fixed Sidebar Section -->
-    <div class="flex-shrink-0 h-screen sticky top-0 z-50">
+    <div class="flex-shrink-0 h-full">
         <?php include 'ownerheader.php'; ?>
     </div>
 
-    <!-- Main Dynamic Content Area -->
-    <main class="flex-1 p-6 overflow-y-auto">
-        <div class="w-full max-w-5xl mx-auto">
-            <div class="sm:hidden mb-4">
-            <button onclick="toggleMobileMenu()" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-sans font-medium uppercase tracking-wider px-3 py-2 rounded shadow-sm border border-slate-700">
-                ☰ Menu
-            </button>
-            </div>
-            <!-- Section Header: Traditional Ledger Style -->
-            <div class="mb-6 pb-4 border-b-2 border-gray-800 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-                <div>
-                    <span class="text-xs font-bold uppercase tracking-widest text-gray-600 block mb-1">Owner Portal</span>
-                    <h1 class="text-3xl font-bold tracking-tight text-gray-900 font-sans">🏠 အိမ်/အဆောင်အသစ်တင်ရန်ပုံစံ</h1>
-                    <p class="text-xs text-gray-600 mt-1 italic">Fill out the multi-step ledger form to register your property listing into the system.</p>
+    <div class="flex-1 h-full overflow-hidden flex flex-col">
+        
+        <div class="sticky top-0 z-20 flex-shrink-0 bg-white border-b border-gray-300 shadow-sm px-4 py-3 flex items-center justify-between font-sans rounded-sm">
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleMobileMenu()" class="sm:hidden bg-slate-800 hover:bg-slate-900 text-white text-xs font-medium uppercase tracking-wider px-3 py-2 rounded shadow-sm border border-slate-700">
+                    ☰ Menu
+                </button>
+                <div class="hidden sm:flex items-center space-x-2 text-xs text-gray-500">
+                    <span class="text-gray-800 font-bold text-lg">Rental Hub</span>
                 </div>
+            </div>
+
+            <div class="flex items-center space-x-4 divide-x divide-gray-200">
+                <div class="pl-4 flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded bg-slate-800 flex items-center justify-center text-white text-xs font-bold shadow-inner border border-slate-700">
+                        AD
+                    </div>
+                    <div class="hidden lg:block leading-none">
+                        <p class="text-xs font-bold text-gray-900">အိမ်ပိုင်ရှင် မန်နေဂျာ</p>
+                        <p class="text-[10px] text-gray-500 mt-0.5">Console Role</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <main class="flex-1 p-6 overflow-y-auto">
+            <div class="w-full ">
                 
-                <!-- Traditional Boxy Stepper Component -->
-                <div class="flex items-center bg-white border border-gray-300 shadow-sm font-sans text-xs font-bold uppercase tracking-wider">
-                    <div id="step1-badge" class="px-4 py-2.5 bg-gray-800 text-white border-r border-gray-300 flex items-center gap-2 transition-all">
-                        <span class="font-mono bg-white text-gray-900 w-4 h-4 inline-flex items-center justify-center text-[10px]">1</span>
-                        <span>အခြေခံအချက်အလက်</span>
-                    </div>
-                    <div id="step2-badge" class="px-4 py-2.5 text-gray-400 flex items-center gap-2 transition-all">
-                        <span class="font-mono bg-gray-100 border border-gray-300 text-gray-400 w-4 h-4 inline-flex items-center justify-center text-[10px]">2</span>
-                        <span>အခန်းအသေးစိတ်</span>
+                <div class="mb-6 pb-4 border-b-2 border-gray-800 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-widest text-gray-600 block mb-1">Owner Portal</span>
+                        <h1 class="text-3xl font-bold tracking-tight text-gray-900 font-sans">🏠 အိမ်/အဆောင်အသစ်တင်ရန်ပုံစံ</h1>
+                          </div>
+                    
+                    <div class="flex items-center bg-white border border-gray-300 shadow-sm font-sans text-xs font-bold uppercase tracking-wider self-start sm:self-auto">
+                        <div id="step1-badge" class="px-4 py-2.5 bg-gray-800 text-white border-r border-gray-300 flex items-center gap-2 transition-all">
+                            <span class="font-mono bg-white text-gray-900 w-4 h-4 inline-flex items-center justify-center text-[10px]">1</span>
+                            <span>Basic Information</span>
+                        </div>
+                        <div id="step2-badge" class="px-4 py-2.5 text-gray-400 flex items-center gap-2 transition-all">
+                            <span class="font-mono bg-gray-100 border border-gray-300 text-gray-400 w-4 h-4 inline-flex items-center justify-center text-[10px]">2</span>
+                            <span>Room Details</span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
             <!-- Central Form Container Card: Classic Sharp Border Box -->
             <div class="bg-white border border-gray-300 shadow-sm p-6 md:p-8 font-sans">
@@ -257,25 +273,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- STEP 1 VIEWPORT -->
                     <div id="step1-section" class="space-y-6">
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">ပို့စ်ခေါင်းစဉ် <span class="text-red-600">*</span></label>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Post  Title <span class="text-red-600">*</span></label>
                             <input type="text" name="title" required placeholder="ဥပမာ - စမ်းချောင်းမြို့နယ်ရှိ အဆင့်မြင့်ပြင်ဆင်ပြီး တိုက်ခန်း"
                                    class="w-full px-3 py-2.5 border border-gray-300 rounded-none focus:border-gray-800 outline-none transition-all placeholder:text-gray-400 bg-white text-sm">
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">အသေးစိတ်ဖော်ပြချက် (Description)</label>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Detail Description (Description)</label>
                             <textarea name="description" rows="4" placeholder="အိမ် သို့မဟုတ် အဆောင်အကြောင်း အသေးစိတ် သိရှိလိုသည်များကို ရေးသားရန်..." 
                                       class="w-full px-3 py-2.5 border border-gray-300 rounded-none outline-none focus:border-gray-800 transition-all placeholder:text-gray-400 bg-white text-sm"></textarea>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-3">ငှားရမ်းမည့် အမျိုးအစား ရွေးချယ်ပါ <span class="text-red-600">*</span></label>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-3">Selected Rental Type <span class="text-red-600">*</span></label>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <label class="border-2 border-gray-800 bg-stone-50 p-4 flex items-start gap-3 cursor-pointer transition-all" id="type-apartment-card">
                                     <input type="radio" name="rentable_type" value="Apartment" checked class="w-4 h-4 text-gray-800 focus:ring-0 mt-0.5 accent-gray-800">
                                     <div class="flex flex-col">
                                         <span class="font-bold text-gray-900 text-sm">🏢 Apartment</span>
-                                        <span class="text-[11px] text-gray-600 mt-1">တိုက်ခန်းတစ်ပြင်လုံး (သို့) ကွန်ဒိုတစ်ခန်းလုံး ငှားရန်</span>
+                                        <span class="text-[11px] text-gray-600 mt-1">Rent an entire apartment or condo</span>
                                     </div>
                                 </label>
                                 
@@ -283,7 +299,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <input type="radio" name="rentable_type" value="Hostel" class="w-4 h-4 text-gray-800 focus:ring-0 mt-0.5 accent-gray-800">
                                     <div class="flex flex-col">
                                         <span class="font-bold text-gray-900 text-sm">🏫 Hostel</span>
-                                        <span class="text-[11px] text-gray-600 mt-1">အဆောင်ခန်းများ၊ အိပ်ဆောင်ကုတင်များ သီးသန့်စီခွဲငှားရန်</span>
+                                        <span class="text-[11px] text-gray-600 mt-1">အဆောင်ခန်းများ၊ အိပ်ဆောင်ကုတင်များ သီးသန့်စီခွဲငှားရန် Dormitories,dorm beds for rent individually</span>
                                     </div>
                                 </label>
                             </div>
@@ -291,14 +307,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">မြို့ <span class="text-red-600">*</span></label>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">City<span class="text-red-600">*</span></label>
                                 <select name="city" class="w-full px-3 py-2.5 border border-gray-300 rounded-none outline-none bg-white focus:border-gray-800 transition-all text-sm">
                                     <option value="Yangon">ရန်ကုန်</option>
                                     <option value="Mandalay">မန္တလေး</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">မြို့နယ် <span class="text-red-600">*</span></label>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Township <span class="text-red-600">*</span></label>
                                 <select name="township" class="w-full px-3 py-2.5 border border-gray-300 rounded-none outline-none bg-white focus:border-gray-800 transition-all text-sm">
                                 
                                      <option value="Ahlone">Ahlone</option>
@@ -351,13 +367,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">လိပ်စာအပြည့်အစုံ <span class="text-red-600">*</span></label>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Full Address <span class="text-red-600">*</span></label>
                             <textarea name="full_address" required rows="3" placeholder="လမ်းအမည်၊ အိမ်နံပါတ်၊ အနီးနားအမှတ်အသားများ အပြည့်အစုံရေးပါ..." 
                                       class="w-full px-3 py-2.5 border border-gray-300 rounded-none outline-none focus:border-gray-800 transition-all placeholder:text-gray-400 bg-white text-sm"></textarea>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-3">ပါဝင်သော ဝန်ဆောင်မှုများ (Amenities)</label>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-3">Included Servic (Amenities)</label>
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                 <label class="flex items-center gap-2 p-3 bg-stone-50 hover:bg-stone-100 border border-gray-300 cursor-pointer text-xs font-bold text-gray-700 transition-colors">
                                     <input type="checkbox" name="amenities[]" value="Aircon" class="w-4 h-4 rounded-none border-gray-300 accent-gray-800"> <span>❄️ Aircon</span>
@@ -376,8 +392,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         <div class="pt-4 border-t border-gray-300">
                             <button type="button" onclick="goToStep2()" class="w-full border border-gray-800 bg-gray-900 text-white font-bold uppercase tracking-wider py-3 px-6 hover:bg-gray-800 active:bg-gray-900 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer">
-                                <span>ရှေ့သို့ ဆက်သွားမည်</span>
-                                <span class="font-mono">➔</span>
+                                <span>Moving Forward
+
+                                </span>
+                                
                             </button>
                         </div>
                     </div>
@@ -393,44 +411,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">ဘယ်နှစ်လွှာ (Floor Level) <span class="text-red-600">*</span></label>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Floor Level <span class="text-red-600">*</span></label>
                                     <select name="floor_level" class="w-full px-3 py-2.5 border border-gray-300 bg-white focus:border-gray-800 transition-all text-sm">
-                                        <option value="Ground Floor">မြေညီထပ်</option>
-                                        <option value="1st Floor">ပထမထပ်</option>
-                                        <option value="2nd Floor">ဒုတိယထပ်</option>
-                                        <option value="3rd Floor">တတိယထပ်</option>
+                                        <option value="Ground Floor">Ground Floor</option>
+                                        <option value="1st Floor">First Floor</option>
+                                        <option value="2nd Floor">Second Floor</option>
+                                        <option value="3rd Floor">Third Floor</option>
+                                        <option value="1st Floor">Fouth Floor</option>
+                                        <option value="2nd Floor">Fifth Floor</option>
+                                        <option value="3rd Floor">Sixth Floor</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">နေထိုင်နိုင်မည့် လူဦးရေ (Max Occupants) <span class="text-red-600">*</span></label>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Max Occupants <span class="text-red-600">*</span></label>
                                     <input type="number" name="max_occupy" min="1" value="1" class="w-full px-3 py-2.5 border border-gray-300 focus:border-gray-800 outline-none transition-all bg-white font-mono text-sm">
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">လစဉ်ငှားရမ်းခ (MMK) <span class="text-red-600">*</span></label>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Monthly Price(MMK) <span class="text-red-600">*</span></label>
                                     <input type="number" id="apt_price" name="apartment_price" placeholder="ဥပမာ - 500000" class="w-full px-3 py-2.5 border border-gray-300 focus:border-gray-800 outline-none transition-all bg-white font-mono text-sm">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">စရန်ငွေ / အာမခံကြေး (MMK) <span class="text-red-600">*</span></label>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Deposit / Security Deposit (MMK) <span class="text-red-600">*</span></label>
                                     <input type="number" id="apt_deposit" name="deposit_amount_apt" placeholder="လစဉ်ကြေးဖြည့်လျှင် အလိုအလျောက်တွက်ပေးမည်" class="w-full px-3 py-2.5 border border-gray-300 bg-stone-50 outline-none font-mono text-sm" readonly>
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">အခန်းအခြေအနေ <span class="text-red-600">*</span></label>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Room Condition <span class="text-red-600">*</span></label>
                                     <select name="is_available_apt" class="w-full px-3 py-2.5 border border-gray-300 bg-white focus:border-gray-800 transition-all text-sm">
-                                        <option value="1">Available (အားလုံးငှားရန်ရှိသည်)</option>
-                                        <option value="0">Rented (ငှားရမ်းပြီးသားဖြစ်သည်)</option>
+                                        <option value="1">Available</option>
+                                        <option value="0">Rented</option>
                                     </select>
                                 </div>
                                 <div class="p-4 bg-stone-50 border border-gray-300">
-                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">📸 ဓာတ်ပုံများတင်ရန် (Gallery Images)</label>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">📸 Upload Photos (Gallery Images)</label>
                                     <input type="file" name="property_gallery[]" accept="image/*" multiple 
                                         class="w-full text-xs text-gray-600 file:mr-4 file:py-1.5 file:px-3 file:border file:border-gray-800 file:bg-gray-900 file:text-white hover:file:bg-gray-800 file:cursor-pointer cursor-pointer border border-gray-300 p-1 bg-white">
-                                    <p class="text-[10px] text-gray-500 italic mt-1.5">ပုံအများကြီးကို တစ်ပြိုင်နက်တည်း ရွေးချယ်တင်နိုင်ပါသည်။</p>
+                                    <p class="text-[10px] text-gray-500 italic mt-1.5">You can select multiple images at once</p>
                                 </div>
                             </div>
                         </div>
@@ -440,7 +461,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end pb-2 border-b-2 border-gray-800 gap-3">
                                 <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider">🏫 Hostel အဆောင်ခန်းများ ထည့်သွင်းရန်</h3>
                                 <button type="button" onclick="addHostelRow()" class="border border-gray-800 bg-gray-950 text-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider hover:bg-gray-800 transition-colors cursor-pointer">
-                                    ＋ အဆောင်ခန်းထပ်တိုးရန်
+                                    ＋ Add New Hostel
                                 </button>
                             </div>
 
@@ -449,13 +470,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <table class="w-full text-left text-xs min-w-[800px] border-collapse">
                                         <thead class="bg-gray-800 text-white font-semibold uppercase tracking-wider">
                                             <tr>
-                                                <th class="p-3 border border-gray-700 w-[12%]">အခန်းနံပါတ်</th>
-                                                <th class="p-3 border border-gray-700 w-[15%]">အမျိုးအစား</th>
-                                                <th class="p-3 border border-gray-700 w-[10%]">အခန်းခွဲ (Sub)</th>
-                                                <th class="p-3 border border-gray-700 w-[20%]">လစဉ်ကြေး (MMK)</th>
-                                                <th class="p-3 border border-gray-700 w-[20%]">စရန်ငွေ (MMK)</th>
-                                                <th class="p-3 border border-gray-700 w-[15%]">အခန်းပုံ (Image)</th>
-                                                <th class="p-3 border border-gray-700 w-[8%] text-center">ဖျက်ရန်</th>
+                                                <th class="p-3 border border-gray-700 w-[12%]">Room No</th>
+                                                <th class="p-3 border border-gray-700 w-[15%]">Type</th>
+                                                <th class="p-3 border border-gray-700 w-[10%]"> Sub</th>
+                                                <th class="p-3 border border-gray-700 w-[20%]">Monthly Price (MMK)</th>
+                                                <th class="p-3 border border-gray-700 w-[20%]">Deposit Amount (MMK)</th>
+                                                <th class="p-3 border border-gray-700 w-[15%]"> Image</th>
+                                                <th class="p-3 border border-gray-700 w-[8%] text-center">Delete</th>
                                             </tr>
                                         </thead>
                                         <tbody id="hostel-rooms-tbody" class="divide-y divide-gray-300 bg-white">
@@ -488,10 +509,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <!-- Step 2 Navigation Actions -->
                         <div class="flex items-center gap-4 pt-6 border-t border-gray-300">
                             <button type="button" onclick="goToStep1()" class="w-1/3 border border-gray-400 bg-gray-100 text-gray-800 font-bold uppercase tracking-wider py-3 px-6 hover:bg-gray-200 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer">
-                                <span>⏪ နောက်သို့</span>
+                                <span>Next</span>
                             </button>
                             <button type="submit" class="w-2/3 border border-emerald-800 bg-emerald-700 text-white font-bold uppercase tracking-wider py-3 px-6 hover:bg-emerald-800 active:bg-emerald-900 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer">
-                                <span>💾 အချက်အလက်များသိမ်းဆည်းမည်</span>
+                                <span> Save Data</span>
                             </button>
                         </div>
                     </div>

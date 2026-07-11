@@ -91,17 +91,16 @@ $result = $conn->query($sql);
                 </div>
 
                 <div class="px-6">
-        <div class="mb-6 pb-4 border-b-2 border-gray-800 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+        <div class="mb-6 pb-4 border-b-2 border-gray-800 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                  <div>
                     <span class="text-xs font-bold uppercase tracking-widest text-gray-600 block mb-1">Owner Portal</span>
-                    <h1 class="text-3xl font-bold tracking-tight text-gray-900 font-sans">စာချုပ်လျှောက်ထားလွှာများ စီမံခန့်ခွဲမှုစနစ်</h1>
-                    <p class="text-xs text-gray-600 mt-1 italic">Renter များထံမှ ပေးပို့လာသော စာချုပ်လျှောက်ထားလွှာများအား စစ်ဆေးကြည့်ရှုရန် နေရာဖြစ်ပါသည်။</p>
-                </div>
+                    <h1 class="text-3xl font-bold tracking-tight text-gray-900 font-sans">Contract Management</h1>
+                        </div>
                 
-                <div class="bg-white p-4 border border-gray-300 shadow-sm border-l-4 border-l-slate-800">
-                    <span class="text-xs uppercase font-bold tracking-wider text-gray-500 block">စုစုပေါင်း စာချုပ်အရေအတွက်</span>
-                    <span class="text-2xl font-bold text-gray-800 mt-2 block"><?php echo $result ? $result->num_rows : 0; ?> စောင်</span>
-                </div>
+                        <div class="bg-slate-800 border border-slate-700 text-white font-medium text-xs uppercase tracking-wider px-4 py-2.5 rounded shadow-sm font-sans self-start sm:self-auto">
+                        Total Contracts <span class="font-bold "><?php echo $result ? $result->num_rows : 0; ?></span> 
+                    </div>
+                
             </div>
             
             <!-- Section Header: Traditional Ledger Style -->
