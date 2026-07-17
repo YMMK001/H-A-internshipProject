@@ -52,7 +52,6 @@ try {
 }
 
 // ၄။ COMBINED POLYMORPHIC UNION QUERY
-// Fixed picture rendering logic by grabbing the absolute structural image mapping
 $query = "
     SELECT
         ap.id AS id,
@@ -68,10 +67,10 @@ $query = "
     INNER JOIN apartments ap ON rh.id = ap.rental_house_id
     LEFT JOIN (
         SELECT rental_house_id, image_url
-        FROM rental_house_images
-        WHERE id IN (
-            SELECT MIN(id) FROM rental_house_images GROUP BY rental_house_id
-        )
+            FROM rental_house_images
+            WHERE id IN (
+                SELECT MIN(id) FROM rental_house_images GROUP BY rental_house_id
+            )
     ) img ON rh.id = img.rental_house_id
     WHERE rh.is_active = 1
 
@@ -91,10 +90,10 @@ $query = "
     INNER JOIN hostel_rooms hr ON rh.id = hr.rental_house_id
     LEFT JOIN (
         SELECT rental_house_id, image_url
-        FROM rental_house_images
-        WHERE id IN (
-            SELECT MIN(id) FROM rental_house_images GROUP BY rental_house_id
-        )
+            FROM rental_house_images
+            WHERE id IN (
+                SELECT MIN(id) FROM rental_house_images GROUP BY rental_house_id
+            )
     ) img ON rh.id = img.rental_house_id
     WHERE rh.is_active = 1
 ";
@@ -117,6 +116,7 @@ $hostels    = array_filter($properties, function($item) { return $item['type'] =
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Rental Hub - Find Your Home</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Noto+Sans+Myanmar:wght@300;400;500;700&display=swap');
         .font-classic { font-family: 'Noto Sans Myanmar', sans-serif; }
@@ -127,6 +127,7 @@ $hostels    = array_filter($properties, function($item) { return $item['type'] =
 
 <div class="flex-1 flex flex-col h-screen overflow-y-auto">
     
+    <!-- NAVIGATION -->
     <nav class="bg-white border-b border-stone-200 sticky top-0 z-50 shadow-sm">
         <div class="max-w-6xl mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between py-4 items-center gap-4">
@@ -163,27 +164,96 @@ $hostels    = array_filter($properties, function($item) { return $item['type'] =
         </div>
     </nav>
 
+    <!-- HEADER / HERO INTRO -->
     <header class="bg-white border-b border-stone-200 py-14 text-center">
         <div class="max-w-4xl mx-auto px-6">
             <span class="inline-block uppercase tracking-widest text-[10px] font-semibold text-amber-800 border-b border-amber-800 pb-1 mb-4">Established Property Management</span>
-            <h1 class="text-3xl sm:text-4xl font-serif font-normal text-stone-900 max-w-3xl mx-auto leading-tight">
+            <h1 class="text-3xl sm:text-4xl font-serif font-normal text-stone-900 max-w-3xl mx-auto leading-tight title-classic">
                 One platform. Perfect harmony for <span class="italic text-blue-900">Renters</span> & <span class="italic text-blue-900">Owners</span>.
             </h1>
             <div class="w-12 h-0.5 bg-amber-700 mx-auto my-4"></div>
             <p class="text-xs text-stone-500 font-serif">
                 Quick Search: 
-                <button onclick="quickSearch('ရန်ကုန်')" class="text-blue-900 underline mx-1 hover:text-amber-800">ရန်ကုန်</button> | 
-                <button onclick="quickSearch('မန္တလေး')" class="text-blue-900 underline mx-1 hover:text-amber-800">မန္တလေး</button> | 
+                <button onclick="quickSearch('Yangon')" class="text-blue-900 underline mx-1 hover:text-amber-800">ရန်ကုန်</button> | 
+                <button onclick="quickSearch('Mandalay')" class="text-blue-900 underline mx-1 hover:text-amber-800">မန္တလေး</button> | 
                 <button onclick="quickSearch('AVAILABLE')" class="text-emerald-700 underline mx-1 hover:text-emerald-900 font-bold">Available Now</button>
             </p>
         </div>
     </header>
 
+    <!-- UPDATED: SHOWCASE SECTION (Warm Classic & Slimmer Height) -->
+    <section class="max-w-6xl mx-auto px-6 w-full pt-8 pb-2">
+        <div class="bg-[#f5f2eb] rounded-xl shadow-sm overflow-hidden border border-stone-300/60 text-stone-800">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 lg:p-8 items-center">
+                
+                <!-- Left Details -->
+                <div class="lg:col-span-5 space-y-4">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded text-[9px] uppercase font-bold tracking-wider bg-amber-700/10 text-amber-800 border border-amber-700/20">
+                        <i class="fa-solid fa-feather-pointed mr-1 text-amber-700"></i> Elite Core Premium
+                    </span>
+                    <h2 class="text-xl lg:text-2xl font-normal leading-tight font-serif text-stone-900 title-classic">
+                        ယုံကြည်စိတ်ချရသော <br>
+                        <span class="text-blue-900  font-semibold">အိမ်ရာစီမံခန့်ခွဲမှုဗဟို</span>
+                    </h2>
+                    <p class="text-stone-600 text-xs leading-relaxed font-light">
+                        အဆောင်နှင့် တိုက်ခန်းငှားရမ်းခြင်းလုပ်ငန်းများကို ခေတ်မီစနစ်များဖြင့် ဒစ်ဂျစ်တယ်စနစ်သို့ ပြောင်းလဲလိုက်ပါ။ ပိုင်ရှင်နှင့် အိမ်ငှားကြား စာရွက်စာတမ်းရှုပ်ထွေးမှုများကို ဘေးကင်းလုံခြုံစွာ ဖြေရှင်းပေးပါသည်။
+                    </p>
+                    
+                    <!-- Feature Checkmarks -->
+                    <div class="space-y-2.5 pt-3 border-t border-stone-300/40">
+                        <div class="flex items-start gap-3">
+                            <div class="mt-0.5 bg-amber-700/10 text-amber-800 p-1 rounded border border-amber-700/20 text-[9px]">
+                                <i class="fa-solid fa-arrow-rotate-left"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-[11px] text-stone-800">Auto-Sync Digital Contracts</h4>
+                                <p class="text-[10px] text-stone-500">စာချုပ်သက်တမ်းကုန်ဆုံးပါက အခန်းများကို Available အဖြစ် အလိုအလျောက်ပြောင်းလဲပေးခြင်း။</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="mt-0.5 bg-amber-700/10 text-amber-800 p-1 rounded border border-amber-700/20 text-[9px]">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-[11px] text-stone-800">Polymorphic Core Tracking</h4>
+                                <p class="text-[10px] text-stone-500">တိုက်ခန်းများနှင့် အဆောင်ဒေတာများကို ပေါင်းစည်းထားသော ရလဒ်ထွက်စနစ်ဖြင့် စနစ်တကျပြသပေးခြင်း။</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Grid (Slimmed down to h-[220px] on small, h-[260px] on large) -->
+                <div class="lg:col-span-7 grid grid-cols-12 gap-3 h-[220px] lg:h-[260px]">
+                    <div class="col-span-7 relative rounded-lg overflow-hidden border border-stone-300/40 group shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80" alt="Modern Room Architecture" class="absolute inset-0 w-full h-full object-cover grayscale-[5%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-750">
+                        <div class="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-transparent to-transparent"></div>
+                        <span class="absolute bottom-2.5 left-2.5 bg-stone-900/80 border border-stone-700 backdrop-blur-md px-2 py-0.5 rounded-sm text-[9px] uppercase tracking-wider font-bold text-amber-300">Premium Spaces</span>
+                    </div>
+                    <div class="col-span-5 grid grid-rows-2 gap-3">
+                        <div class="relative rounded-lg overflow-hidden border border-stone-300/40 group shadow-sm">
+                            <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=400&q=80" alt="Cozy Interior View" class="absolute inset-0 w-full h-full object-cover grayscale-[5%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-750">
+                            <div class="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-transparent to-transparent"></div>
+                            <span class="absolute bottom-2 left-2 bg-stone-900/80 border border-stone-700 backdrop-blur-md px-1.5 py-0.5 rounded-sm text-[8px] uppercase tracking-wider text-stone-200">Cozy Hostels</span>
+                        </div>
+                        <div class="relative rounded-lg overflow-hidden border border-stone-300/40 group shadow-sm">
+                            <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=400&q=80" alt="Verified Apartment" class="absolute inset-0 w-full h-full object-cover grayscale-[5%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-750">
+                            <div class="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-transparent to-transparent"></div>
+                            <span class="absolute bottom-2 left-2 bg-stone-900/80 border border-stone-700 backdrop-blur-md px-1.5 py-0.5 rounded-sm text-[8px] uppercase tracking-wider text-stone-200">Verified Units</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN SECTION -->
     <main class="flex-1 bg-[#faf9f6]">
         <div class="max-w-6xl px-6 w-full py-12 mx-auto">
             
             <div id="cardLayout" class="space-y-14 block">
                 
+                <!-- Apartments Section -->
                 <div id="apartmentCardSection">
                     <h2 class="text-xs uppercase tracking-widest text-gray-400 font-bold mb-5 border-b border-gray-200 pb-2">Apartments / တိုက်ခန်းများ</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -236,6 +306,7 @@ $hostels    = array_filter($properties, function($item) { return $item['type'] =
                     </div>
                 </div>
 
+                <!-- Hostels Section -->
                 <div id="hostelCardSection">
                     <h2 class="text-xs uppercase tracking-widest text-gray-400 font-bold mb-5 border-b border-gray-200 pb-2">Hostels / အဆောင်များ</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -289,6 +360,7 @@ $hostels    = array_filter($properties, function($item) { return $item['type'] =
                 </div>
             </div>
 
+            <!-- Table Layout Section -->
             <div id="tableLayout" class="hidden bg-white border border-gray-200 rounded shadow-sm overflow-hidden mt-4">
                 <div class="overflow-x-auto max-h-[500px]">
                     <table class="w-full text-left border-collapse text-xs tracking-wide">
@@ -354,6 +426,7 @@ $hostels    = array_filter($properties, function($item) { return $item['type'] =
                 </div>
             </div>
 
+            <!-- Contact Section -->
             <section class="mt-20 border-t border-stone-200 pt-14">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div class="space-y-3">
@@ -387,6 +460,7 @@ $hostels    = array_filter($properties, function($item) { return $item['type'] =
         </div>
     </main>
 
+    <!-- FOOTER -->
     <footer class="bg-stone-900 text-stone-400 text-xs border-t border-stone-800 mt-auto">
         <div class="max-w-6xl mx-auto px-6 py-10">
             <div class="flex flex-col sm:flex-row justify-between items-center gap-6 border-b border-stone-800 pb-8">
@@ -410,12 +484,10 @@ $hostels    = array_filter($properties, function($item) { return $item['type'] =
 </div>
 
 <script>
-    // Unified filter engine handles all structural selections on input change
     function filterProperties() {
         const textValue = document.getElementById('citySearchInput').value.toLowerCase().trim();
         const typeValue = document.getElementById('typeSelect').value.toLowerCase();
 
-        // Filter Card View Elements
         const cards = document.querySelectorAll('.property-card');
         cards.forEach(card => {
             const cardText = card.textContent.toLowerCase();
@@ -428,7 +500,6 @@ $hostels    = array_filter($properties, function($item) { return $item['type'] =
             card.style.display = (matchText && matchType) ? "" : "none";
         });
 
-        // Filter Table View Elements
         const rows = document.querySelectorAll('.property-row');
         rows.forEach(row => {
             const rowText = row.textContent.toLowerCase();
@@ -446,7 +517,6 @@ $hostels    = array_filter($properties, function($item) { return $item['type'] =
         filterProperties();
     }
 
-    // Quick filter click linkages
     function quickSearch(keyword) {
         const searchInput = document.getElementById('citySearchInput');
         const typeSelect = document.getElementById('typeSelect');

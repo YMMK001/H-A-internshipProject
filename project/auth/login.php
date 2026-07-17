@@ -11,6 +11,7 @@ define('DB_USER', 'root');
 define('DB_PASS', '');            
 
 $error = '';
+$email = ''; // Initialized to prevent undefined variable notices in HTML value attribute
 
 // Capture the redirection source from the URL parameters (defaults to 'homepage')
 $redirect_to = $_GET['redirect'] ?? 'homepage';
@@ -43,17 +44,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $result = $stmt->get_result();
                 $user = $result->fetch_assoc();
 
-                // Hybrid Verification Strategy
                 if ($user) {
                     $is_valid = false;
 
-                    if (strpos($user['password'], '$2y$10$') === 0) {
+                    // Check if the saved database password is a standard bcrypt hash
+                    if (strpos($user['password'], '$2y$') === 0) {
                         // Secure hash match validation
-                        if (hash_equals($user['password'], crypt($password, $user['password']))) {
+                        if (password_verify($password, $user['password'])) {
                             $is_valid = true;
                         }
                     } else {
-                        // Plain-text match fallback validation
+                        // Plain-text match fallback validation (Your manual direct database edits)
                         if ($password === $user['password']) {
                             $is_valid = true;
                         }
@@ -73,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             header("Location: ../admin/owner_dashboard.php");
                             exit;
                         } else {
-                            // CONVENIENT ROUTING MATCHED WITH HOMEPAGE TRACKERS
+                            // Convenience routing matched with homepage trackers
                             if ($redirect_to === 'contract') {
                                 header("Location: ../renter/rentercontract.php");
                             } else {
@@ -106,13 +107,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body class="bg-[#fbfaf7] text-stone-900 antialiased min-h-screen flex flex-col justify-center py-12">
       
-    <!-- Classic Container Card -->
     <div class="bg-white w-[440px] mx-auto p-10 border border-stone-300 shadow-sm relative">
         
-        <!-- Subtle Classic Header Line -->
         <div class="absolute top-0 left-0 right-0 h-1.5 bg-blue-900"></div>
         
-        <!-- Identity / Logo Token -->
         <div class="flex justify-center mb-6">
             <div class="h-12 w-12 bg-blue-900 border border-amber-600 flex items-center justify-center text-amber-100 font-serif font-bold text-2xl">R</div>
         </div>
@@ -122,7 +120,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             Please sign in to access your dashboard account.
         </p>
         
-        <!-- Display Alert Feedback Banner if login fails -->
         <?php if (!empty($error)): ?>
             <div class="bg-stone-50 border-l-4 border-amber-700 text-stone-800 px-4 py-3 mb-6 text-sm font-serif italic" role="alert">
                 <span><?php echo htmlspecialchars($error); ?></span>
@@ -131,10 +128,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <form action="" method="POST" class="flex flex-col gap-5">
             
-            <!-- Hidden input field tracking where the user initiated the login -->
             <input type="hidden" name="redirect_to" value="<?php echo htmlspecialchars($redirect_to); ?>">
 
-            <!-- Email Input Group -->
             <div class="flex flex-col gap-1.5">
                 <label class="text-stone-700 text-xs font-semibold uppercase tracking-wider" for="useremail">Email Address</label>
                 <input class="p-3 bg-[#faf9f6] border border-stone-300 focus:outline-none focus:border-blue-900 focus:bg-white text-stone-900 font-sans transition-all placeholder-stone-400" 
@@ -146,7 +141,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                        placeholder="name@domain.com">
             </div>
             
-            <!-- Password Input Group -->
             <div class="flex flex-col gap-1.5">
                 <label class="text-stone-700 text-xs font-semibold uppercase tracking-wider" for="userpassword">Password</label>
                 <input class="p-3 bg-[#faf9f6] border border-stone-300 focus:outline-none focus:border-blue-900 focus:bg-white text-stone-900 font-sans transition-all" 
@@ -156,7 +150,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                        required>
             </div>
             
-            <!-- Utilities Section -->
             <div class="flex justify-between items-center text-sm font-serif mt-1">
                 <div class="flex items-center">  
                     <input type="checkbox" id="remember" class="accent-blue-950 h-4 w-4 border-stone-300 rounded-none cursor-pointer">
@@ -165,7 +158,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <a href="#" class="text-amber-800 hover:text-blue-900 hover:underline transition-colors">Forgot Password?</a>
             </div>
             
-            <!-- Submit Action -->
             <div class="pt-4">
                 <button type="submit" class="bg-blue-900 w-full text-base font-serif font-medium p-3.5 text-amber-100 hover:bg-blue-950 border border-amber-800 shadow-sm transition-all tracking-wide">
                     Authenticate Account &rarr;
@@ -173,7 +165,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </form>
 
-        <!-- Subtle Classic Footer Link -->
         <div class="mt-8 pt-6 border-t border-stone-200 text-center text-xs font-serif text-stone-500">
             Do not have an active portal? <a href="register.php" class="text-blue-900 hover:underline font-medium">Create an account</a>.
         </div>

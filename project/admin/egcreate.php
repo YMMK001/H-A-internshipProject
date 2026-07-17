@@ -228,7 +228,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ☰ Menu
                 </button>
                 <div class="hidden sm:flex items-center space-x-2 text-xs text-gray-500">
-                    <span class="text-gray-800 font-bold text-lg">Rental Hub</span>
+                    <span class="text-gray-800 font-bold text-3xl">Rental Hub</span>
                 </div>
             </div>
 
@@ -238,7 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         AD
                     </div>
                     <div class="hidden lg:block leading-none">
-                        <p class="text-xs font-bold text-gray-900">အိမ်ပိုင်ရှင် မန်နေဂျာ</p>
+                        <p class="text-xs font-bold text-gray-900">Owner</p>
                         <p class="text-[10px] text-gray-500 mt-0.5">Console Role</p>
                     </div>
                 </div>
@@ -359,9 +359,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <option value="Kungyangon">Kungyangon</option>
                                      <option value="Kyauktan">Kyauktan</option>
                                     <option value="Thanlyin">Thanlyin</option>
-                                    <option value="Thongwa">Thongwa</option>
-        
-                                    
+                                    <option value="Thongwa">Thongwa</option>     
                                 </select>
                             </div>
                         </div>

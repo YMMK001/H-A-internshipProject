@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         AD
                     </div>
                     <div class="hidden lg:block leading-none">
-                        <p class="text-xs font-bold text-gray-900">အိမ်ပိုင်ရှင် မန်နေဂျာ</p>
+                        <p class="text-xs font-bold text-gray-900">Owner</p>
                         <p class="text-[10px] text-gray-500 mt-0.5">Console Role</p>
                     </div>
                 </div>

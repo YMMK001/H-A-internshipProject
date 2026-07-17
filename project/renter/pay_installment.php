@@ -56,7 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $image_name = null;
     if (isset($_FILES['payment_image']) && $_FILES['payment_image']['error'] === 0) {
-        $target_dir  = "uploads/";
+        // 🛠 ပြင်ဆင်ထားသည့်နေရာ - admin/uploads/ ထဲသို့ သိမ်းဆည်းရန် လမ်းကြောင်းပြောင်းထားပါသည်
+        $target_dir  = "../admin/uploads/";
         if (!is_dir($target_dir)) mkdir($target_dir, 0777, true);
         
         $image_name  = time() . '_' . basename($_FILES["payment_image"]["name"]);
@@ -139,7 +140,7 @@ if ($is_profile_context) {
             
             <div class="border-b border-gray-100 pb-4 mb-5">
                 <h2 class="text-lg font-bold text-slate-900 tracking-tight uppercase title-classic">Process Payment</h2>
-                <p class="text-gray-400 text-[11px] uppercase tracking-wider mt-1">အရစ်ကျအပိုင်း - Month <?= htmlspecialchars($installment['installment_period']) ?> အတွက် Ngwe Pay Yan</p>
+                <p class="text-gray-400 text-[11px] uppercase tracking-wider mt-1">အရစ်ကျအပိုင်း - Month <?= htmlspecialchars($installment['installment_period']) ?> အတွက် ငွေပေးရန်</p>
             </div>
 
             <?php if(!empty($message)): ?>

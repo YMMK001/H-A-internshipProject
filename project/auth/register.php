@@ -63,8 +63,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Insert new user if no registration conflicts exist
             if (empty($error)) {
+                // Securely hash the password using bcrypt before database entry
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
                 $insert_stmt = $conn->prepare("INSERT INTO users (name, email, password, phone, nrc, role) VALUES (?, ?, ?, ?, ?, ?)");
-                $insert_stmt->bind_param("ssssss", $name, $email, $password, $phone, $nrc, $role);
+                $insert_stmt->bind_param("ssssss", $name, $email, $hashed_password, $phone, $nrc, $role);
 
                 if ($insert_stmt->execute()) {
                     $success = 'Account created successfully! You can now sign in.';
@@ -131,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="flex flex-col gap-1.5">
                 <label class="text-stone-700 text-xs font-semibold uppercase tracking-wider" for="user_email">Email Address</label>
                 <input class="p-3 bg-[#faf9f6] border border-stone-300 focus:outline-none focus:border-blue-900 focus:bg-white text-stone-900 font-sans transition-all placeholder-stone-400" 
-                       type="email" id="user_email" name="user_email" value="<?php echo htmlspecialchars($email); ?>" required placeholder="name@domain.com">
+                       type="type" id="user_email" name="user_email" value="<?php echo htmlspecialchars($email); ?>" required placeholder="name@domain.com">
             </div>
             
             <div class="flex flex-col gap-1.5">
@@ -153,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php endfor; ?>
                     </select>
 
-                    <select id="nrc_township" name="nrc_township" class="p-3 bg-[#faf9f6] border border-stone-300 focus:outline-none focus:border-blue-900 focus:bg-white text-sm text-stone-800 transition-all cursor-pointer" required disabled>
+<select id="nrc_township" name="nrc_township" class="p-3 bg-[#faf9f6] border border-stone-300 focus:outline-none focus:border-blue-900 focus:bg-white text-sm text-stone-800 transition-all cursor-pointer" required disabled>
                         <option value="" disabled selected>Township</option>
                         
                         <option data-region="1/" value="bmn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'bmn') ? 'selected' : ''; ?>>BAMANA (Bhamo)</option>
@@ -328,8 +331,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <option data-region="14/" value="wkm" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'wkm') ? 'selected' : ''; ?>>WAKAMA (Wakema)</option>
                         <option data-region="14/" value="yna" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'yna') ? 'selected' : ''; ?>>YANAUNA (Yegyi)</option>
                     </select>
-
-                    <input class="p-3 bg-[#faf9f6] border border-stone-300 focus:outline-none focus:border-blue-900 focus:bg-white text-stone-900 font-mono transition-all placeholder-stone-400 text-sm" 
+      <input class="p-3 bg-[#faf9f6] border border-stone-300 focus:outline-none focus:border-blue-900 focus:bg-white text-stone-900 font-mono transition-all placeholder-stone-400 text-sm" 
                            type="text" name="nrc_number" pattern="\d{6}" maxlength="6" required placeholder="123456">
                 </div>
             </div>
@@ -357,16 +359,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             const regionSelect = document.getElementById("nrc_region");
             const townshipSelect = document.getElementById("nrc_township");
             
-            // Store all original township options systematically
-            const allTownships = Array.from(townshipSelect.options);
+            const allTownships = Array.from(townshipSelect.options || []);
 
             function filterTownships() {
                 const selectedRegion = regionSelect.value;
+                if (!townshipSelect.options) return; // Guard clause if using a text input instead of a select element
                 
-                // Clear out existing options
                 townshipSelect.innerHTML = "";
                 
-                // Add the baseline prompt option back
                 const defaultOption = document.createElement("option");
                 defaultOption.value = "";
                 defaultOption.disabled = true;
@@ -375,14 +375,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 townshipSelect.appendChild(defaultOption);
 
                 if (selectedRegion) {
-                    // Enable select control frame
                     townshipSelect.disabled = false;
-                    
-                    // Filter matching entries
                     const filtered = allTownships.filter(opt => opt.getAttribute("data-region") === selectedRegion);
                     
                     filtered.forEach(opt => {
-                        // Re-apply state if post-back values match preserved options
                         if ("<?php echo isset($_POST['nrc_township']) ? $_POST['nrc_township'] : ''; ?>" === opt.value) {
                             opt.selected = true;
                             defaultOption.selected = false;
@@ -394,12 +390,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
-            // Run instantly on load to protect form re-submissions/saved errors
             if (regionSelect.value) {
                 filterTownships();
             }
 
-            // Fire on manual structural changes
             regionSelect.addEventListener("change", filterTownships);
         });
     </script>

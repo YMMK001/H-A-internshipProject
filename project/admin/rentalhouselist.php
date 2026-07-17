@@ -110,6 +110,7 @@ $apartments = array_filter($properties, function($item) { return $item['type'] =
 $hostels    = array_filter($properties, function($item) { return $item['type'] === 'hostel'; });
 ?>
 
+
 <!DOCTYPE html>
 <html lang="my">
 <head>

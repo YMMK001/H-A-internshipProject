@@ -43,6 +43,7 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Owner - Payment Approvals</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -74,7 +75,7 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         AD
                     </div>
                     <div class="hidden lg:block leading-none">
-                        <p class="text-xs font-bold text-gray-900">အိမ်ပိုင်ရှင် မန်နေဂျာ</p>
+                        <p class="text-xs font-bold text-gray-900">Owner</p>
                         <p class="text-[10px] text-gray-500 mt-0.5">Console Role</p>
                     </div>
                 </div>
@@ -88,10 +89,10 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div>
                         <span class="text-xs font-bold uppercase tracking-widest text-gray-600 block mb-1">Owner Portal</span>
                         <h1 class="text-3xl font-bold tracking-tight text-gray-900 font-sans">Verifying/Checking Incoming Payments</h1>
-                       </div>
+                    </div>
                     
-                       <div class="bg-slate-800 border border-slate-700 text-white font-medium text-xs uppercase tracking-wider px-4 py-2.5 rounded shadow-sm font-sans self-start sm:self-auto">
-                        Total of <?= count($payments) ?> Transaction</span> 
+                    <div class="bg-slate-800 border border-slate-700 text-white font-medium text-xs uppercase tracking-wider px-4 py-2.5 rounded shadow-sm font-sans self-start sm:self-auto">
+                        Total of <?= count($payments) ?> Transaction
                     </div>
                 
                 </div>
@@ -141,9 +142,10 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             
                                             <td class="p-3 border-r border-gray-200 font-medium">
                                                 <?php if(!empty($pay['payment_image'])): ?>
-                                                    <a href="uploads/<?= htmlspecialchars($pay['payment_image']) ?>" target="_blank" class="text-blue-800 hover:text-blue-900 font-bold inline-flex items-center gap-1 hover:underline">
-                                                        👁 View Slip
-                                                    </a>
+                                                  <!-- ပြင်ဆင်ရန်ပုံစံ -->
+<button type="button" onclick="openSlipModal('uploads/<?= htmlspecialchars($pay['payment_image']) ?>')" class="text-blue-800 hover:text-blue-900 font-bold inline-flex items-center gap-1 hover:underline cursor-pointer">
+    👁 View Slip
+</button>
                                                 <?php else: ?>
                                                     <span class="text-gray-400 italic">ပုံမရှိပါ</span>
                                                 <?php endif; ?>
@@ -192,7 +194,52 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </main>
     </div>
 
+    <!-- --- BLUR BACKDROP SLIP VIEW MODAL --- -->
+    <div id="slipModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-slate-900/40 backdrop-blur-md p-4 transition-all duration-300">
+        <div class="relative bg-white p-2 max-w-md w-full rounded-md shadow-2xl border border-slate-200 transform scale-95 transition-transform duration-300 flex flex-col">
+            <!-- Close Cross Button (✕) -->
+            <button type="button" onclick="closeSlipModal()" class="absolute -top-3 -right-3 bg-rose-600 hover:bg-rose-700 text-white w-7 h-7 flex items-center justify-center rounded-full shadow-md font-bold text-sm border border-rose-500 transition cursor-pointer z-50">
+                ✕
+            </button>
+            <!-- Slip Image Display -->
+            <div class="w-full overflow-hidden rounded bg-slate-100 flex items-center justify-center max-h-[80vh]">
+                <img id="modalImage" src="" alt="Payment Slip" class="max-w-full max-h-[75vh] object-contain">
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Modal ဖွင့်ရန် Function
+        function openSlipModal(imageSrc) {
+            const modal = document.getElementById('slipModal');
+            const modalImg = document.getElementById('modalImage');
+            
+            modalImg.src = imageSrc;
+            modal.classList.remove('hidden');
+            // Animation Dynamic Scale Smooth ဖြစ်စေရန်
+            setTimeout(() => {
+                modal.querySelector('.transform').classList.remove('scale-95');
+                modal.querySelector('.transform').classList.add('scale-100');
+            }, 10);
+        }
+
+        // Modal ပိတ်ရန် Function
+        function closeSlipModal() {
+            const modal = document.getElementById('slipModal');
+            modal.querySelector('.transform').classList.remove('scale-100');
+            modal.querySelector('.transform').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 150);
+        }
+
+        // Modal ရဲ့ Background (အပြင်ဘက်) ကို နှိပ်ရင်လည်း ပိတ်သွားစေရန်
+        document.getElementById('slipModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSlipModal();
+            }
+        });
+
         function toggleMobileMenu() {
             const sidebar = document.querySelector('aside');
             const overlay = document.getElementById('mobMenuOverlay');

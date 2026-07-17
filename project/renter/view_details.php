@@ -100,43 +100,39 @@ $is_available = (int)$details['is_available'] === 1;
 </head>
 <body class="bg-[#faf9f6] font-classic flex h-screen text-stone-800 overflow-hidden">
 
-
 <?php    include 'homepageheader.php'; ?>
-    <!-- Stable Sidebar Area -->
-    
-<div class="sm:hidden mb-4">
+    <div class="sm:hidden mb-4">
         <button onclick="toggleMobileMenu()" class="bg-[#292515] text-white text-xs font-serif px-3 py-2 shadow-sm border border-stone-700">
             ☰ Menu
         </button>
       </div>
-    <!-- Independent Scroll Main Content Area -->
     <div class="flex-1 h-full overflow-y-auto py-10 px-4">
         
         <div class="max-w-3xl mx-auto space-y-6">
             
-            <!-- Minimal Back Navigation Button -->
             <div>
                 <a href="javascript:history.back()" class="text-xs font-bold uppercase tracking-widest text-stone-500 hover:text-stone-950 transition-colors flex items-center gap-2">
                     ← Back / နောက်သို့
                 </a>
             </div>
 
-            <!-- Master Classic Structural Layout Container -->
             <div class="bg-white rounded-md shadow-sm border border-gray-200 overflow-hidden">
                 
-                <!-- IMAGE SLIDESHOW (CAROUSEL) SECTION -->
                 <div class="relative w-full h-[320px] md:h-[380px] bg-stone-100 group overflow-hidden border-b border-gray-200">
                     <?php if (!empty($images)): ?>
-                        <!-- Slides Container -->
                         <div id="slides-container" class="w-full h-full flex transition-transform duration-500 ease-out">
-                            <?php foreach ($images as $img_url): ?>
+                            <?php foreach ($images as $img_url): 
+                                // FIX: renter folder ထဲကနေ project/uploads/ ထဲကို တိုက်ရိုက်လှမ်းကြည့်နိုင်အောင်
+                                // database ထဲက '../uploads/' ကို '../uploads/' အစား '../uploads/' အတိုင်း ပြန်သုံးမည့်အစား 
+                                // လက်ရှိ folder (renter) ထဲကနေ အပေါ်ထွက်ပြီး uploads ကို လှမ်းကြည့်ရန် လမ်းကြောင်း ညှိပေးခြင်းဖြစ်သည်
+                                $renter_img_url = str_replace('../uploads/', '../uploads/', $img_url);
+                            ?>
                                 <div class="w-full h-full flex-shrink-0">
-                                    <img src="<?= htmlspecialchars($img_url) ?>" alt="Property Image" class="w-full h-full object-cover">
-                                </div>
+    <img src="<?= htmlspecialchars($renter_img_url) ?>" alt="Property Image" class="w-full h-full object-contain">
+</div>
                             <?php endforeach; ?>
                         </div>
 
-                        <!-- Classic Slide Controls -->
                         <button onclick="moveSlide(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 border border-gray-200 text-stone-900 w-10 h-10 rounded flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity font-mono text-sm focus:outline-none z-10 hover:bg-stone-50 shadow-sm">
                             PREV
                         </button>
@@ -144,12 +140,10 @@ $is_available = (int)$details['is_available'] === 1;
                             NEXT
                         </button>
 
-                        <!-- Minimal Corner Counter Indicators -->
                         <div class="absolute bottom-4 right-4 bg-stone-900/90 text-white font-mono text-[10px] tracking-widest px-2.5 py-1 rounded shadow-sm z-10 uppercase">
                             Gallery Slides
                         </div>
                         
-                        <!-- Dots Indicators -->
                         <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
                             <?php foreach ($images as $index => $img_url): ?>
                                 <button onclick="currentSlide(<?= $index ?>)" class="slide-dot w-2 h-2 rounded-full bg-stone-400/40 hover:bg-stone-800 transition-all focus:outline-none" data-slide="<?= $index ?>"></button>
@@ -162,7 +156,6 @@ $is_available = (int)$details['is_available'] === 1;
                     <?php endif; ?>
                 </div>
 
-                <!-- Premium Header Title Block -->
                 <div class="p-6 md:p-8 bg-stone-50 border-b border-gray-200 relative">
                     <div class="absolute top-6 right-6">
                         <?php if ($type_lower === 'apartment'): ?>
@@ -178,10 +171,8 @@ $is_available = (int)$details['is_available'] === 1;
                     </p>
                 </div>
 
-                <!-- Content Matrix Segment -->
                 <div class="p-6 md:p-8 space-y-8">
                     
-                    <!-- Pricing Metric Widgets -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="p-4 bg-stone-50 border border-gray-200 rounded-sm">
                             <span class="text-[10px] font-bold uppercase tracking-wider text-stone-400 block mb-1">လစဉ်ငှားရမ်းခ / Rent Price</span>
@@ -200,14 +191,13 @@ $is_available = (int)$details['is_available'] === 1;
                                     </span>
                                 <?php else: ?>
                                     <span class="inline-flex items-center text-[10px] font-bold uppercase tracking-wide border border-rose-300 text-rose-800 bg-rose-50 px-2.5 py-0.5 rounded-sm">
-                                        OCCUPIED / ငှားရမ်းပြီး
+                                        OCCUPIED / NgarrRannPyi
                                     </span>
                                 <?php endif; ?>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Reopen Warning Prompt -->
                     <?php if (!$is_available): ?>
                         <div class="p-4 bg-stone-50 border border-stone-200 rounded-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                             <div class="space-y-0.5">
@@ -222,7 +212,6 @@ $is_available = (int)$details['is_available'] === 1;
                         </div>
                     <?php endif; ?>
 
-                    <!-- Structural Specifications List -->
                     <div class="space-y-2">
                         <h3 class="text-xs font-bold text-stone-900 uppercase tracking-widest border-b border-gray-100 pb-1">📐 Specifications / အခန်းအသေးစိတ်</h3>
                         <div class="bg-white border border-gray-200 rounded-sm divide-y divide-gray-100">
@@ -237,7 +226,6 @@ $is_available = (int)$details['is_available'] === 1;
                         </div>
                     </div>
 
-                    <!-- Room Detailed Description -->
                     <?php if (!empty($details['description'])): ?>
                         <div class="space-y-2">
                             <h3 class="text-xs font-bold text-stone-900 uppercase tracking-widest border-b border-gray-100 pb-1">📝 Description / ဖော်ပြချက်</h3>
@@ -247,7 +235,6 @@ $is_available = (int)$details['is_available'] === 1;
                         </div>
                     <?php endif; ?>
 
-                    <!-- Amenities Collection Blocks -->
                     <div class="space-y-2">
                         <h3 class="text-xs font-bold text-stone-900 uppercase tracking-widest border-b border-gray-100 pb-1">✨ Amenities / ပါဝင်သော ဝန်ဆောင်မှုများ</h3>
                         <div class="flex flex-wrap gap-2 pt-1">
@@ -266,7 +253,6 @@ $is_available = (int)$details['is_available'] === 1;
                         </div>
                     </div>
 
-                    <!-- Footer Action Callout Box -->
                     <div class="pt-6 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div class="text-[10px] text-stone-400 uppercase tracking-wider font-medium">
                             * စာချုပ်သစ်ချုပ်ဆိုရန် လျှောက်ထားလွှာစာမျက်နှာသို့ ဆက်သွားမည်။
@@ -291,7 +277,6 @@ $is_available = (int)$details['is_available'] === 1;
         
     </div>
 
-    <!-- SLIDESHOW JAVASCRIPT -->
     <script>
         let currentSlideIndex = 0;
         const totalSlides = <?= count($images); ?>;
