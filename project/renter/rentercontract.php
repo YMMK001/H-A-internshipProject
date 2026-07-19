@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['unit'])) {
         $hostel_room_id = intval(str_replace('hostel_', '', $selected_unit));
     }
 
-    // 💡 FIX: Capture user-submitted dates directly from the form post array
+    // FIX: Capture user-submitted dates directly from the form post array
     $start_date = $_POST['start_date'] ?? null; 
     $end_date = $_POST['end_date'] ?? null; 
     
@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['unit'])) {
     $insert_stmt->bind_param("iiissd", $form_user_id, $apartment_id, $hostel_room_id, $start_date, $end_date, $total_deposit_amount);
     
     if ($insert_stmt->execute()) {
-        // ⭐ အသစ်ဝင်သွားတဲ့ Contract ရဲ့ ID ကို ယူခြင်း
+        // အသစ်ဝင်သွားတဲ့ Contract ရဲ့ ID ကို ယူခြင်း
         $new_contract_id = $conn->insert_id; 
 
         header("Location: installment_list.php?contract_id=" . $new_contract_id);
@@ -84,17 +84,25 @@ $target_id   = isset($_GET['item_id']) ? intval($_GET['item_id']) : null;
 $target_type = isset($_GET['type']) ? $_GET['type'] : null;
 $target_key  = ($target_id && $target_type) ? $target_type . "_" . $target_id : "";
 
-// 4. Fetch available Apartments joined with their parent Rental House info
-$apartments_query = "SELECT a.id, a.apartment_price, a.floor_level, a.max_occupy, a.deposit_amount, rh.title, rh.township, rh.amenities 
+// 4. Fetch available Apartments joined with their parent Rental House info & First Image
+$apartments_query = "SELECT a.id, a.apartment_price, a.floor_level, a.max_occupy, a.deposit_amount, rh.title, rh.township, rh.amenities, img.image_url 
                      FROM apartments a
                      JOIN rental_houses rh ON a.rental_house_id = rh.id
+                     LEFT JOIN (
+                         SELECT rental_house_id, image_url FROM rental_house_images 
+                         WHERE id IN (SELECT MIN(id) FROM rental_house_images GROUP BY rental_house_id)
+                     ) img ON rh.id = img.rental_house_id
                      WHERE a.is_available = 1";
 $apartments_result = $conn->query($apartments_query);
 
-// 5. Fetch available Hostel Rooms joined with their parent Rental House info
-$hostels_query = "SELECT h.id, h.monthly_price, h.room_num, h.room_type, h.sub_unit, h.deposit_amount, rh.title, rh.township, rh.amenities 
+// 5. Fetch available Hostel Rooms joined with their parent Rental House info & First Image
+$hostels_query = "SELECT h.id, h.monthly_price, h.room_num, h.room_type, h.sub_unit, h.deposit_amount, rh.title, rh.township, rh.amenities, img.image_url 
                   FROM hostel_rooms h
                   JOIN rental_houses rh ON h.rental_house_id = rh.id
+                  LEFT JOIN (
+                      SELECT rental_house_id, image_url FROM rental_house_images 
+                      WHERE id IN (SELECT MIN(id) FROM rental_house_images GROUP BY rental_house_id)
+                  ) img ON rh.id = img.rental_house_id
                   WHERE h.is_available = 1";
 $hostels_result = $conn->query($hostels_query);
 
@@ -112,7 +120,8 @@ if ($apartments_result && $apartments_result->num_rows > 0) {
             'occupy' => htmlspecialchars($row['max_occupy']) . " ဦး",
             'price' => number_format($row['apartment_price']) . " MMK",
             'deposit' => $row['deposit_amount'],
-            'amenities' => htmlspecialchars($row['amenities'] ?? 'None')
+            'amenities' => htmlspecialchars($row['amenities'] ?? 'None'),
+            'image_url' => $row['image_url'] ? htmlspecialchars($row['image_url']) : ''
         ];
     }
 }
@@ -129,7 +138,8 @@ if ($hostels_result && $hostels_result->num_rows > 0) {
             'occupy' => htmlspecialchars($row['sub_unit']),
             'price' => number_format($row['monthly_price']) . " MMK",
             'deposit' => $row['deposit_amount'],
-            'amenities' => htmlspecialchars($row['amenities'] ?? 'None')
+            'amenities' => htmlspecialchars($row['amenities'] ?? 'None'),
+            'image_url' => $row['image_url'] ? htmlspecialchars($row['image_url']) : ''
         ];
     }
 }
@@ -148,10 +158,11 @@ if ($hostels_result && $hostels_result->num_rows > 0) {
         .title-classic { font-family: 'Playfair Display', 'Noto Sans Myanmar', serif; }
     </style>
 </head>
-<body class="bg-[#faf9f6] font-classic flex h-screen text-gray-800 overflow-hidden">
+<body class="bg-[#faf9f6] font-classic flex flex-col h-screen text-gray-800 overflow-hidden">
 
-    <div class="flex-1 h-full max-w-3xl mx-auto py-10 px-4 space-y-8 overflow-y-auto">
-        
+            <?php include 'homepageheader.php';?>
+
+   <div class="flex-1 h-full w-full max-w-6xl mx-auto py-10 px-4 space-y-8 overflow-y-auto">
         <div class="bg-white border border-gray-200 rounded-md p-6 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div class="md:hidden mb-4">
                 <button onclick="toggleMobileMenu()" class="bg-[#292515] text-white text-xs font-serif px-3 py-2 shadow-sm border border-stone-700">
@@ -161,15 +172,6 @@ if ($hostels_result && $hostels_result->num_rows > 0) {
             <div>
                 <h1 class="text-xl font-bold tracking-tight text-slate-900 title-classic">THE RENTER PORTAL</h1>
                 <p class="text-[11px] uppercase tracking-wider text-gray-400 mt-1">စာချုပ်အသစ်တောင်းဆိုခြင်းနှင့် လခပေးချေမှုများကို တစ်နေရာတည်းတွင် ဆောင်ရွက်ပါ</p>
-            </div>
-            
-            <div class="flex bg-gray-100 p-1 border border-gray-200 rounded-md self-start md:self-auto text-xs font-medium">
-                <button id="tabContractBtn" class="px-4 py-1.5 bg-white text-slate-900 font-bold border border-gray-200 rounded shadow-sm transition-all">
-                    ✍️ စာချုပ်အသစ်တောင်းရန်
-                </button>
-                <button id="tabPaymentBtn" class="px-4 py-1.5 text-gray-500 hover:text-slate-900 transition-all">
-                    💵 လစဉ်လခပေးရန်
-                </button>
             </div>
         </div>
 
@@ -193,7 +195,7 @@ if ($hostels_result && $hostels_result->num_rows > 0) {
                 </div>
 
                 <div class="space-y-2">
-                    <h3 class="text-xs font-bold text-slate-900 uppercase tracking-widest border-b border-gray-100 pb-1">🏢 ၁။ Ngah ramy mard a hkan rway hcate ran</h3>
+                    <h3 class="text-xs font-bold text-slate-900 uppercase tracking-widest border-b border-gray-100 pb-1">🏢 ၁။ ငှားရမ်းမည့် အခန်းရွေးချယ်ရန်</h3>
                     <select id="unitSelector" name="unit" onchange="updatePreviewCard()" required class="w-full text-xs px-3 py-2.5 rounded-sm border border-gray-300 focus:outline-none focus:border-slate-500 bg-white text-gray-700 font-medium tracking-wide">
                       
                         <?php if (!empty($apartments_list)): ?>
@@ -224,12 +226,17 @@ if ($hostels_result && $hostels_result->num_rows > 0) {
                     </select>
                 </div>
 
+                <!-- 🖼 DYNAMIC UNIT PREVIEW CARD WITH IMAGE -->
                 <div class="bg-white border border-gray-200 rounded-md p-4 relative overflow-hidden shadow-sm">
                     <div class="absolute top-0 right-0 bg-slate-900 text-white text-[9px] font-bold px-2.5 py-0.5 rounded-bl uppercase tracking-wider">
                         Unit Preview
                     </div>
                     <div class="flex flex-col sm:flex-row gap-5">
-                        <div class="w-full sm:w-24 h-20 bg-stone-100 border border-gray-200 rounded flex items-center justify-center text-[11px] text-gray-400 shrink-0 font-medium uppercase tracking-wider">No Image</div>
+                        <!-- Image Element Container -->
+                        <div id="imagePreviewContainer" class="w-full sm:w-28 h-24 bg-stone-100 border border-gray-200 rounded overflow-hidden flex items-center justify-center shrink-0">
+                            <img id="previewImage" src="" alt="Property" class="w-full h-full object-cover hidden">
+                            <span id="noImageText" class="text-[10px] text-gray-400 uppercase tracking-wider font-medium">No Image</span>
+                        </div>
                         <div class="flex-1 space-y-1.5">
                             <h4 id="previewTitle" class="font-bold text-slate-800 text-sm tracking-tight">ပြင်ဆင်ပြီး တိုက်ခန်း/အဆောင်ခန်း</h4>
                             <p id="previewLocation" class="text-[11px] text-gray-400 uppercase tracking-wide">📍 တည်နေရာ ပြသရန်</p>
@@ -248,11 +255,11 @@ if ($hostels_result && $hostels_result->num_rows > 0) {
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-[11px] font-bold text-gray-500 mb-1">စတင်နေထိုင်မည့်ရက် (Start Date) *</label>
-                            <input type="date" name="start_date" required class="w-full text-xs px-3 py-2 rounded-sm border border-gray-300 focus:outline-none focus:border-slate-500 bg-white text-gray-700">
+                            <input type="date" name="start_date" min="<?php echo date('Y-m-d'); ?>" required class="w-full text-xs px-3 py-2 rounded-sm border border-gray-300 focus:outline-none focus:border-slate-500 bg-white text-gray-700">
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold text-gray-500 mb-1">စာချုပ်ကုန်ဆုံးမည့်ရက် (End Date) *</label>
-                            <input type="date" name="end_date" required class="w-full text-xs px-3 py-2 rounded-sm border border-gray-300 focus:outline-none focus:border-slate-500 bg-white text-gray-700">
+                            <input type="date" name="end_date" min="<?php echo date('Y-m-d'); ?>" required class="w-full text-xs px-3 py-2 rounded-sm border border-gray-300 focus:outline-none focus:border-slate-500 bg-white text-gray-700">
                         </div>
                         <div class="md:col-span-2">
                             <label class="block text-[11px] font-bold text-gray-500 mb-1">လွှဲအပ်မည့် စရန်ငွေပမာဏ (Total Deposit Amount) *</label>
@@ -260,8 +267,9 @@ if ($hostels_result && $hostels_result->num_rows > 0) {
                                 <input type="number" 
                                        id="total_deposit_input"
                                        name="total_deposit" 
+                                       readonly
                                        required 
-                                       class="w-full text-xs px-3 py-2.5 pl-14 rounded-sm border border-gray-300 focus:outline-none focus:border-slate-500 bg-stone-50 font-bold text-slate-900 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                       class="w-full text-xs px-3 py-2.5 pl-14 rounded-sm border border-gray-200 bg-stone-100 font-bold text-slate-700 select-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-[10px] font-bold select-none pointer-events-none">
                                     MMK
                                 </span>
@@ -280,27 +288,6 @@ if ($hostels_result && $hostels_result->num_rows > 0) {
     </div>
 
     <script>
-        function switchRenterTab(tabType) {
-            const contractTab = document.getElementById('contractTabContent');
-            const paymentTab = document.getElementById('paymentTabContent');
-            const contractBtn = document.getElementById('tabContractBtn');
-            const paymentBtn = document.getElementById('tabPaymentBtn');
-
-            if (tabType === 'contract') {
-                contractTab.classList.remove('hidden');
-                if(paymentTab) paymentTab.classList.add('hidden');
-                
-                contractBtn.className = "px-4 py-1.5 bg-white text-slate-900 font-bold border border-gray-200 rounded shadow-sm transition-all";
-                paymentBtn.className = "px-4 py-1.5 text-gray-500 hover:text-slate-900 transition-all";
-            } else {
-                contractTab.classList.add('hidden');
-                if(paymentTab) paymentTab.classList.remove('hidden');
-                
-                paymentBtn.className = "px-4 py-1.5 bg-white text-slate-900 font-bold border border-gray-200 rounded shadow-sm transition-all";
-                contractBtn.className = "px-4 py-1.5 text-gray-500 hover:text-slate-900 transition-all";
-            }
-        }
-
         const unitData = <?php echo json_encode($unit_metadata); ?>;
 
         function updatePreviewCard() {
@@ -316,6 +303,10 @@ if ($hostels_result && $hostels_result->num_rows > 0) {
             const pPrice     = document.getElementById('previewPrice');
             const pAmenities = document.getElementById('previewAmenities');
             const depositInput = document.getElementById('total_deposit_input');
+            
+            // Image Preview Elements
+            const pImage     = document.getElementById('previewImage');
+            const noImageText = document.getElementById('noImageText');
 
             if (unitData && unitData[selectedKey]) {
                 const data = unitData[selectedKey];
@@ -330,19 +321,42 @@ if ($hostels_result && $hostels_result->num_rows > 0) {
                 if (depositInput) {
                     depositInput.value = data.deposit ? data.deposit : 0;
                 }
+
+                // Handle Image Loading Dynamically
+                if (data.image_url && data.image_url !== "") {
+                    pImage.src = data.image_url;
+                    pImage.classList.remove('hidden');
+                    noImageText.classList.add('hidden');
+                } else {
+                    pImage.src = "";
+                    pImage.classList.add('hidden');
+                    noImageText.classList.remove('hidden');
+                }
             }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const preselectedUnit = urlParams.get('select_unit');
+            const targetId = urlParams.get('item_id');
+            const targetType = urlParams.get('type');
+            const selector = document.getElementById('unitSelector');
 
-            if (preselectedUnit) {
-                const selector = document.getElementById('unitSelector');
-                if (selector) {
-                    selector.value = preselectedUnit;
+            if (selector) {
+                if (targetId && targetType) {
+                    // URL parameter ပါလာပါက ၎င်းတန်ဖိုးကို select လုပ်သည်
+                    const generatedKey = targetType + "_" + targetId;
+                    selector.value = generatedKey;
+                    
+                    // Fallback: အကယ်၍ matched မဖြစ်ဘဲ တန်ဖိုးလွတ်နေပါက ပထမဆုံး option ကို auto ရွေးရန်
+                    if (selector.selectedIndex === -1) {
+                        selector.selectedIndex = 0;
+                    }
+                } else {
+                    // URL parameter မပါလာပါက ပထမဦးဆုံး option ကို auto ရွေးချယ်ပေးထားရန်
+                    selector.selectedIndex = 0;
                 }
             }
+            // ရွေးချယ်ပြီးသား data ဖြင့် Preview Card ကို ချက်ချင်း Update ပြုလုပ်ရန်
             updatePreviewCard();
         });
     </script>
@@ -351,14 +365,14 @@ if ($hostels_result && $hostels_result->num_rows > 0) {
           const sidebar = document.getElementById('tenantSidebar');
           const overlay = document.getElementById('mobMenuOverlay');
           
-          if (sidebar.classList.contains('-translate-x-full')) {
+          if (sidebar && sidebar.classList.contains('-translate-x-full')) {
               sidebar.classList.remove('-translate-x-full');
               sidebar.classList.add('translate-x-0');
-              overlay.classList.remove('hidden');
-          } else {
+              if(overlay) overlay.classList.remove('hidden');
+          } else if(sidebar) {
               sidebar.classList.remove('translate-x-0');
               sidebar.classList.add('-translate-x-full');
-              overlay.classList.add('hidden');
+              if(overlay) overlay.classList.add('hidden');
           }
       }
   </script>

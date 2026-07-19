@@ -124,7 +124,7 @@ if (isset($_SESSION['user_id'])) {
     <!-- Dropdown Mobile Context Menu -->
     <div id="mobileMenu" class="hidden md:hidden bg-[#242114] border-t border-stone-800 font-serif-classic text-sm">
       <div class="px-2 pt-2 pb-4 space-y-1">
-        <a href="renterdashboard.php" class="block px-3 py-2.5 text-white bg-stone-900/40 font-medium">Overview</a>
+        <a href="renterdashboard.php" class="block px-3 py-2.5 text-white bg-stone-900/40 font-medium">History</a>
        
         <a href="renter_contract.php" class="block px-3 py-2.5 text-stone-200 hover:bg-stone-900/40">Contracts</a>
         <?php if ($active_contract_id): ?>

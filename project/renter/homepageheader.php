@@ -4,11 +4,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// ၂။ Null Parameter အမှားများမတက်စေရန် Session Username အား စစ်ဆေးပြင်ဆင်ခြင်း
-if (!isset($_SESSION['username'])) {
-    $_SESSION['username'] = "Renter";
-}
-
 // ၃။ DATABASE CONFIGURATION & CONNECTION (PDO)
 $host     = 'localhost';
 $db_name  = 'intern_test';
@@ -124,7 +119,7 @@ $hostels    = array_filter($properties, function($item) { return $item['type'] =
 </head>
 <body class="bg-[#fcfbf9] font-classic h-screen overflow-hidden flex text-gray-800">
 
-<div class="flex-1 flex flex-col h-screen overflow-y-auto">
+
     
     <!-- Top Navigation Menu containing working Search Filters & Home controls -->
     <nav class="bg-white border-b border-stone-200 sticky top-0 z-50 shadow-sm">
@@ -148,19 +143,34 @@ $hostels    = array_filter($properties, function($item) { return $item['type'] =
                     </select>
                 </div>
 
-                
-                <div class="bg-white border border-stone-200 text-xs px-2 py-1.5 rounded outline-none cursor-pointer focus:border-blue-900"><a href="renterhomepage.php" class="hover:text-blue-800 transition-colors">Home</a></div>
+                <div class="bg-white border border-stone-200 text-xs px-2 py-1.5 rounded outline-none cursor-pointer focus:border-blue-900">
+                    <a href="renterhomepage.php" class="hover:text-blue-800 transition-colors">Home</a>
+                </div>
 
-                <!-- Interface View Switches & Auth Links -->
+                <!-- Interface View Switches & Dynamic Auth Links -->
                 <div class="flex items-center gap-4">
                     <div class="flex items-center gap-1 bg-stone-100 p-1 border border-stone-200 rounded">
                         <button id="cardViewBtn" onclick="switchView('card')" class="px-3 py-1 bg-white text-slate-900 font-medium rounded text-[11px] shadow-sm transition-all">Card</button>
                         <button id="tableViewBtn" onclick="switchView('table')" class="px-3 py-1 text-stone-500 hover:text-slate-900 font-medium rounded text-[11px] transition-all">Table</button>
                     </div>
+                    
                     <div class="hidden sm:flex items-center gap-4 border-l border-stone-200 pl-4">
-                        <a href="register.php" class="text-xs font-medium text-stone-600 hover:text-blue-900 hover:underline transition-all">Register</a>
-                        <!-- Sign In from Header passes 'homepage' redirect query -->
-                        <a href="../admin/login.php?redirect=homepage" class="px-4 py-1.5 text-xs font-serif font-medium text-amber-100 bg-blue-900 hover:bg-blue-950 border border-amber-700 shadow-sm transition-all">Sign In</a>
+                        <?php if (isset($_SESSION['user_id']) && isset($_SESSION['username'])): ?>
+                            <!-- အကောင့်ဝင်ရောက်ထားချိန်တွင် Renter Profile နှင့် Logout အား ပြသပေးမည့် နေရာ -->
+                            <div class="flex items-center gap-3">
+                                <div class="flex flex-col items-end">
+                                     <span class="text-xs font-bold text-slate-800"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                                </div>
+                                <div class="h-8 w-8 rounded-full bg-stone-200 border border-stone-300 flex items-center justify-center text-slate-600 font-bold text-xs uppercase shadow-sm">
+                                    <?php echo mb_substr(htmlspecialchars($_SESSION['username']), 0, 1, "UTF-8"); ?>
+                                </div>
+                                <a href="../auth/logout.php" class="text-xs font-medium text-red-600 hover:text-red-800 hover:underline pl-1 transition-all">Logout</a>
+                            </div>
+                        <?php else: ?>
+                            <!-- အကောင့်မဝင်ရသေးပါက Register နှင့် Sign In ကို ပုံမှန်အတိုင်း ပြသပေးမည် -->
+                            <a href="register.php" class="text-xs font-medium text-stone-600 hover:text-blue-900 hover:underline transition-all">Register</a>
+                            <a href="../admin/login.php?redirect=homepage" class="px-4 py-1.5 text-xs font-serif font-medium text-amber-100 bg-blue-900 hover:bg-blue-950 border border-amber-700 shadow-sm transition-all">Sign In</a>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -168,7 +178,16 @@ $hostels    = array_filter($properties, function($item) { return $item['type'] =
         </div>
     </nav>
 
+    <!-- UI/Content sections remain stable below -->
 
 
-
-    
+<script>
+    // View state switches and filtering log
+    function switchView(type) {
+        console.log("Switching view to " + type);
+    }
+    function filterByCity() { }
+    function filterProperties() { }
+</script>
+</body>
+</html>

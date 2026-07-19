@@ -98,7 +98,7 @@ $is_available = (int)$details['is_available'] === 1;
         .title-classic { font-family: 'Playfair Display', 'Noto Sans Myanmar', serif; }
     </style>
 </head>
-<body class="bg-[#faf9f6] font-classic flex h-screen text-stone-800 overflow-hidden">
+<body class="bg-[#faf9f6] font-classic flex flex-col h-screen text-stone-800 overflow-hidden">
 
 <?php    include 'homepageheader.php'; ?>
     <div class="sm:hidden mb-4">
@@ -259,7 +259,7 @@ $is_available = (int)$details['is_available'] === 1;
                         </div>
                         <div>
                             <?php if ($is_available): ?>
-                                <a href="apply_contract.php?select_unit=<?= $type_lower ?>_<?= $item_id ?>" 
+                                <a href="rentercontract.php?select_unit=<?= $type_lower ?>_<?= $item_id ?>" 
                                    class="bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs px-6 py-3 rounded-sm uppercase tracking-wider transition-all shadow-sm inline-block text-center">
                                     🚀 Apply Contract / စာချုပ်စတင်လျှောက်ထားမည်
                                 </a>

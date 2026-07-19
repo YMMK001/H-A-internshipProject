@@ -101,6 +101,19 @@ foreach ($method_data as $row) {
     $methods[] = $row['method_name'];
     $method_shares[] = (float)$row['method_total'];
 }
+
+// 7. Data Processing: Calculate Average Pricing Comparison (Apartment vs Hostel)
+$apt_prices = [];
+$hostel_prices = [];
+foreach ($rentals as $row) {
+    if ($row['type'] === 'Apartment') {
+        $apt_prices[] = (float)$row['price'];
+    } else {
+        $hostel_prices[] = (float)$row['price'];
+    }
+}
+$avg_apt = count($apt_prices) > 0 ? array_sum($apt_prices) / count($apt_prices) : 0;
+$avg_hostel = count($hostel_prices) > 0 ? array_sum($hostel_prices) / count($hostel_prices) : 0;
 ?>
 
 <!DOCTYPE html>
@@ -186,23 +199,57 @@ foreach ($method_data as $row) {
 
                     <!-- CLASSIC DUAL-CHART BLOCK COMPONENT -->
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 font-sans">
-                        <!-- Line Chart: Revenue over time -->
-                        <div class="bg-white border border-gray-300 shadow-sm p-4 lg:col-span-2">
-                            <div class="border-b border-gray-200 pb-2 mb-4">
-                                <h3 class="text-xs uppercase font-bold tracking-wider text-gray-600">Revenue Performance Over Time</h3>
-                            </div>
-                            <div class="w-full relative h-[250px]">
+                        <!-- Revenue Timeline Chart -->
+                        <div class="bg-white p-4 border border-gray-300 shadow-sm lg:col-span-2">
+                            <h3 class="text-sm font-bold uppercase text-gray-700 mb-4 tracking-wide">Revenue Collection Timeline</h3>
+                            <div class="h-64 relative">
                                 <canvas id="revenueTimelineChart"></canvas>
                             </div>
                         </div>
 
-                        <!-- Donut Chart: Payment Methods Distribution -->
-                        <div class="bg-white border border-gray-300 shadow-sm p-4">
-                            <div class="border-b border-gray-200 pb-2 mb-4">
-                                <h3 class="text-xs uppercase font-bold tracking-wider text-gray-600">Payment Gateway Distribution</h3>
-                            </div>
-                            <div class="w-full relative h-[250px] flex items-center justify-center">
+                        <!-- Payment Gateways Share -->
+                        <div class="bg-white p-4 border border-gray-300 shadow-sm">
+                            <h3 class="text-sm font-bold uppercase text-gray-700 mb-4 tracking-wide">Payment Gateways Share</h3>
+                            <div class="h-64 relative">
                                 <canvas id="paymentMethodChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PRICE COMPARISON BLOCK COMPONENT -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 font-sans">
+                        <!-- Visual Rent Comparison Chart -->
+                        <div class="bg-white p-4 border border-gray-300 shadow-sm lg:col-span-2">
+                            <h3 class="text-sm font-bold uppercase text-gray-700 mb-4 tracking-wide">Rental Rates Comparison (Average Market Price)</h3>
+                            <div class="h-64 relative">
+                                <canvas id="rentComparisonChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Data Insights Summary Panel -->
+                        <div class="bg-white p-5 border border-gray-300 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-sm font-bold uppercase text-gray-700 mb-4 tracking-wide">Pricing Comparison Summary</h3>
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center border-b pb-2 border-gray-100">
+                                        <span class="text-xs font-semibold text-blue-900 uppercase tracking-wider px-2 py-0.5 border border-blue-200 bg-blue-50">Avg Apartment</span>
+                                        <span class="font-bold text-gray-900 text-sm"><?= number_format($avg_apt) ?> MMK</span>
+                                    </div>
+                                    <div class="flex justify-between items-center border-b pb-2 border-gray-100">
+                                        <span class="text-xs font-semibold text-purple-900 uppercase tracking-wider px-2 py-0.5 border border-purple-200 bg-purple-50">Avg Hostel Room</span>
+                                        <span class="font-bold text-gray-900 text-sm"><?= number_format($avg_hostel) ?> MMK</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-50 p-3 border border-gray-200 mt-4">
+                                <p class="text-[11px] text-gray-600 leading-relaxed">
+                                    <strong>Insight:</strong> 
+                                    <?php if ($avg_apt > $avg_hostel): ?>
+                                        Apartments are on average <strong><?= number_format($avg_apt - $avg_hostel) ?> MMK</strong> more expensive per month than hostel units.
+                                    <?php else: ?>
+                                        Hostel rooms are on average <strong><?= number_format($avg_hostel - $avg_apt) ?> MMK</strong> more expensive per month than apartment units.
+                                    <?php endif; ?>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -271,76 +318,130 @@ foreach ($method_data as $row) {
     <!-- Charts Engine Implementation Scripts -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            
-            // --- Line Chart Configuration (Revenue Timeline) ---
-            const timelineCtx = document.getElementById('revenueTimelineChart').getContext('2d');
-            const timelineLabels = <?php echo json_encode($months); ?>;
-            const timelineData = <?php echo json_encode($revenues); ?>;
+            if (typeof Chart === 'undefined') {
+                console.error("Chart.js failed to load. Check your internet connection or CDN link.");
+                return;
+            }
 
-            new Chart(timelineCtx, {
-                type: 'line',
-                data: {
-                    labels: timelineLabels.length ? timelineLabels : ["No Data"],
-                    datasets: [{
-                        label: 'Monthly Payments Received',
-                        data: timelineData.length ? timelineData : [0],
-                        borderColor: '#1e293b', 
-                        backgroundColor: 'rgba(30, 41, 59, 0.05)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.2,
-                        pointBackgroundColor: '#0f172a'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: {
-                            grid: { color: '#f3f4f6' },
-                            ticks: {
-                                font: { size: 10 },
-                                callback: value => value.toLocaleString() + ' MMK'
-                            }
-                        },
-                        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
-                    }
-                }
-            });
+            try {
+                // --- Line Chart Configuration (Revenue Timeline) ---
+                const timelineCtx = document.getElementById('revenueTimelineChart');
+                const timelineLabels = <?php echo json_encode(!empty($months) ? $months : ["No Data"]); ?>;
+                const timelineData = <?php echo json_encode(!empty($revenues) ? $revenues : [0]); ?>;
 
-            // --- Donut Chart Configuration (Payment Gateways) ---
-            const methodCtx = document.getElementById('paymentMethodChart').getContext('2d');
-            const methodLabels = <?php echo json_encode($methods); ?>;
-            const methodData = <?php echo json_encode($method_shares); ?>;
-
-            new Chart(methodCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: methodLabels.length ? methodLabels : ["No Records"],
-                    datasets: [{
-                        data: methodData.length ? methodData : [1],
-                        backgroundColor: [
-                            '#1e293b', 
-                            '#0f766e', 
-                            '#b45309', 
-                            '#4338ca'  
-                        ],
-                        borderWidth: 2,
-                        borderColor: '#ffffff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { font: { size: 10 }, boxWidth: 10 }
+                new Chart(timelineCtx, {
+                    type: 'line',
+                    data: {
+                        labels: timelineLabels,
+                        datasets: [{
+                            label: 'Monthly Payments Received',
+                            data: timelineData,
+                            borderColor: '#1e293b', 
+                            backgroundColor: 'rgba(30, 41, 59, 0.05)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.2,
+                            pointBackgroundColor: '#0f172a'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: {
+                                grid: { color: '#f3f4f6' },
+                                ticks: {
+                                    font: { size: 10 },
+                                    callback: function(value) {
+                                        return Number(value).toLocaleString() + ' MMK';
+                                    }
+                                }
+                            },
+                            x: { grid: { display: false }, ticks: { font: { size: 10 } } }
                         }
                     }
-                }
-            });
+                });
+            } catch (e) {
+                console.error("Error rendering Timeline Chart:", e);
+            }
+
+            try {
+                // --- Donut Chart Configuration (Payment Gateways) ---
+                const methodCtx = document.getElementById('paymentMethodChart');
+                const methodLabels = <?php echo json_encode(!empty($methods) ? $methods : ["No Records"]); ?>;
+                const methodData = <?php echo json_encode(!empty($method_shares) ? $method_shares : [1]); ?>;
+
+                new Chart(methodCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: methodLabels,
+                        datasets: [{
+                            data: methodData,
+                            backgroundColor: [
+                                '#1e293b', 
+                                '#0f766e', 
+                                '#b45309', 
+                                '#4338ca'  
+                            ],
+                            borderWidth: 2,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { font: { size: 10 }, boxWidth: 10 }
+                            }
+                        }
+                    }
+                });
+            } catch (e) {
+                console.error("Error rendering Payment Method Chart:", e);
+            }
+
+            try {
+                // --- Bar Chart Configuration (Apartment vs Hostel Price Comparison) ---
+                const rentCtx = document.getElementById('rentComparisonChart');
+                const avgApt = <?php echo (float)$avg_apt; ?>;
+                const avgHostel = <?php echo (float)$avg_hostel; ?>;
+
+                new Chart(rentCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Apartment', 'Hostel Room'],
+                        datasets: [{
+                            data: [avgApt, avgHostel],
+                            backgroundColor: ['#2563eb', '#8b5cf6'],
+                            borderWidth: 0,
+                            borderRadius: 4,
+                            barThickness: 60
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: {
+                                grid: { color: '#f3f4f6' },
+                                ticks: {
+                                    font: { size: 10 },
+                                    callback: function(value) {
+                                        return Number(value).toLocaleString() + ' MMK';
+                                    }
+                                }
+                            },
+                            x: { grid: { display: false }, ticks: { font: { size: 11, weight: 'bold' } } }
+                        }
+                    }
+                });
+            } catch (e) {
+                console.error("Error rendering Rent Comparison Chart:", e);
+            }
         });
 
         function toggleMobileMenu() {

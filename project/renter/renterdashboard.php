@@ -76,7 +76,7 @@ try {
             <div class="flex items-center space-x-8">
                 <div class="text-xl font-serif text-amber-500 font-bold tracking-wider">Rental<span class="text-white">Hub</span></div>
                 <nav class="hidden md:flex space-x-6 text-sm font-medium tracking-wide text-stone-300">
-                    <a href="#" class="text-white border-b-2 border-amber-500 pb-1">Overview</a>
+                    <a href="#" class="text-white border-b-2 border-amber-500 pb-1">History</a>
                     <a href="renter_contract.php" class="hover:text-white transition">Lease Agreements</a>
                     <a href="payment_history.php" class="hover:text-white transition">Payment Ledgers</a>
                 </nav>
@@ -123,7 +123,7 @@ try {
             </div>
             <div>
                 <p class="text-[10px] uppercase font-bold tracking-wider text-stone-400 leading-none">Resident Token</p>
-                <p class="text-xs font-mono font-bold text-stone-700 mt-1">ID: #<?= htmlspecialchars($renter_id) ?></p>
+                <p class="text-xs font-mono font-bold text-stone-700 mt-1">ID: #<?= htmlspecialchars((string)($renter_id ?? '')) ?></p>
             </div>
         </div>
     </div>
@@ -146,8 +146,15 @@ try {
                     <?php 
                         $is_apartment = !empty($row['apartment_id']);
                         $type_badge = $is_apartment ? 'Apartment' : 'Hostel Room';
-                        $price = $is_apartment ? $row['apartment_price'] : $row['monthly_price'];
-                        $unit_detail = $is_apartment ? "Floor: " . $row['floor_level'] : "Room No: " . $row['room_num'] . " (" . $row['room_type'] . ")";
+                        $price = $is_apartment ? ($row['apartment_price'] ?? 0) : ($row['monthly_price'] ?? 0);
+                        
+                        if ($is_apartment) {
+                            $unit_detail = "Floor: " . ($row['floor_level'] ?? 'N/A');
+                        } else {
+                            $room_num = $row['room_num'] ?? 'N/A';
+                            $room_type = $row['room_type'] ?? 'N/A';
+                            $unit_detail = "Room No: " . $room_num . " (" . $room_type . ")";
+                        }
                     ?>
                     
                     <!-- Classic Property Card Container wrapper -->
@@ -160,11 +167,11 @@ try {
                                     <?= $is_apartment ? 'border-blue-200 text-blue-800 bg-blue-50/40' : 'border-stone-300 text-stone-700 bg-stone-100' ?>">
                                     <?= $type_badge ?>
                                 </span>
-                                <h3 class="font-bold text-stone-900 text-base line-clamp-1 tracking-tight title-classic uppercase"><?= htmlspecialchars($row['house_title']) ?></h3>
+                                <h3 class="font-bold text-stone-900 text-base line-clamp-1 tracking-tight title-classic uppercase"><?= htmlspecialchars($row['house_title'] ?? 'Untitled Property') ?></h3>
                             </div>
                             <div class="text-right flex-shrink-0">
                                 <span class="text-[9px] uppercase tracking-wider text-stone-400 block font-bold">Monthly Rent</span>
-                                <span class="text-base font-bold text-stone-900"><?= number_format($price) ?> <span class="text-[10px] font-medium text-stone-400">MMK</span></span>
+                                <span class="text-base font-bold text-stone-900"><?= number_format((float)$price) ?> <span class="text-[10px] font-medium text-stone-400">MMK</span></span>
                             </div>
                         </div>
 
@@ -174,8 +181,8 @@ try {
                             <div class="flex items-start gap-3 text-stone-600">
                                 <span class="text-stone-400 text-sm mt-0.5">📍</span>
                                 <div>
-                                    <p class="font-bold text-stone-800 uppercase tracking-wide text-[11px]"><?= htmlspecialchars($row['township']) . ", " . htmlspecialchars($row['city']) ?></p>
-                                    <p class="text-stone-400 mt-1 leading-relaxed"><?= htmlspecialchars($row['full_address']) ?></p>
+                                    <p class="font-bold text-stone-800 uppercase tracking-wide text-[11px]"><?= htmlspecialchars($row['township'] ?? 'Unknown Township') . ", " . htmlspecialchars($row['city'] ?? 'Unknown City') ?></p>
+                                    <p class="text-stone-400 mt-1 leading-relaxed"><?= htmlspecialchars($row['full_address'] ?? 'No address provided') ?></p>
                                 </div>
                             </div>
 
@@ -190,14 +197,14 @@ try {
                                 <div>
                                     <span class="block text-[10px] uppercase tracking-wider text-stone-400 font-bold mb-1">Lease Term</span>
                                     <div class="font-medium text-stone-800 space-y-0.5">
-                                        <p><span class="text-stone-400 font-normal">From:</span> <?= date('d-M-Y', strtotime($row['start_date'])) ?></p>
-                                        <p><span class="text-stone-400 font-normal">To:</span> <?= date('d-M-Y', strtotime($row['end_date'])) ?></p>
+                                        <p><span class="text-stone-400 font-normal">From:</span> <?= !empty($row['start_date']) ? date('d-M-Y', strtotime($row['start_date'])) : 'N/A' ?></p>
+                                        <p><span class="text-stone-400 font-normal">To:</span> <?= !empty($row['end_date']) ? date('d-M-Y', strtotime($row['end_date'])) : 'N/A' ?></p>
                                     </div>
                                 </div>
                                 <div class="border-l border-stone-100 pl-4">
                                     <span class="block text-[10px] uppercase tracking-wider text-stone-400 font-bold mb-1">Security Deposit</span>
                                     <span class="font-bold text-stone-900 text-sm block mt-1">
-                                        <?= number_format($row['total_deposit_amount']) ?> <span class="text-[9px] text-stone-400">MMK</span>
+                                        <?= number_format((float)($row['total_deposit_amount'] ?? 0)) ?> <span class="text-[9px] text-stone-400">MMK</span>
                                     </span>
                                 </div>
                             </div>
