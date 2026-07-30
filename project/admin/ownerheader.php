@@ -22,7 +22,7 @@
 
                     <div class="w-2.5 h-6 bg-blue-500 hidden md:block"></div>
                     <div>
-                        <h2 class="font-bold text-base tracking-wider uppercase text-white font-serif">PROPERTY ADMIN</h2>
+                        <h2 class="font-bold text-base tracking-wider uppercase text-white font-serif">ADMIN DASHBOARD</h2>
                         <span class="text-[11px] uppercase tracking-widest text-slate-400 block font-sans">Management Portal</span>    
                     </div>
                 </div>
@@ -47,12 +47,12 @@
                 
                 <a href="view_renter.php" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-900 border-l-4 border-transparent rounded-none transition-all">
                     <i class="fa-solid fa-users text-slate-500 w-4 text-center text-sm"></i> 
-                    <span>Renters (အိမ်ငှားများ)</span>
+                    <span>Renters </span>
                 </a>
                 
                 <a href="admin_payment.php" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-900 border-l-4 border-transparent rounded-none transition-all">
                     <i class="fa-solid fa-credit-card text-slate-500 w-4 text-center text-sm"></i> 
-                    <span>Payments (ငွေစာရင်း)</span>
+                    <span>Payments </span>
                 </a>
                 
                 <a href="add_paymentmethod.php" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-900 border-l-4 border-transparent rounded-none transition-all">
@@ -61,11 +61,12 @@
                 </a>
             </nav>
 
-            <div class="border-t border-slate-800 pt-4 items-center justify-between text-xs tracking-wider font-semibold uppercase mt-auto">
-                <a href="../renter/renterhomepage.php" class="w-full flex items-center justify-center gap-2 text-rose-400 hover:text-white hover:bg-rose-950/40 border border-slate-800 hover:border-rose-900 py-2 transition-all">
-                    <i class="fa-solid fa-sign-out-alt"></i> Log Out
-                </a>
-            </div>
+            <!-- Replace this section at the bottom of your <aside> navigation -->
+<div class="border-t border-slate-800 pt-4 items-center justify-between text-xs tracking-wider font-semibold uppercase mt-auto">
+    <a href="../auth/logout.php" class="w-full flex items-center justify-center gap-2 text-rose-400 hover:text-white hover:bg-rose-950/40 border border-slate-800 hover:border-rose-900 py-2 transition-all">
+        <i class="fa-solid fa-sign-out-alt"></i> Log Out
+    </a>
+</div>
            
         </aside>
 

@@ -278,7 +278,10 @@ if ($hostels_result && $hostels_result->num_rows > 0) {
                     </div>
                 </div>
 
-                <div class="flex justify-end pt-4 border-t border-gray-100">
+                <div class="flex justify-end pt-4 border-t gap-2 border-gray-100">
+                    <a href="renterhomepage.php" class="bg-gray-100 hover:bg-slate-900 hover:text-gray-200 text-gray-700 font-semibold text-xs uppercase tracking-wider px-4 py-2.5 border border-gray-300 rounded transition-colors">
+                            Cancel
+                        </a>
                     <button type="submit" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-6 py-3 rounded-sm uppercase tracking-wider transition-all shadow-sm">
                         🚀 စာချုပ်တောင်းဆိုချက် ပေးပို့မည်
                     </button>

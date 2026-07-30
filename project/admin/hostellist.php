@@ -123,8 +123,9 @@ $rentals = $stmt->fetchAll();
                             ☰ Menu
                         </button>
                         <div class="hidden sm:flex items-center space-x-2 text-xs text-gray-500">
-                            <span class="text-gray-900 font-bold text-2xl">Rental House</span>
+                            <span class="text-gray-900 font-bold text-3xl">Rental House</span>
                         </div>
+                        
                     </div>
 
                     <div class="flex items-center space-x-4 divide-x divide-gray-200">

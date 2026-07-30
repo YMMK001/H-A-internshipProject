@@ -106,7 +106,7 @@ if (empty($payments)) {
     <title>Contract Payments Details</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 font-sans min-h-screen flex">
+<body class="bg-gray-50 font-sans min-h-screen flex overflow-hidden">
 
     <?php include 'ownerheader.php'; ?>
 
@@ -147,29 +147,29 @@ if (empty($payments)) {
             </div>
 
             <?php if (!$room_info): ?>
-                <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg p-6 text-center">
-                    Contract record #<?= $contract_id ?> not found in system database.
+                <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg p-4 text-center">
+                    Contract record #<?= htmlspecialchars((string)$contract_id) ?> not found in system database.
                 </div>
             <?php else: ?>
 
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-4 mb-4 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div>
                         <div class="flex items-center gap-3">
-                            <h1 class="text-2xl font-bold text-gray-900"><?= htmlspecialchars($room_info['property_title']) ?></h1>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold <?= $room_info['rental_type'] === 'Apartment' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-blue-50 text-blue-700 border border-blue-200' ?>">
-                                <?= htmlspecialchars($room_info['rental_type']) ?>
+                            <h1 class="text-2xl font-bold text-gray-900"><?= htmlspecialchars($room_info['property_title'] ?? '') ?></h1>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold <?= ($room_info['rental_type'] ?? '') === 'Apartment' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-blue-50 text-blue-700 border border-blue-200' ?>">
+                                <?= htmlspecialchars($room_info['rental_type'] ?? '') ?>
                             </span>
                         </div>
-                        <p class="text-sm text-gray-500 mt-1"><?= htmlspecialchars($room_info['unit_details']) ?></p>
+                        <p class="text-sm text-gray-500 mt-1"><?= htmlspecialchars($room_info['unit_details'] ?? '') ?></p>
                         <div class="mt-4 text-xs text-gray-400 space-y-1">
-                            <div><strong class="text-gray-600 font-medium">Tenant:</strong> <?= htmlspecialchars($room_info['tenant_name']) ?></div>
+                            <div><strong class="text-gray-600 font-medium">Renter:</strong> <?= htmlspecialchars($room_info['tenant_name'] ?? '') ?></div>
                             <div><strong class="text-gray-600 font-medium">Lease Period:</strong> <?= date('d M Y', strtotime($room_info['start_date'])) ?> to <?= date('d M Y', strtotime($room_info['end_date'])) ?></div>
                         </div>
                     </div>
                     
                     <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 flex flex-col justify-center min-w-[200px]">
                         <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider">Contract ID</span>
-                        <span class="text-3xl font-black text-slate-800">#<?= htmlspecialchars($room_info['contract_id']) ?></span>
+                        <span class="text-3xl font-black text-slate-800">#<?= htmlspecialchars($room_info['contract_id'] ?? '') ?></span>
                     </div>
                 </div>
 
@@ -177,7 +177,7 @@ if (empty($payments)) {
                     <div class="border-b border-gray-100 px-6 py-4">
                         <h2 class="font-bold text-gray-800">Payment Transaction Logs</h2>
                     </div>
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto overflow-y-auto max-h-[360px]">
                         <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="bg-gray-50 border-b border-gray-200 text-xs font-semibold uppercase tracking-wider text-gray-500">
@@ -223,9 +223,9 @@ if (empty($payments)) {
                                             </td>
                                             <td class="py-4 px-6 text-center">
                                                 <?php if (!empty($payment['payment_image'])): ?>
-                                                    <a href="<?= htmlspecialchars($payment['payment_image']) ?>" target="_blank" class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-800 hover:underline">
-                                                        View Receipt
-                                                    </a>
+                                                    <button type="button" onclick="openSlipModal('uploads/<?= htmlspecialchars($payment['payment_image']) ?>')" class="text-blue-800 hover:text-blue-900 font-bold inline-flex items-center gap-1 hover:underline cursor-pointer">
+                                                        👁 View Receipt
+                                                    </button>
                                                 <?php else: ?>
                                                     <span class="text-xs text-gray-400 italic">No attachment</span>
                                                 <?php endif; ?>
@@ -239,5 +239,53 @@ if (empty($payments)) {
                 </div>
             <?php endif; ?>
 
-        </div> </div> </body>
+        </div>
+    </div> 
+
+    <!-- Receipt Image Modal -->
+    <div id="slipModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-all">
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-lg w-full transform scale-95 transition-all duration-200">
+            <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+                <h3 class="font-bold text-gray-800">Payment Receipt</h3>
+                <button onclick="closeSlipModal()" class="text-gray-400 hover:text-gray-600 font-bold text-lg leading-none">&times;</button>
+            </div>
+            <div class="p-4 flex justify-center bg-gray-50">
+                <img id="modalImage" src="" alt="Payment Receipt" class="max-h-[70vh] object-contain rounded-lg shadow">
+            </div>
+            <div class="px-5 py-3 bg-white border-t border-gray-100 text-right">
+                <button onclick="closeSlipModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white font-medium text-xs rounded-lg transition">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openSlipModal(imageSrc) {
+            const modal = document.getElementById('slipModal');
+            const modalImg = document.getElementById('modalImage');
+            
+            modalImg.src = imageSrc;
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.querySelector('.transform').classList.remove('scale-95');
+                modal.querySelector('.transform').classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeSlipModal() {
+            const modal = document.getElementById('slipModal');
+            modal.querySelector('.transform').classList.remove('scale-100');
+            modal.querySelector('.transform').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 150);
+        }
+
+        document.getElementById('slipModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSlipModal();
+            }
+        });
+    </script>
+    
+</body>
 </html>

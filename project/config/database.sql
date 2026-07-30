@@ -62,11 +62,12 @@ CREATE TABLE `installments`(
     `due_date` DATE NOT NULL,
     `status` ENUM('unpaid', 'partially_paid', 'paid') NULL DEFAULT 'unpaid',
     `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP(), `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP());
-CREATE TABLE `payment_methods`(
+CREATE TABLE `payment_methods` (
     `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(100) NOT NULL,
     `account_name` VARCHAR(255) NOT NULL,
     `account_number` VARCHAR(100) NOT NULL,
+    `image` VARCHAR(255) NULL, -- Stores relative file path or image URL
     `is_active` BOOLEAN NULL DEFAULT 1
 );
 CREATE TABLE `rental_house_images` (

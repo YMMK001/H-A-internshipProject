@@ -2,8 +2,8 @@
 // 1. Database Connection Configuration
 $host     = 'localhost';
 $db_name  = 'intern_test'; // Change to your DB name
-$username = 'root';               // Change to your DB username
-$password = '';                   // Change to your DB password
+$username = 'root';        // Change to your DB username
+$password = '';            // Change to your DB password
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8mb4", $username, $password);
@@ -22,28 +22,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $account_name   = trim($_POST['account_name'] ?? '');
     $account_number = trim($_POST['account_number'] ?? '');
     $is_active      = isset($_POST['is_active']) ? 1 : 0;
+    
+    $image_path = null;
 
     // Simple validation
     if (empty($name) || empty($account_name) || empty($account_number)) {
         $message = 'All fields are required!';
     } else {
-        try {
-            // Prepare SQL injection safe query
-            $sql = "INSERT INTO payment_methods (name, account_name, account_number, is_active) 
-                    VALUES (:name, :account_name, :account_number, :is_active)";
-            
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([
-                ':name'           => $name,
-                ':account_name'   => $account_name,
-                ':account_number' => $account_number,
-                ':is_active'      => $is_active
-            ]);
+        // Handle File Upload
+        if (isset($_FILES['payment_image']) && $_FILES['payment_image']['error'] === UPLOAD_ERR_OK) {
+            $fileTmpPath = $_FILES['payment_image']['tmp_name'];
+            $fileName    = $_FILES['payment_image']['name'];
+            $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
-            $message = 'Payment method added successfully!';
-            $isSuccess = true;
-        } catch (PDOException $e) {
-            $message = 'Error saving to database: ' . $e->getMessage();
+            $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+            
+            if (in_array($fileExtension, $allowedExtensions)) {
+                $uploadFileDir = 'uploads/';
+                
+                // Create directory if it doesn't exist
+                if (!is_dir($uploadFileDir)) {
+                    mkdir($uploadFileDir, 0755, true);
+                }
+
+                // Unique filename to prevent overwrites
+                $newFileName = uniqid('pay_', true) . '.' . $fileExtension;
+                $dest_path   = $uploadFileDir . $newFileName;
+
+                if (move_uploaded_file($fileTmpPath, $dest_path)) {
+                    $image_path = $dest_path;
+                } else {
+                    $message = 'Error moving uploaded file.';
+                }
+            } else {
+                $message = 'Invalid file type. Please upload JPG, PNG, WEBP, or GIF images.';
+            }
+        }
+
+        // Only insert if no upload errors occurred
+        if (empty($message)) {
+            try {
+                // Prepare SQL query with image column
+                $sql = "INSERT INTO payment_methods (name, account_name, account_number, image, is_active) 
+                        VALUES (:name, :account_name, :account_number, :image, :is_active)";
+                
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([
+                    ':name'           => $name,
+                    ':account_name'   => $account_name,
+                    ':account_number' => $account_number,
+                    ':image'          => $image_path,
+                    ':is_active'      => $is_active
+                ]);
+
+                $message = 'Payment method added successfully!';
+                $isSuccess = true;
+            } catch (PDOException $e) {
+                $message = 'Error saving to database: ' . $e->getMessage();
+            }
         }
     }
 }
@@ -61,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800  flex">
+<body class="bg-slate-50 text-slate-800 flex">
 
     <div class="flex-shrink-0 h-screen sticky top-0 z-50">
         <?php include 'ownerheader.php'; ?>
@@ -75,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ☰ Menu
                 </button>
                 <div class="hidden sm:flex items-center space-x-2 text-xs text-gray-500">
-                    <span class="text-gray-800 font-bold text-2xl">Add Payment Method</span>
+                    <span class="text-gray-800 font-bold text-3xl">Add Payment Method</span>
                 </div>
             </div>
 
@@ -92,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
 
-        <main class="flex-1 flex  p-6 md:p-8 overflow-y-auto">
+        <main class="flex-1 flex p-6 md:p-8 overflow-y-auto">
             <div class="w-full max-w-md bg-white rounded-2xl shadow-sm border border-slate-200/70 overflow-hidden">
                 
                 <div class="bg-slate-900 p-6 text-center border-b border-slate-800">
@@ -108,7 +144,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     <?php endif; ?>
 
-                    <form action="" method="POST" class="space-y-5">
+                    <!-- Form with enctype for uploading files -->
+                    <form action="" method="POST" enctype="multipart/form-data" class="space-y-5">
                         
                         <div>
                             <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Payment Method Name</label>
@@ -126,6 +163,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Account Number / Details</label>
                             <input type="text" name="account_number" placeholder="e.g., 200-456-7890" required
                                    class="w-full text-xs font-mono px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white transition-colors">
+                        </div>
+
+                        <!-- Image File Upload Field -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Logo / QR Code Image</label>
+                            <input type="file" name="payment_image" accept="image/*"
+                                   class="w-full text-xs text-slate-500 bg-slate-50 border border-slate-200 rounded-lg cursor-pointer focus:outline-none file:mr-4 file:py-2.5 file:px-4 file:rounded-l-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-white hover:file:bg-slate-700">
                         </div>
 
                         <div class="flex items-center pt-1">

@@ -67,7 +67,7 @@ try {
         body { font-family: 'Poppins', 'Noto Sans Myanmar', sans-serif; }
     </style>
 </head>
-<body class="bg-[#f4f6f9] text-slate-800 antialiased min-h-screen flex">
+<body class="bg-[#f4f6f9] text-slate-800 antialiased min-h-screen flex overflow-hidden">
 
      <?php include 'ownerheader.php'; ?>
 
@@ -79,7 +79,7 @@ try {
                             ☰ Menu
                         </button>
                         <div class="hidden sm:flex items-center space-x-2 text-xs text-gray-500">
-                            <span class="text-gray-800 font-bold text-2xl">Renters List</span>
+                            <span class="text-gray-800 font-bold text-2xl">Rental Details</span>
                         </div>
                     </div>
 
@@ -134,7 +134,7 @@ try {
 
                 <?php if (!empty($rented_items)): ?>
                     <div class="bg-white border border-slate-200 rounded-sm shadow-sm overflow-hidden">
-                        <div class="overflow-x-auto">
+                        <div class="overflow-x-auto overflow-y-auto max-h-[440px]">
                             <table class="w-full text-left border-collapse whitespace-nowrap text-xs">
                                 <thead class="bg-[#242d3c] text-white font-semibold uppercase tracking-wider">
                                     <tr>

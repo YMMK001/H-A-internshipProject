@@ -1,4 +1,9 @@
 <?php
+// Session စတင်ခြင်း
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 // 1. Database Connection Configuration
 $host    = 'localhost';
 $db      = 'intern_test';
@@ -100,12 +105,12 @@ $is_available = (int)$details['is_available'] === 1;
 </head>
 <body class="bg-[#faf9f6] font-classic flex flex-col h-screen text-stone-800 overflow-hidden">
 
-<?php    include 'homepageheader.php'; ?>
+<?php include 'homepageheader.php'; ?>
     <div class="sm:hidden mb-4">
         <button onclick="toggleMobileMenu()" class="bg-[#292515] text-white text-xs font-serif px-3 py-2 shadow-sm border border-stone-700">
             ☰ Menu
         </button>
-      </div>
+    </div>
     <div class="flex-1 h-full overflow-y-auto py-10 px-4">
         
         <div class="max-w-3xl mx-auto space-y-6">
@@ -122,14 +127,11 @@ $is_available = (int)$details['is_available'] === 1;
                     <?php if (!empty($images)): ?>
                         <div id="slides-container" class="w-full h-full flex transition-transform duration-500 ease-out">
                             <?php foreach ($images as $img_url): 
-                                // FIX: renter folder ထဲကနေ project/uploads/ ထဲကို တိုက်ရိုက်လှမ်းကြည့်နိုင်အောင်
-                                // database ထဲက '../uploads/' ကို '../uploads/' အစား '../uploads/' အတိုင်း ပြန်သုံးမည့်အစား 
-                                // လက်ရှိ folder (renter) ထဲကနေ အပေါ်ထွက်ပြီး uploads ကို လှမ်းကြည့်ရန် လမ်းကြောင်း ညှိပေးခြင်းဖြစ်သည်
                                 $renter_img_url = str_replace('../uploads/', '../uploads/', $img_url);
                             ?>
                                 <div class="w-full h-full flex-shrink-0">
-    <img src="<?= htmlspecialchars($renter_img_url) ?>" alt="Property Image" class="w-full h-full object-contain">
-</div>
+                                    <img src="<?= htmlspecialchars($renter_img_url) ?>" alt="Property Image" class="w-full h-full object-contain">
+                                </div>
                             <?php endforeach; ?>
                         </div>
 
@@ -259,7 +261,15 @@ $is_available = (int)$details['is_available'] === 1;
                         </div>
                         <div>
                             <?php if ($is_available): ?>
-                                <a href="rentercontract.php?select_unit=<?= $type_lower ?>_<?= $item_id ?>" 
+                                <?php 
+                                // LOGIN SESSION DYNAMIC ROUTING CHECK
+                                if (isset($_SESSION['user_id'])) {
+                                    $contract_action = "rentercontract.php?select_unit={$type_lower}_{$item_id}";
+                                } else {
+                                    $contract_action = "../auth/login.php?redirect=contract&property_id={$item_id}&type={$type_lower}";
+                                }
+                                ?>
+                                <a href="<?= $contract_action ?>" 
                                    class="bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs px-6 py-3 rounded-sm uppercase tracking-wider transition-all shadow-sm inline-block text-center">
                                     🚀 Apply Contract / စာချုပ်စတင်လျှောက်ထားမည်
                                 </a>
@@ -315,22 +325,21 @@ $is_available = (int)$details['is_available'] === 1;
         document.addEventListener('DOMContentLoaded', () => {
             if(totalSlides > 0) updateSlidePosition();
         });
+
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('tenantSidebar');
+            const overlay = document.getElementById('mobMenuOverlay');
+            
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.remove('translate-x-0');
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
     </script>
-<script>
-      function toggleMobileMenu() {
-          const sidebar = document.getElementById('tenantSidebar');
-          const overlay = document.getElementById('mobMenuOverlay');
-          
-          if (sidebar.classList.contains('-translate-x-full')) {
-              sidebar.classList.remove('-translate-x-full');
-              sidebar.classList.add('translate-x-0');
-              overlay.classList.remove('hidden');
-          } else {
-              sidebar.classList.remove('translate-x-0');
-              sidebar.classList.add('-translate-x-full');
-              overlay.classList.add('hidden');
-          }
-      }
-  </script>
 </body>
 </html>

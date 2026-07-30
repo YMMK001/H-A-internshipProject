@@ -147,8 +147,9 @@ $avg_hostel = count($hostel_prices) > 0 ? array_sum($hostel_prices) / count($hos
                             ☰ Menu
                         </button>
                         <div class="hidden sm:flex items-center space-x-2 text-xs text-gray-500">
-                            <span class="text-gray-800 font-bold text-2xl">Executive Dashboard</span>
-                        </div>
+                    <span class="text-gray-800 font-bold text-3xl">Executive Dashboard</span>
+                </div>
+                        
                     </div>
 
                     <div class="flex items-center space-x-4 divide-x divide-gray-200">

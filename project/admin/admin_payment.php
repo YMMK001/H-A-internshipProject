@@ -60,13 +60,14 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
         
         <div class="bg-white border-b border-gray-300 shadow-sm px-6 py-3 flex items-center justify-between font-sans">
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-2">
                 <button onclick="toggleMobileMenu()" class="sm:hidden bg-slate-800 hover:bg-slate-900 text-white text-xs font-medium uppercase tracking-wider px-3 py-2 rounded shadow-sm border border-slate-700">
                     ☰ Menu
                 </button>
-                <div class="hidden sm:flex items-center space-x-2 text-xs text-gray-500">
-                    <span class="text-gray-800 font-bold text-2xl">Renters List</span>
-                </div>
+                 <div class="hidden sm:flex items-center space-x-2 text-xs text-gray-500">
+                            <span class="text-gray-900 font-bold text-3xl">Verifying/Checking Incoming Payments</span>
+                        </div>
+                
             </div>
 
             <div class="flex items-center space-x-4 divide-x divide-gray-200">
@@ -87,9 +88,9 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 
                 <div class="mb-6 pb-4 border-b-2 border-gray-800 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
                     <div>
-                        <span class="text-xs font-bold uppercase tracking-widest text-gray-600 block mb-1">Owner Portal</span>
-                        <h1 class="text-3xl font-bold tracking-tight text-gray-900 font-sans">Verifying/Checking Incoming Payments</h1>
-                    </div>
+                            <span class="text-xs font-bold uppercase tracking-widest text-slate-600 block mb-1">Internal Management Console</span>
+                            <h1 class="text-3xl font-bold tracking-tight text-slate-900 font-sans">Payment List</h1>
+                        </div>
                     
                     <div class="bg-slate-800 border border-slate-700 text-white font-medium text-xs uppercase tracking-wider px-4 py-2.5 rounded shadow-sm font-sans self-start sm:self-auto">
                         Total of <?= count($payments) ?> Transaction
@@ -143,9 +144,9 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             <td class="p-3 border-r border-gray-200 font-medium">
                                                 <?php if(!empty($pay['payment_image'])): ?>
                                                   <!-- ပြင်ဆင်ရန်ပုံစံ -->
-<button type="button" onclick="openSlipModal('uploads/<?= htmlspecialchars($pay['payment_image']) ?>')" class="text-blue-800 hover:text-blue-900 font-bold inline-flex items-center gap-1 hover:underline cursor-pointer">
-    👁 View Slip
-</button>
+                                    <button type="button" onclick="openSlipModal('uploads/<?= htmlspecialchars($pay['payment_image']) ?>')" class="text-blue-800 hover:text-blue-900 font-bold inline-flex items-center gap-1 hover:underline cursor-pointer">
+                                        👁 View Slip
+                                    </button>
                                                 <?php else: ?>
                                                     <span class="text-gray-400 italic">ပုံမရှိပါ</span>
                                                 <?php endif; ?>

@@ -70,7 +70,7 @@ $result = $conn->query($sql);
                             ☰ Menu
                         </button>
                         <div class="hidden sm:flex items-center space-x-2 text-xs text-gray-500">
-                            <span class="text-gray-900 font-bold text-2xl">Contract</span>
+                            <span class="text-gray-900 font-bold text-3xl">Contract Management</span>
                         </div>
                     </div>
 
@@ -89,9 +89,9 @@ $result = $conn->query($sql);
 
                 <div class="px-6">
                     <div class="mb-6 pb-4 border-b-2 border-gray-800 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-                        <div>
-                            <span class="text-xs font-bold uppercase tracking-widest text-gray-600 block mb-1">Owner Portal</span>
-                            <h1 class="text-3xl font-bold tracking-tight text-gray-900 font-sans">Contract Management</h1>
+                       <div>
+                            <span class="text-xs font-bold uppercase tracking-widest text-slate-600 block mb-1">Internal Management Console</span>
+                            <h1 class="text-3xl font-bold tracking-tight text-slate-900 font-sans">Contract List </h1>
                         </div>
                         
                         <div class="bg-slate-800 border border-slate-700 text-white font-medium text-xs uppercase tracking-wider px-4 py-2.5 rounded shadow-sm font-sans self-start sm:self-auto">

@@ -251,7 +251,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="mb-6 pb-4 border-b-2 border-gray-800 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
                     <div>
                         <span class="text-xs font-bold uppercase tracking-widest text-gray-600 block mb-1">Owner Portal</span>
-                        <h1 class="text-3xl font-bold tracking-tight text-gray-900 font-sans">🏠 အိမ်/အဆောင်အသစ်တင်ရန်ပုံစံ</h1>
+                        <h1 class="text-3xl font-bold tracking-tight text-gray-900 font-sans"> Add New Apartment & Hostel</h1>
                           </div>
                     
                     <div class="flex items-center bg-white border border-gray-300 shadow-sm font-sans text-xs font-bold uppercase tracking-wider self-start sm:self-auto">

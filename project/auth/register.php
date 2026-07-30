@@ -13,6 +13,18 @@ $email = '';
 $phone = '';
 $nrc = '';
 
+// Contract Redirect Parameters (GET သို့မဟုတ် POST မှ ရယူခြင်း)
+$redirect = $_REQUEST['redirect'] ?? '';
+$property_id = $_REQUEST['property_id'] ?? '';
+$type = $_REQUEST['type'] ?? '';
+
+// Query String ပြန်လည်တည်ဆောက်ခြင်း (Links များတွင် သုံးရန်)
+$queryParams = [];
+if (!empty($redirect)) $queryParams['redirect'] = $redirect;
+if (!empty($property_id)) $queryParams['property_id'] = $property_id;
+if (!empty($type)) $queryParams['type'] = $type;
+$queryString = !empty($queryParams) ? '?' . http_build_query($queryParams) : '';
+
 // Check if the form is submitted via POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Collect and sanitize form inputs
@@ -80,8 +92,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             $conn->close();
             
+            // Registration အောင်မြင်ပါက Login Page သို့ Parameter များနှင့်တကွ Redirect လုပ်ခြင်း
             if (empty($error)) {
-                header('Location: login.php');
+                header('Location: login.php' . $queryString);
                 exit;
             }
         }
@@ -96,78 +109,97 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>RentalHub - Registry Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-[#fbfaf7] text-stone-900 antialiased min-h-screen flex flex-col justify-center py-16">
-     
-    <div class="bg-white w-[460px] mx-auto p-10 border border-stone-300 shadow-sm relative">
-        
-        <div class="absolute top-0 left-0 right-0 h-1.5 bg-blue-900"></div>
+<body class="bg-[#fbfaf7] text-stone-900 antialiased min-h-screen flex flex-col justify-between">
 
-        <div class="flex justify-center mb-6">
-            <div class="h-12 w-12 bg-blue-900 border border-amber-600 flex items-center justify-center text-amber-100 font-serif font-bold text-2xl">R</div>
-        </div>
-        
-        <h1 class="font-serif font-normal text-3xl text-center tracking-tight text-stone-900">Create Account</h1>
-        <p class="text-stone-500 font-serif italic text-sm text-center mt-2 mb-8">
-            Or <a href="login.php" class="text-blue-900 hover:underline font-medium">sign in</a> to your existing profile
-        </p>
-        
-        <?php if (!empty($error)): ?>
-            <div class="bg-stone-50 border-l-4 border-amber-700 text-stone-800 px-4 py-3 mb-6 text-sm font-serif italic" role="alert">
-                <span><?php echo htmlspecialchars($error); ?></span>
-            </div>
-        <?php endif; ?>
+    <!-- TOP HEADER NAVBAR (IMAGE ACCORDING) -->
+    <header class="sticky top-0 z-50 w-full bg-white border-b border-stone-200">
+        <?php include '../renter/homepageheader.php'; ?>
+    </header>
 
-        <?php if (!empty($success)): ?>
-            <div class="bg-stone-50 border-l-4 border-emerald-700 text-stone-800 px-4 py-3 mb-6 text-sm font-serif italic" role="alert">
-                <span><?php echo htmlspecialchars($success); ?></span>
-            </div>
-        <?php endif; ?>
-
-        <form action="" method="POST" class="flex flex-col gap-5">
+    <!-- MAIN CENTER CONTAINER -->
+    <main class="flex-1 flex items-center justify-center py-4 px-4">
+        <div class="bg-white w-[460px] p-8 sm:p-10 border border-stone-300 shadow-xs relative">
             
-            <div class="flex flex-col gap-1.5">
-                <label class="text-stone-700 text-xs font-semibold uppercase tracking-wider" for="name">Full Name</label>
-                <input class="p-3 bg-[#faf9f6] border border-stone-300 focus:outline-none focus:border-blue-900 focus:bg-white text-stone-900 font-sans transition-all placeholder-stone-400" 
-                       type="text" id="name" name="name" value="<?php echo htmlspecialchars($name); ?>" required placeholder="e.g., Alexander Mercer">
+            <!-- TOP ACCENT LINE -->
+            <div class="absolute top-0 left-0 right-0 h-[5px] bg-[#0f172a]"></div>
+
+            <!-- LOGO BOX -->
+            <div class="flex justify-center mb-6">
+                <div class="h-11 w-11 bg-[#0f172a] border border-[#b45309] flex items-center justify-center text-[#fef3c7] font-serif font-bold text-2xl">
+                    R
+                </div>
             </div>
             
-            <div class="flex flex-col gap-1.5">
-                <label class="text-stone-700 text-xs font-semibold uppercase tracking-wider" for="user_email">Email Address</label>
-                <input class="p-3 bg-[#faf9f6] border border-stone-300 focus:outline-none focus:border-blue-900 focus:bg-white text-stone-900 font-sans transition-all placeholder-stone-400" 
-                       type="type" id="user_email" name="user_email" value="<?php echo htmlspecialchars($email); ?>" required placeholder="name@domain.com">
-            </div>
+            <!-- HEADER TITLES -->
+            <h1 class="font-serif font-normal text-3xl text-center tracking-tight text-stone-900">Create Account</h1>
+            <p class="text-stone-500 font-serif italic text-sm text-center mt-1.5 mb-8">
+                Or <a href="login.php<?php echo $queryString; ?>" class="text-[#0f172a] hover:underline font-bold">sign in</a> to your existing profile
+            </p>
             
-            <div class="flex flex-col gap-1.5">
-                <label class="text-stone-700 text-xs font-semibold uppercase tracking-wider" for="phone">Phone Number</label>
-                <input class="p-3 bg-[#faf9f6] border border-stone-300 focus:outline-none focus:border-blue-900 focus:bg-white text-stone-900 font-sans transition-all placeholder-stone-400" 
-                       type="text" id="phone" name="phone" value="<?php echo htmlspecialchars($phone); ?>" required placeholder="+95...">
-            </div>
-            
-            <div class="flex flex-col gap-1.5">
-                <label class="text-stone-700 text-xs font-semibold uppercase tracking-wider">NRC Number Documentation</label>
-                <div class="grid grid-cols-3 gap-2">
-                    
-                    <select id="nrc_region" name="nrc_region" class="p-3 bg-[#faf9f6] border border-stone-300 focus:outline-none focus:border-blue-900 focus:bg-white text-sm text-stone-800 transition-all cursor-pointer" required>
-                        <option value="" disabled selected>Code</option>
-                        <?php for ($i = 1; $i <= 14; $i++): ?>
-                            <option value="<?php echo $i; ?>/" <?php echo (isset($_POST['nrc_region']) && $_POST['nrc_region'] == "$i/") ? 'selected' : ''; ?>>
-                                <?php echo $i; ?>/
-                            </option>
-                        <?php endfor; ?>
-                    </select>
+            <!-- MESSAGES -->
+            <?php if (!empty($error)): ?>
+                <div class="bg-[#fef2f2] border-l-4 border-red-700 text-stone-800 px-4 py-3 mb-6 text-sm font-serif italic" role="alert">
+                    <span><?php echo htmlspecialchars($error); ?></span>
+                </div>
+            <?php endif; ?>
 
-<select id="nrc_township" name="nrc_township" class="p-3 bg-[#faf9f6] border border-stone-300 focus:outline-none focus:border-blue-900 focus:bg-white text-sm text-stone-800 transition-all cursor-pointer" required disabled>
-                        <option value="" disabled selected>Township</option>
+            <?php if (!empty($success)): ?>
+                <div class="bg-[#f0fdf4] border-l-4 border-emerald-700 text-stone-800 px-4 py-3 mb-6 text-sm font-serif italic" role="alert">
+                    <span><?php echo htmlspecialchars($success); ?></span>
+                </div>
+            <?php endif; ?>
+
+            <!-- FORM -->
+            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'] . $queryString); ?>" method="POST" class="flex flex-col gap-4">
+                
+                <!-- HIDDEN INPUTS TO PRESERVE PARAMETERS -->
+                <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>">
+                <input type="hidden" name="property_id" value="<?php echo htmlspecialchars($property_id); ?>">
+                <input type="hidden" name="type" value="<?php echo htmlspecialchars($type); ?>">
+
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-stone-700 text-[11px] font-semibold uppercase tracking-wider" for="name">Full Name</label>
+                    <input class="p-2 bg-[#eef2ff] border border-stone-300 focus:outline-none focus:border-[#0f172a] text-stone-900 font-sans text-sm rounded-none" 
+                           type="text" id="name" name="name" value="<?php echo htmlspecialchars($name); ?>" required placeholder="e.g., Alexander Mercer">
+                </div>
+                
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-stone-700 text-[11px] font-semibold uppercase tracking-wider" for="user_email">Email Address</label>
+                    <input class="p-2 bg-[#eef2ff] border border-stone-300 focus:outline-none focus:border-[#0f172a] text-stone-900 font-sans text-sm rounded-none" 
+                           type="email" id="user_email" name="user_email" value="<?php echo htmlspecialchars($email); ?>" required placeholder="name@domain.com">
+                </div>
+                
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-stone-700 text-[11px] font-semibold uppercase tracking-wider" for="phone">Phone Number</label>
+                    <input class="p-2 bg-[#eef2ff] border border-stone-300 focus:outline-none focus:border-[#0f172a] text-stone-900 font-sans text-sm rounded-none" 
+                           type="text" id="phone" name="phone" value="<?php echo htmlspecialchars($phone); ?>" required placeholder="+95...">
+                </div>
+                
+                <!-- NRC SECTION -->
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-stone-700 text-[11px] font-semibold uppercase tracking-wider">NRC Number Documentation</label>
+                    <div class="grid grid-cols-3 gap-2">
                         
-                        <option data-region="1/" value="bmn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'bmn') ? 'selected' : ''; ?>>BAMANA (Bhamo)</option>
-                        <option data-region="1/" value="khf" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'khf') ? 'selected' : ''; ?>>KHAPHANA (Chipwi)</option>
-                        <option data-region="1/" value="mkn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mkn') ? 'selected' : ''; ?>>MAKHANA (Myitkyina)</option>
-                        <option data-region="1/" value="mgn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mgn') ? 'selected' : ''; ?>>MAGHANA (Mogaung)</option>
-                        <option data-region="1/" value="mvn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mvn') ? 'selected' : ''; ?>>MANYANA (Mohnyin)</option>
-                        <option data-region="1/" value="ptn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ptn') ? 'selected' : ''; ?>>PATANA (Putao)</option>
-                        <option data-region="1/" value="wmn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'wmn') ? 'selected' : ''; ?>>WAMANA (Waingmaw)</option>
+                        <select id="nrc_region" name="nrc_region" class="p-2.5 bg-[#eef2ff] border border-stone-300 focus:outline-none focus:border-[#0f172a] text-xs text-stone-800 cursor-pointer rounded-none" required>
+                            <option value="" disabled selected>Code</option>
+                            <?php for ($i = 1; $i <= 14; $i++): ?>
+                                <option value="<?php echo $i; ?>/" <?php echo (isset($_POST['nrc_region']) && $_POST['nrc_region'] == "$i/") ? 'selected' : ''; ?>>
+                                    <?php echo $i; ?>/
+                                </option>
+                            <?php endfor; ?>
+                        </select>
 
-                        <option data-region="2/" value="dmn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'dmn') ? 'selected' : ''; ?>>DAMANA (Demawso)</option>
+                        <select id="nrc_township" name="nrc_township" class="p-2.5 bg-[#eef2ff] border border-stone-300 focus:outline-none focus:border-[#0f172a] text-xs text-stone-800 cursor-pointer disabled:opacity-60 rounded-none" required disabled>
+                            <option value="" disabled selected>Township</option>
+                            
+                            <option data-region="1/" value="bmn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'bmn') ? 'selected' : ''; ?>>BAMANA (Bhamo)</option>
+                            <option data-region="1/" value="khf" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'khf') ? 'selected' : ''; ?>>KHAPHANA (Chipwi)</option>
+                            <option data-region="1/" value="mkn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mkn') ? 'selected' : ''; ?>>MAKHANA (Myitkyina)</option>
+                            <option data-region="1/" value="mgn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mgn') ? 'selected' : ''; ?>>MAGHANA (Mogaung)</option>
+                            <option data-region="1/" value="mvn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mvn') ? 'selected' : ''; ?>>MANYANA (Mohnyin)</option>
+                            <option data-region="1/" value="ptn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ptn') ? 'selected' : ''; ?>>PATANA (Putao)</option>
+                            <option data-region="1/" value="wmn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'wmn') ? 'selected' : ''; ?>>WAMANA (Waingmaw)</option>
+                             <option data-region="2/" value="dmn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'dmn') ? 'selected' : ''; ?>>DAMANA (Demawso)</option>
                         <option data-region="2/" value="lkn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'lkn') ? 'selected' : ''; ?>>LAKANA (Loikaw)</option>
                         <option data-region="2/" value="msn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'msn') ? 'selected' : ''; ?>>MASANA (Mese)</option>
                         <option data-region="2/" value="ytn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ytn') ? 'selected' : ''; ?>>YATHANA (Bawlakhe)</option>
@@ -330,29 +362,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <option data-region="14/" value="ttn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ttn') ? 'selected' : ''; ?>>THATANA (Thabaung)</option>
                         <option data-region="14/" value="wkm" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'wkm') ? 'selected' : ''; ?>>WAKAMA (Wakema)</option>
                         <option data-region="14/" value="yna" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'yna') ? 'selected' : ''; ?>>YANAUNA (Yegyi)</option>
-                    </select>
-      <input class="p-3 bg-[#faf9f6] border border-stone-300 focus:outline-none focus:border-blue-900 focus:bg-white text-stone-900 font-mono transition-all placeholder-stone-400 text-sm" 
-                           type="text" name="nrc_number" pattern="\d{6}" maxlength="6" required placeholder="123456">
+                   
+                        </select>
+
+                        <input class="p-2.5 bg-[#eef2ff] border border-stone-300 focus:outline-none focus:border-[#0f172a] text-stone-900 font-mono text-xs rounded-none" 
+                               type="text" name="nrc_number" pattern="\d{6}" maxlength="6" required placeholder="123456">
+                    </div>
                 </div>
-            </div>
 
-            <div class="flex flex-col gap-1.5">
-                <label class="text-stone-700 text-xs font-semibold uppercase tracking-wider" for="user_password">Password</label>
-                <input class="p-3 bg-[#faf9f6] border border-stone-300 focus:outline-none focus:border-blue-900 focus:bg-white text-stone-900 font-sans transition-all" 
-                       type="password" id="user_password" name="user_password" required minlength="8">
-            </div>
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-stone-700 text-[11px] font-semibold uppercase tracking-wider" for="user_password">Password</label>
+                    <input class="p-2 bg-[#eef2ff] border border-stone-300 focus:outline-none focus:border-[#0f172a] text-stone-900 font-sans text-sm rounded-none" 
+                           type="password" id="user_password" name="user_password" required minlength="8">
+                </div>
 
-            <div class="flex flex-col gap-1.5">
-                <label class="text-stone-700 text-xs font-semibold uppercase tracking-wider" for="confirm_password">Confirm Password</label>
-                <input class="p-3 bg-[#faf9f6] border border-stone-300 focus:outline-none focus:border-blue-900 focus:bg-white text-stone-900 font-sans transition-all" 
-                       type="password" id="confirm_password" name="confirm_password" required minlength="8">
-            </div>
-            
-            <button type="submit" class="w-full bg-blue-900 hover:bg-blue-950 text-white font-serif tracking-wide py-3.5 transition-colors shadow-sm mt-3">
-                Register Account
-            </button>
-        </form>
-    </div>
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-stone-700 text-[11px] font-semibold uppercase tracking-wider" for="confirm_password">Confirm Password</label>
+                    <input class="p-2 bg-[#eef2ff] border border-stone-300 focus:outline-none focus:border-[#0f172a] text-stone-900 font-sans text-sm rounded-none" 
+                           type="password" id="confirm_password" name="confirm_password" required minlength="8">
+                </div>
+                
+                <button type="submit" class="w-full bg-[#0f172a] hover:bg-slate-900 text-[#fef3c7] font-serif text-base py-3.5 transition-colors shadow-xs mt-3 cursor-pointer">
+                    Register Account &rarr;
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <footer class="py-4 text-center text-xs text-stone-400 font-serif">
+        &copy; <?php echo date('Y'); ?> RentalHub. All rights reserved.
+    </footer>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -363,7 +402,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             function filterTownships() {
                 const selectedRegion = regionSelect.value;
-                if (!townshipSelect.options) return; // Guard clause if using a text input instead of a select element
+                if (!townshipSelect.options) return;
                 
                 townshipSelect.innerHTML = "";
                 

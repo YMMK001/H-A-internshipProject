@@ -60,7 +60,7 @@ try {
                             ☰ Menu
                         </button>
                         <div class="hidden sm:flex items-center space-x-2 text-xs text-gray-500">
-                            <span class="text-gray-800 font-bold text-2xl">Renters List</span>
+                            <span class="text-gray-800 font-bold text-3xl">Renters List Management</span>
                         </div>
                     </div>
 
@@ -80,7 +80,7 @@ try {
                     <div class="mb-6 pb-4 border-b-2 border-slate-800 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
                         <div>
                             <span class="text-xs font-bold uppercase tracking-widest text-slate-600 block mb-1">Internal Management Console</span>
-                            <h1 class="text-3xl font-bold tracking-tight text-slate-900 font-sans">Renters List Management</h1>
+                            <h1 class="text-3xl font-bold tracking-tight text-slate-900 font-sans">Renters List </h1>
                         </div>
                     
                         <div class="bg-slate-800 border border-slate-700 text-white font-medium text-xs uppercase tracking-wider px-4 py-2.5 rounded shadow-sm font-sans self-start sm:self-auto">

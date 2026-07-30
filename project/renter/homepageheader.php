@@ -119,69 +119,116 @@ $hostels    = array_filter($properties, function($item) { return $item['type'] =
 </head>
 <body class="bg-[#fcfbf9] font-classic h-screen overflow-hidden flex text-gray-800">
 
-
-    
     <!-- Top Navigation Menu containing working Search Filters & Home controls -->
-    <nav class="bg-white border-b border-stone-200 sticky top-0 z-50 shadow-sm">
+    <nav class="bg-white border-b border-stone-200 sticky top-0 z-50 shadow-sm w-full">
         <div class="max-w-6xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between py-4 items-center gap-4">
-                
-                <!-- Logo (Acts as Home Trigger) -->
-                <a href="index.php" class="flex items-center gap-3 group">
-                    <div class="h-10 w-10 bg-blue-900 border border-amber-600 flex items-center justify-center text-amber-100 font-serif font-bold text-xl">R</div>
-                    <span class="text-2xl font-serif font-bold tracking-tight text-stone-900">Rental<span class="text-blue-900 italic font-normal">Hub</span></span>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 py-3 px-4 sm:px-6 bg-white/80 backdrop-blur-md border-b border-stone-200/80 shadow-xs">
+    
+    <!-- LOGO (ACTS AS HOME TRIGGER) -->
+    <a href="index.php" class="flex items-center gap-3 group">
+        <div class="h-10 w-10 bg-slate-900 border border-amber-600/80 flex items-center justify-center text-amber-200 font-serif font-bold text-xl rounded-md shadow-xs group-hover:bg-slate-950 transition-all">
+            R
+        </div>
+        <span class="text-2xl font-serif font-bold tracking-tight text-slate-900">
+            Rental<span class="text-amber-800 italic font-normal">Hub</span>
+        </span>
+    </a>
+
+    <!-- INTEGRATED NAV SEARCH FILTERS -->
+    <div class="flex flex-wrap items-center gap-2 bg-stone-100/80 border border-stone-200 p-1.5 rounded-lg w-full md:w-auto max-w-xl flex-1 shadow-inner">
+        <div class="relative flex-1 min-w-[140px] flex items-center">
+            <input type="text" id="citySearchInput" onkeyup="filterByCity()" placeholder="Search title or keyword..." class="w-full bg-white border border-stone-200 text-xs text-stone-800 px-3 py-1.5 rounded-md outline-none focus:border-amber-800 focus:ring-1 focus:ring-amber-800/20 transition-all">
+        </div>
+        
+        <select id="typeSelect" onchange="filterProperties()" class="bg-white border border-stone-200 text-xs text-stone-700 px-3 py-1.5 rounded-md outline-none cursor-pointer focus:border-amber-800 transition-all">
+            <option value="">All Types</option>
+            <option value="apartment">Apartment</option>
+          
+            <option value="hostel">Hostel</option>
+        </select>
+
+        <a href="../renter/renterhomepage.php" class="bg-white border border-stone-200 text-xs text-stone-700 hover:text-amber-900 hover:border-amber-800/40 px-3 py-1.5 rounded-md font-medium transition-all shadow-2xs">
+            Home
+        </a>
+    </div>
+
+    <!-- USER AUTH & PROFILE DROPDOWN MENU -->
+    <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4 border-l border-stone-200 pl-4">
+            <?php if (isset($_SESSION['user_id']) && isset($_SESSION['username'])): ?>
+                <!-- DROPDOWN PROFILE MENU -->
+                <div class="relative">
+                    <button onclick="toggleProfileDropdown()" class="flex items-center gap-2.5 focus:outline-none cursor-pointer group">
+                        <div class="flex flex-col items-end">
+                            <span class="text-xs font-bold text-slate-800 group-hover:text-amber-900 transition-colors">
+                                <?php echo htmlspecialchars($_SESSION['username']); ?>
+                            </span>
+                        </div>
+                        <div class="h-8 w-8 rounded-full bg-amber-100 border border-amber-600/40 flex items-center justify-center text-amber-950 font-bold text-xs uppercase shadow-xs group-hover:border-amber-800 transition-all">
+                            <?php echo mb_substr(htmlspecialchars($_SESSION['username']), 0, 1, "UTF-8"); ?>
+                        </div>
+                        <svg class="w-3.5 h-3.5 text-stone-500 group-hover:text-amber-900 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Dropdown Menu Content -->
+                    <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-52 bg-white border border-stone-200 rounded-xl shadow-xl py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100">
+                        <div class="px-4 py-2 border-b border-stone-100 bg-stone-50/50 rounded-t-xl">
+                            <p class="text-[10px] font-bold uppercase tracking-wider text-stone-400">Signed in as</p>
+                            <p class="text-xs font-bold text-slate-900 truncate"><?php echo htmlspecialchars($_SESSION['username']); ?></p>
+                        </div>
+                        
+                        <a href="renter_profile.php" class="flex items-center gap-2 px-4 py-2 text-xs text-stone-700 hover:bg-amber-50/60 hover:text-amber-950 transition-colors">
+                            <span>👤</span> My Profile
+                        </a>
+                        
+                        
+                        <div class="border-t border-stone-100 my-1"></div>
+                        
+                        <a href="../auth/logout.php" class="flex items-center gap-2 px-4 py-2 text-xs text-red-600 hover:bg-red-50 font-medium transition-colors rounded-b-xl">
+                            <span>🚪</span> Logout
+                        </a>
+                        </div>
+                </div>
+            <?php else: ?>
+                <!-- GUEST AUTH LINKS -->
+                <a href="../auth/register.php" class="text-xs font-semibold text-stone-600 hover:text-slate-900 transition-all">
+                    Register
                 </a>
+                <a href="../auth/login.php?redirect=homepage" class="px-4 py-1.5 text-xs font-medium text-amber-100 bg-slate-900 hover:bg-slate-950 border border-amber-600/50 rounded-md shadow-xs transition-all">
+                    Sign In
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
 
-                <!-- INTEGRATED NAV SEARCH FILTERS -->
-                <div class="flex flex-wrap items-center gap-2 bg-stone-50 border border-stone-200 p-1.5 rounded-md w-full md:w-auto max-w-xl flex-1">
-                    <input type="text" id="citySearchInput" onkeyup="filterByCity()" placeholder="Search title or keyword..." class="bg-white border border-stone-200 text-xs px-3 py-1.5 rounded outline-none focus:border-blue-900 flex-1 min-w-[120px]">
-                    
-                    <select id="typeSelect" onchange="filterProperties()" class="bg-white border border-stone-200 text-xs px-2 py-1.5 rounded outline-none cursor-pointer focus:border-blue-900">
-                        <option value="">All Types</option>
-                        <option value="apartment">Apartment</option>
-                        <option value="hostel">Hostel</option>
-                    </select>
-                </div>
-
-                <div class="bg-white border border-stone-200 text-xs px-2 py-1.5 rounded outline-none cursor-pointer focus:border-blue-900">
-                    <a href="renterhomepage.php" class="hover:text-blue-800 transition-colors">Home</a>
-                </div>
-
-                <!-- Interface View Switches & Dynamic Auth Links -->
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-1 bg-stone-100 p-1 border border-stone-200 rounded">
-                        <button id="cardViewBtn" onclick="switchView('card')" class="px-3 py-1 bg-white text-slate-900 font-medium rounded text-[11px] shadow-sm transition-all">Card</button>
-                        <button id="tableViewBtn" onclick="switchView('table')" class="px-3 py-1 text-stone-500 hover:text-slate-900 font-medium rounded text-[11px] transition-all">Table</button>
-                    </div>
-                    
-                    <div class="hidden sm:flex items-center gap-4 border-l border-stone-200 pl-4">
-                        <?php if (isset($_SESSION['user_id']) && isset($_SESSION['username'])): ?>
-                            <!-- အကောင့်ဝင်ရောက်ထားချိန်တွင် Renter Profile နှင့် Logout အား ပြသပေးမည့် နေရာ -->
-                            <div class="flex items-center gap-3">
-                                <div class="flex flex-col items-end">
-                                     <span class="text-xs font-bold text-slate-800"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                                </div>
-                                <div class="h-8 w-8 rounded-full bg-stone-200 border border-stone-300 flex items-center justify-center text-slate-600 font-bold text-xs uppercase shadow-sm">
-                                    <?php echo mb_substr(htmlspecialchars($_SESSION['username']), 0, 1, "UTF-8"); ?>
-                                </div>
-                                <a href="../auth/logout.php" class="text-xs font-medium text-red-600 hover:text-red-800 hover:underline pl-1 transition-all">Logout</a>
-                            </div>
-                        <?php else: ?>
-                            <!-- အကောင့်မဝင်ရသေးပါက Register နှင့် Sign In ကို ပုံမှန်အတိုင်း ပြသပေးမည် -->
-                            <a href="register.php" class="text-xs font-medium text-stone-600 hover:text-blue-900 hover:underline transition-all">Register</a>
-                            <a href="../admin/login.php?redirect=homepage" class="px-4 py-1.5 text-xs font-serif font-medium text-amber-100 bg-blue-900 hover:bg-blue-950 border border-amber-700 shadow-sm transition-all">Sign In</a>
-                        <?php endif; ?>
-                    </div>
-                </div>
-
-            </div>
+</div>
         </div>
     </nav>
 
     <!-- UI/Content sections remain stable below -->
 
-
 <script>
+    // Toggle Profile Dropdown
+    function toggleProfileDropdown() {
+        const dropdown = document.getElementById('profileDropdown');
+        if (dropdown) {
+            dropdown.classList.toggle('hidden');
+        }
+    }
+
+    // Close dropdown when clicking outside
+    window.addEventListener('click', function(e) {
+        const dropdown = document.getElementById('profileDropdown');
+        const button = e.target.closest('button');
+        if (dropdown && !dropdown.classList.contains('hidden')) {
+            if (!button || !button.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        }
+    });
+
     // View state switches and filtering log
     function switchView(type) {
         console.log("Switching view to " + type);
