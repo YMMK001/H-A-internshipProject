@@ -150,10 +150,10 @@ function renderDashboardBody($overdue_installments, $active_lease, $installments
                             <span class="font-bold text-stone-900 text-sm">
                                 <?= number_format($overdue['amount_to_pay']) ?> MMK
                             </span>
-                            <a href="pay_installment.php?contract_id=<?= $active_contract_id ?>&installment_id=<?= $overdue['id'] ?>" 
-                               class="px-3 py-1.5 bg-red-800 text-stone-100 font-serif text-[11px] hover:bg-red-900 transition shadow-xs font-semibold">
-                                Pay Overdue Bill &rarr;
-                            </a>
+                            <a href="pay_installment.php?contract_id=<?= $active_contract_id ?>&installment_id=<?= $overdue['id'] ?>&from=profile" 
+   class="px-3 py-1.5 bg-red-800 text-stone-100 font-serif text-[11px] hover:bg-red-900 transition shadow-xs font-semibold">
+    Pay Overdue Bill &rarr;
+</a>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -426,7 +426,7 @@ function renderDashboardBody($overdue_installments, $active_lease, $installments
                            💳 Payment Ledgers
                         </a>
                     <?php else: ?>
-                        <a href="#" onclick="alert('No active lease framework detected.'); return false;" class="px-3 py-2.5 text-stone-400 cursor-not-allowed italic">
+                        <a href="" onclick="alert('No active lease framework detected.'); return false;" class="px-3 py-2.5 text-stone-400 cursor-not-allowed italic">
                            💳 Payment Ledgers
                         </a>
                     <?php endif; ?>

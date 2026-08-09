@@ -31,7 +31,7 @@ CREATE TABLE `apartments`(
     `floor_level` VARCHAR(50) NULL,
     `apartment_price` DECIMAL(10, 2) NOT NULL,
     `is_available` BOOLEAN NULL DEFAULT 1,
-    `deposit_amount`DECIMAL(10, 2) NOT NULL ,
+    `deposit_amount`DECIMAL(10, 2) NOT NULL 
    
 );
 CREATE TABLE `hostel_rooms`(
@@ -42,7 +42,7 @@ CREATE TABLE `hostel_rooms`(
     `sub_unit` VARCHAR(50) NULL,
     `monthly_price` DECIMAL(10, 2) NOT NULL,
     `is_available` BOOLEAN NULL DEFAULT 1,
-     `deposit_amount`DECIMAL(10, 2) NOT NULL,
+     `deposit_amount`DECIMAL(10, 2) NOT NULL
      
 );
 CREATE TABLE `contracts`(
@@ -84,6 +84,16 @@ CREATE TABLE `payments`(
     `paid_amount` BIGINT NOT NULL,
     `payment_image` VARCHAR(255) NULL,
     `paid_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP());
+    CREATE TABLE `notifications` (
+    `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `user_id` INT NOT NULL,
+    `title` VARCHAR(255) NOT NULL,
+    `message` TEXT NOT NULL,
+    `type` VARCHAR(50) NOT NULL,
+    `is_read` BOOLEAN NULL DEFAULT 0,
+    `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP(),
+    CONSTRAINT `fk_notifications_users` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+);
     
 ALTER TABLE
     `contracts` ADD CONSTRAINT `contracts_hostel_room_id_foreign` FOREIGN KEY(`hostel_room_id`) REFERENCES `hostel_rooms`(`id`);

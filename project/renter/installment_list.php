@@ -186,33 +186,43 @@ function renderMainContent($installments, $contract_id, $back_url, $is_profile_c
                                     </td>
                                     
                                     <td class="py-4 px-4 whitespace-nowrap">
-                                        <?php if ($ins['status'] === 'paid'): ?>
-                                            <span class="inline-block border px-2 py-0.5 rounded-none text-[9px] font-bold tracking-widest uppercase border-emerald-300 text-emerald-800 bg-emerald-50">
-                                                Paid
-                                            </span>
-                                        <?php elseif ($ins['status'] === 'partially_paid'): ?>
-                                            <span class="inline-block border px-2 py-0.5 rounded-none text-[9px] font-bold tracking-widest uppercase border-amber-300 text-amber-800 bg-amber-50">
-                                                Partial
-                                            </span>
-                                        <?php else: ?>
-                                            <span class="inline-block border px-2 py-0.5 rounded-none text-[9px] font-bold tracking-widest uppercase border-red-300 text-red-700 bg-red-50">
-                                                Unpaid
-                                            </span>
-                                        <?php endif; ?>
-                                    </td>
-                                    
-                                    <td class="py-4 px-4 text-center whitespace-nowrap">
-                                        <?php if ($ins['status'] !== 'paid'): ?>
-                                            <a href="pay_installment.php?installment_id=<?= htmlspecialchars($ins['id']) ?>&from=<?= $current_context_string  ?> " 
-                                               class="inline-block bg-[#0f172a] hover:bg-slate-900 text-[#fef3c7] font-serif text-[10px] font-semibold uppercase tracking-wider px-3.5 py-1.5 transition shadow-xs">
-                                                ငွေပေးချေမည်
-                                            </a>
-                                        <?php else: ?>
-                                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700 inline-flex items-center gap-1 font-serif">
-                                                ✓ ပေးချေပြီး
-                                            </span>
-                                        <?php endif; ?>
-                                    </td>
+    <?php if ($ins['status'] === 'paid'): ?>
+        <span class="inline-block border px-2 py-0.5 rounded-none text-[9px] font-bold tracking-widest uppercase border-emerald-300 text-emerald-800 bg-emerald-50">
+            Paid
+        </span>
+    <?php elseif ($ins['status'] === 'pending'): ?>
+        <!-- Owner အတည်ပြုချက် စောင့်ဆိုင်းနေသည့် Status Badge -->
+        <span class="inline-block border px-2 py-0.5 rounded-none text-[9px] font-bold tracking-widest uppercase border-amber-300 text-amber-800 bg-amber-50">
+            Waiting for Approval
+        </span>
+    <?php elseif ($ins['status'] === 'partially_paid'): ?>
+        <span class="inline-block border px-2 py-0.5 rounded-none text-[9px] font-bold tracking-widest uppercase border-amber-300 text-amber-800 bg-amber-50">
+            Partial
+        </span>
+    <?php else: ?>
+        <span class="inline-block border px-2 py-0.5 rounded-none text-[9px] font-bold tracking-widest uppercase border-red-300 text-red-700 bg-red-50">
+            Unpaid
+        </span>
+    <?php endif; ?>
+</td>
+
+<td class="py-4 px-4 text-center whitespace-nowrap">
+    <?php if ($ins['status'] === 'paid'): ?>
+        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700 inline-flex items-center gap-1 font-serif">
+            ✓ ပေးချေပြီး
+        </span>
+    <?php elseif ($ins['status'] === 'pending'): ?>
+        <!-- Pending ဖြစ်နေပါက ငွေထပ်ပေး၍ မရအောင် Button ကို ပိတ်ထားပြီး အသိပေးစာပြပါ -->
+        <span class="text-[10px] font-bold uppercase tracking-wider text-amber-700 inline-flex items-center gap-1 font-serif italic">
+            ⏳ စစ်ဆေးအတည်ပြုဆဲ
+        </span>
+    <?php else: ?>
+        <a href="pay_installment.php?id=<?= htmlspecialchars($ins['id']) ?>&from=<?= $current_context_string ?>" 
+           class="inline-block bg-[#0f172a] hover:bg-slate-900 text-[#fef3c7] font-serif text-[10px] font-semibold uppercase tracking-wider px-3.5 py-1.5 transition shadow-xs">
+            ငွေပေးချေမည်
+        </a>
+    <?php endif; ?>
+</td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>

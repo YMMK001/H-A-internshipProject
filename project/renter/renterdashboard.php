@@ -55,13 +55,25 @@ try {
         $active_contract_id = $contract['id'];
     }
 
-    // 3. Count total active rentals for pagination
-    $count_stmt = $db->prepare("SELECT COUNT(*) FROM contracts WHERE user_id = :renter_id");
+    // 3. Count total active rentals for pagination (Expired ဖြစ်ပြီး ပေးရန်မကျန်တော့ပါက ဖျောက်မည်)
+    $count_query = "
+        SELECT COUNT(*) 
+        FROM contracts c 
+        WHERE c.user_id = :renter_id 
+          AND (
+            c.end_date >= CURDATE() 
+            OR EXISTS (
+                SELECT 1 FROM installments i 
+                WHERE i.contract_id = c.id AND i.status != 'paid'
+            )
+          )
+    ";
+    $count_stmt = $db->prepare($count_query);
     $count_stmt->execute([':renter_id' => $renter_id]);
     $total_records = (int)$count_stmt->fetchColumn();
     $total_pages = ceil($total_records / $items_per_page);
 
-    // 4. Fetch paginated rentals for this user
+    // 4. Fetch paginated rentals for this user (Expired ဖြစ်ပြီး ပေးရန်မကျန်တော့ပါက ဖျောက်မည်)
     $query = "
         SELECT 
             c.id AS contract_id, c.start_date, c.end_date, c.total_deposit_amount,
@@ -73,6 +85,13 @@ try {
         LEFT JOIN hostel_rooms h ON c.hostel_room_id = h.id
         LEFT JOIN rental_houses rh ON (a.rental_house_id = rh.id OR h.rental_house_id = rh.id)
         WHERE c.user_id = :renter_id
+          AND (
+            c.end_date >= CURDATE() 
+            OR EXISTS (
+                SELECT 1 FROM installments i 
+                WHERE i.contract_id = c.id AND i.status != 'paid'
+            )
+          )
         ORDER BY c.id DESC
         LIMIT :limit OFFSET :offset
     ";
@@ -178,8 +197,6 @@ function renderMainContent($rentals, $active_contract_id, $current_page = 1, $to
             </div>
         <?php endif; ?>
     </section>
-
-    <!-- HISTORIC TENANCY LEDGER ARCHIVE -->
 <?php
 }
 ?>
@@ -266,9 +283,6 @@ function renderMainContent($rentals, $active_contract_id, $current_page = 1, $to
                            data-url="installment_list.php"
                            class="nav-item px-3 py-2.5 text-stone-700 hover:bg-stone-50 transition rounded-none">
                             💳 Payment Ledgers
-                        </a>
-                        <a href="renterhomepage.php" class="px-3 py-2.5 text-stone-700 hover:bg-stone-50 transition rounded-none">
-                            🔍 Find Available Units
                         </a>
                     </nav>
                 </div>

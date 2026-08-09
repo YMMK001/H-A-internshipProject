@@ -16,8 +16,8 @@ try {
     die("Database connection failed: " . $e->getMessage());
 }
 
-// 2. Read installment_id from URL query string
-$installment_id = $_GET['installment_id'] ?? null;
+// 2. Read installment_id from URL query string (supports 'installment_id' or 'id')
+$installment_id = $_GET['installment_id'] ?? $_GET['id'] ?? null;
 
 if (!$installment_id) {
     die("Invalid Request: Missing Installment ID");
@@ -69,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $pdo->beginTransaction();
 
+        // Record the payment submission
         $insert_pay = $pdo->prepare("INSERT INTO payments (installment_id, payment_method_id, paid_amount, payment_image) 
                                      VALUES (:ins_id, :method_id, :amount, :image)");
         $insert_pay->execute([
@@ -77,6 +78,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':amount'    => $paid_amount,
             ':image'     => $image_name
         ]);
+
+        // Update installment status to pending
+        $update_stmt = $pdo->prepare("
+            UPDATE installments 
+            SET status = 'pending'
+            WHERE id = :installment_id
+        ");
+        $update_stmt->execute([':installment_id' => $installment_id]);
 
         $pdo->commit();
         
@@ -115,70 +124,91 @@ function renderPaymentForm($installment, $payment_methods, $back_url, $message) 
 
         <form action="" method="POST" enctype="multipart/form-data" class="space-y-6 text-xs">
             
-            <!-- Amount Payable -->
-            <div>
-                <label class="block text-xs font-serif text-stone-500 italic mb-2">ပေးချေရမည့် ပမာဏ</label>
-                <input type="text" value="<?= number_format($installment['amount_to_pay']) ?> MMK" readonly
-                       class="w-full bg-stone-50 border border-stone-200 px-4 py-3 text-stone-900 font-bold font-sans text-sm rounded-none focus:outline-none cursor-not-allowed">
-                <input type="hidden" name="paid_amount" value="<?= $installment['amount_to_pay'] ?>">
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                <!-- Left Column: Inputs -->
+                <div class="space-y-6">
+                    <!-- Amount Payable -->
+                    <div>
+                        <label class="block text-xs font-serif text-stone-500 italic mb-2">ပေးချေရမည့် ပမာဏ</label>
+                        <input type="text" value="<?= number_format($installment['amount_to_pay']) ?> MMK" readonly
+                               class="w-full bg-stone-50 border border-stone-200 px-4 py-3 text-stone-900 font-bold font-sans text-sm rounded-none focus:outline-none cursor-not-allowed">
+                        <input type="hidden" name="paid_amount" value="<?= $installment['amount_to_pay'] ?>">
+                    </div>
 
-            <!-- Payment Method Dropdown -->
-            <div>
-                <label class="block text-xs font-serif text-stone-500 italic mb-2">ငွေလွှဲမည့် စနစ်ကို ရွေးချယ်ပါ</label>
-                <div class="relative">
-                    <select id="paymentMethodSelect" name="payment_method_id" required onchange="updatePaymentDetails()"
-                            class="w-full px-4 py-2.5 bg-white border border-stone-300 rounded-none text-stone-700 focus:outline-none focus:border-stone-500 appearance-none cursor-pointer">
-                        <option value="" data-image="">-- ရွေးချယ်ရန် --</option>
-                        <?php foreach ($payment_methods as $method): ?>
-                            <?php 
-                                $img_src = '';
-                                if (!empty($method['image'])) {
-                                    $dbPath = trim($method['image']);
-                                    $dbPath = ltrim($dbPath, '/');
-                                    
-                                    if (strpos($dbPath, 'admin/') === 0) {
-                                        $img_src = '../' . $dbPath;
-                                    } else if (strpos($dbPath, 'uploads/') === 0) {
-                                        $img_src = '../admin/' . $dbPath;
-                                    } else {
-                                        $img_src = '../admin/uploads/' . $dbPath;
-                                    }
-                                }
-                            ?>
-                            <option value="<?= $method['id'] ?>" data-image="<?= htmlspecialchars($img_src) ?>">
-                                <?= htmlspecialchars($method['name']) ?> (Acc Name: <?= htmlspecialchars($method['account_name']) ?> | နံပါတ်: <?= htmlspecialchars($method['account_number']) ?>)
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-stone-500">
-                        <svg class="fill-current h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    <!-- Payment Method Dropdown -->
+                    <div>
+                        <label class="block text-xs font-serif text-stone-500 italic mb-2">ငွေလွှဲမည့် စနစ်ကို ရွေးချယ်ပါ</label>
+                        <div class="relative">
+                            <select id="paymentMethodSelect" name="payment_method_id" required onchange="updatePaymentDetails()"
+                                    class="w-full px-4 py-2.5 bg-white border border-stone-300 rounded-none text-stone-700 focus:outline-none focus:border-stone-500 appearance-none cursor-pointer">
+                                <option value="" data-image="">-- ရွေးချယ်ရန် --</option>
+                                <?php foreach ($payment_methods as $method): ?>
+                                    <?php 
+                                        $img_src = '';
+                                        if (!empty($method['image'])) {
+                                            $dbPath = trim($method['image']);
+                                            $dbPath = ltrim($dbPath, '/');
+                                            
+                                            if (strpos($dbPath, 'admin/') === 0) {
+                                                $img_src = '../' . $dbPath;
+                                            } else if (strpos($dbPath, 'uploads/') === 0) {
+                                                $img_src = '../admin/' . $dbPath;
+                                            } else {
+                                                $img_src = '../admin/uploads/' . $dbPath;
+                                            }
+                                        }
+                                    ?>
+                                    <option value="<?= $method['id'] ?>" data-image="<?= htmlspecialchars($img_src) ?>">
+                                        <?= htmlspecialchars($method['name']) ?> (Acc Name: <?= htmlspecialchars($method['account_name']) ?> | နံပါတ်: <?= htmlspecialchars($method['account_number']) ?>)
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-stone-500">
+                                <svg class="fill-current h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Dynamic QR Code Container -->
-            <div id="qrCodeContainer" class="hidden border border-amber-200/80 bg-amber-50/40 p-4 rounded-none text-center transition-all">
-                <p class="text-[10px] font-bold text-stone-600 uppercase tracking-wider mb-2">QR Code ကို Scan ဖတ်၍ ငွေလွှဲပါ</p>
-                <div class="flex justify-center">
-                    <img id="qrCodeImage" src="" alt="Payment QR Code" 
-                         class="max-h-56 object-contain border border-stone-200 shadow-xs rounded-none bg-white p-1 cursor-pointer" 
-                         onclick="openQrModal(this.src)" 
-                         onerror="handleImageError()"
-                         title="Click to enlarge">
+                <!-- Right Column: Placeholder & Dynamic Compact QR Code Container -->
+                <div>
+                    <!-- Default Placeholder when no payment method is selected -->
+                    <div id="qrPlaceholder" class="border border-dashed border-stone-200 bg-stone-50/50 p-6 text-center flex flex-col items-center justify-center min-h-[140px]">
+                        <svg class="w-8 h-8 text-stone-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path>
+                        </svg>
+                        <p class="text-xs text-stone-400 italic font-serif">ငွေလွှဲမည့် အကောင့်ကို ရွေးချယ်ပါက QR Code ပေါ်လာပါမည်</p>
+                    </div>
+
+                    <!-- Compact QR Code Display Box -->
+                    <div id="qrCodeContainer" class="hidden  p-3 rounded-none text-center transition-all">
+                        <p class="text-[10px] font-bold text-stone-600 uppercase tracking-wider mb-2">QR Code ကို Scan ဖတ်၍ ငွေလွှဲပါ</p>
+                        <div class="flex justify-center">
+                            <img id="qrCodeImage" src="" alt="Payment QR Code" 
+                                 class="max-h-28 object-contain border border-stone-200 shadow-xs rounded-none bg-white p-1 cursor-pointer hover:opacity-90 transition" 
+                                 onclick="openQrModal(this.src)" 
+                                 onerror="handleImageError()"
+                                 title="Click to enlarge">
+                        </div>
+                        <p id="qrHelperText" class="text-[9px] text-stone-400 mt-1.5 italic font-serif">ပုံကို နှိပ်၍ အကြီးကြည့်ရှုနိုင်ပါသည်။</p>
+                    </div>
                 </div>
-                <p id="qrHelperText" class="text-[9px] text-stone-400 mt-1.5 italic font-serif">ပုံကို နှိပ်၍ အကြီးကြည့်ရှုနိုင်ပါသည်။</p>
             </div>
 
             <!-- File Upload Box -->
             <div>
                 <label class="block text-xs font-serif text-stone-500 italic mb-2">ငွေလွှဲပြေစာ (SLIP) တင်ရန်</label>
-                <div class="border border-dashed border-stone-300 p-6 bg-stone-50/30 flex items-center gap-4">
+                <div class="border border-dashed border-stone-300 p-6 bg-stone-50/30 flex flex-col items-center justify-center gap-3">
                     <label class="cursor-pointer bg-stone-100 hover:bg-stone-200 border border-stone-300 px-4 py-2 text-xs font-serif font-bold text-stone-800 shadow-xs uppercase tracking-wider transition">
                         CHOOSE FILE
-                        <input type="file" name="payment_image" required accept="image/*" class="hidden" onchange="document.getElementById('fileName').textContent = this.files[0] ? this.files[0].name : 'No file chosen'">
+                        <input type="file" name="payment_image" required accept="image/*" class="hidden" onchange="previewPaymentReceipt(this)">
                     </label>
                     <span id="fileName" class="text-xs text-stone-400 italic font-serif">No file chosen</span>
+                    
+                    <!-- Image Preview Box -->
+                    <div id="receiptPreviewContainer" class="hidden mt-2">
+                        <img id="receiptPreviewImage" src="" alt="Receipt Preview" class="max-h-48 border border-stone-300 p-1 bg-white shadow-xs object-contain">
+                    </div>
                 </div>
             </div>
 
@@ -349,6 +379,7 @@ function renderPaymentForm($installment, $payment_methods, $back_url, $message) 
         const selectedOption = select.options[select.selectedIndex];
         const imageUrl = selectedOption.getAttribute('data-image');
         
+        const placeholder = document.getElementById('qrPlaceholder');
         const container = document.getElementById('qrCodeContainer');
         const img = document.getElementById('qrCodeImage');
         const helperText = document.getElementById('qrHelperText');
@@ -357,10 +388,13 @@ function renderPaymentForm($installment, $payment_methods, $back_url, $message) 
             img.style.display = "block";
             helperText.innerText = "ပုံကို နှိပ်၍ အကြီးကြည့်ရှုနိုင်ပါသည်။";
             img.src = imageUrl;
+            
+            if (placeholder) placeholder.classList.add('hidden');
             container.classList.remove('hidden');
         } else {
             img.src = '';
             container.classList.add('hidden');
+            if (placeholder) placeholder.classList.remove('hidden');
         }
     }
 
@@ -385,6 +419,28 @@ function renderPaymentForm($installment, $payment_methods, $back_url, $message) 
         const menu = document.getElementById('mobileDropdownMenu');
         if (menu) {
             menu.classList.toggle('hidden');
+        }
+    }
+
+    function previewPaymentReceipt(input) {
+        const fileNameSpan = document.getElementById('fileName');
+        const container = document.getElementById('receiptPreviewContainer');
+        const previewImg = document.getElementById('receiptPreviewImage');
+
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            fileNameSpan.textContent = file.name;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                container.classList.remove('hidden');
+            }
+            reader.readAsDataURL(file);
+        } else {
+            fileNameSpan.textContent = 'No file chosen';
+            previewImg.src = '';
+            container.classList.add('hidden');
         }
     }
 </script>

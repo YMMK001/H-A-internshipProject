@@ -129,7 +129,7 @@ $payments = $stmt->fetchAll();
             </div>
 
             <!-- Automated Ledger Notification Box -->
-            <div class="bg-[#1b365d] text-white p-6 rounded-sm shadow-xs space-y-2">
+            <div class="bg-[#0f172a] text-white p-6 rounded-sm shadow-xs space-y-2">
                 <h3 class="text-xs font-bold uppercase tracking-wider text-amber-400 title-classic">AUTOMATED LEDGER NOTIFICATION</h3>
                 <p class="text-[11px] text-slate-200 leading-relaxed italic">
                     Your statements and installment entries update automatically. For early contract notices or modifications, contact your primary property manager.

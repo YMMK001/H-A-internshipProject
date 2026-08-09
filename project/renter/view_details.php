@@ -343,3 +343,6 @@ $is_available = (int)$details['is_available'] === 1;
     </script>
 </body>
 </html>
+
+
+ 

@@ -519,65 +519,68 @@ $paginatedHostels = array_slice($hostels, $hostelOffset, $itemsPerPage);
 
 <script>
     function filterProperties() {
-        const textValue = document.getElementById('citySearchInput').value.toLowerCase().trim();
-        const typeValue = document.getElementById('typeSelect').value.toLowerCase();
+    const textValue = document.getElementById('citySearchInput').value.toLowerCase().trim();
+    const selectValue = document.getElementById('typeSelect').value.toLowerCase().trim();
 
-        const cards = document.querySelectorAll('.property-card');
-        cards.forEach(card => {
-            const cardText = card.textContent.toLowerCase();
-            const type = card.getAttribute('data-type') || "";
-            const status = card.getAttribute('data-status') || "";
+    // 1. Cards စစ်ထုတ်ခြင်း (.property-card)
+    const cards = document.querySelectorAll('.property-card');
+    cards.forEach(card => {
+        const cardText = card.textContent.toLowerCase();
+        const type = (card.getAttribute('data-type') || "").toLowerCase();
+        const status = (card.getAttribute('data-status') || "").toLowerCase();
 
-            const matchText = cardText.includes(textValue) || status.toLowerCase().includes(textValue);
-            const matchType = typeValue === "" || type === typeValue;
+        // Search Input ဖြင့် စစ်ဆေးခြင်း
+        const matchText = textValue === "" || cardText.includes(textValue) || status.includes(textValue);
 
-            card.style.display = (matchText && matchType) ? "" : "none";
-        });
-
-        const rows = document.querySelectorAll('.property-row');
-        rows.forEach(row => {
-            const rowText = row.textContent.toLowerCase();
-            const type = row.getAttribute('data-type') || "";
-            const status = row.getAttribute('data-status') || "";
-
-            const matchText = rowText.includes(textValue) || status.toLowerCase().includes(textValue);
-            const matchType = typeValue === "" || type === typeValue;
-
-            row.style.display = (matchText && matchType) ? "" : "none";
-        });
-    }
-
-    function filterByCity() {
-        filterProperties();
-    }
-
-    function quickSearch(keyword) {
-        const searchInput = document.getElementById('citySearchInput');
-        const typeSelect = document.getElementById('typeSelect');
-
-        searchInput.value = keyword;
-        typeSelect.value = "";
-        filterProperties();
-    }
-
-    function switchView(viewType) {
-        const cardLayout = document.getElementById('cardLayout');
-        const tableLayout = document.getElementById('tableLayout');
-        const cardViewBtn = document.getElementById('cardViewBtn');
-        const tableViewBtn = document.getElementById('tableViewBtn');
-
-        if (viewType === 'card') {
-            cardLayout.classList.remove('hidden');
-            tableLayout.classList.add('hidden');
-            cardViewBtn.className = "px-3 py-1 bg-white text-slate-900 font-medium rounded text-[11px] shadow-sm transition-all";
-            tableViewBtn.className = "px-3 py-1 text-stone-500 hover:text-slate-900 font-medium rounded text-[11px] transition-all";
+        // Dropdown (Property Type သို့မဟုတ် Township) ဖြင့် စစ်ဆေးခြင်း
+        let matchType = false;
+        if (selectValue === "") {
+            matchType = true;
+        } else if (selectValue === "apartment" || selectValue === "hostel") {
+            // Property Type ရွေးထားပါက data-type ဖြင့် တိုက်စစ်မည်
+            matchType = (type === selectValue);
         } else {
-            cardLayout.classList.add('hidden');
-            tableLayout.classList.remove('hidden');
-            tableViewBtn.className = "px-3 py-1 bg-white text-slate-900 font-medium rounded text-[11px] shadow-sm transition-all";
-            cardViewBtn.className = "px-3 py-1 text-stone-500 hover:text-slate-900 font-medium rounded text-[11px] transition-all";
+            // Township (မြို့နယ်) ရွေးထားပါက Card ထဲရှိ စာသား (Township Name) ကို တိုက်စစ်မည်
+            matchType = cardText.includes(selectValue);
         }
-    }
+
+        card.style.display = (matchText && matchType) ? "" : "none";
+    });
+
+    // 2. Table Rows စစ်ထုတ်ခြင်း (.property-row)
+    const rows = document.querySelectorAll('.property-row');
+    rows.forEach(row => {
+        const rowText = row.textContent.toLowerCase();
+        const type = (row.getAttribute('data-type') || "").toLowerCase();
+        const status = (row.getAttribute('data-status') || "").toLowerCase();
+
+        const matchText = textValue === "" || rowText.includes(textValue) || status.includes(textValue);
+
+        let matchType = false;
+        if (selectValue === "") {
+            matchType = true;
+        } else if (selectValue === "apartment" || selectValue === "hostel") {
+            matchType = (type === selectValue);
+        } else {
+            matchType = rowText.includes(selectValue);
+        }
+
+        row.style.display = (matchText && matchType) ? "" : "none";
+    });
+}
+
+function filterByCity() {
+    filterProperties();
+}
+
+function quickSearch(keyword) {
+    const searchInput = document.getElementById('citySearchInput');
+    const typeSelect = document.getElementById('typeSelect');
+
+    searchInput.value = keyword;
+    typeSelect.value = "";
+    filterProperties();
+}
 </script>
 </body>
 </html>
