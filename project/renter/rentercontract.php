@@ -18,6 +18,28 @@ if ($conn->connect_error) {
     die("Database Connection Failed: " . $conn->connect_error);
 }
 
+// 2. Fetch current user details and verify role FIRST
+$user_id = $_SESSION['user_id'];
+$user_query = "SELECT name, role FROM users WHERE id = ?";
+$stmt = $conn->prepare($user_query);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$user_result = $stmt->get_result();
+$user_data = $user_result->fetch_assoc();
+$stmt->close();
+
+// 3. Strict Role Access Control Check (Fixed with case-insensitive check)
+$user_role = strtolower(trim($user_data['role'] ?? ''));
+
+if (!$user_data || $user_role !== 'renter') {
+    // Role မကိုက်ညီပါက Login စာမျက်နှာသို့ Alert ဖြင့် ပြန်ညွှန်းမည်
+    header("Location: ../auth/login.php?error=unauthorized_role");
+    exit();
+}
+
+$renter_name = $user_data['name'];
+
+// 4. Form Submission Handling (POST Process)
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['unit'])) {
     
     $form_user_id = intval($_POST['user_id']);
@@ -27,16 +49,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['unit'])) {
     $apartment_id = null;
     $hostel_room_id = null;
 
-    // အခန်းအမျိုးအစားအလိုက် ID ကို သေချက်ာခွဲထုတ်ခြင်း
+    // အခန်းအမျိုးအစားအလိုက် ID ကို သေချာခွဲထုတ်ခြင်း
     if (strpos($selected_unit, 'apartment_') === 0) {
         $apartment_id = intval(str_replace('apartment_', '', $selected_unit));
     } elseif (strpos($selected_unit, 'hostel_') === 0) {
         $hostel_room_id = intval(str_replace('hostel_', '', $selected_unit));
     }
 
-    // FIX: Capture user-submitted dates directly from the form post array
-    $start_date = $_POST['start_date'] ?? null; 
-    $end_date = $_POST['end_date'] ?? null; 
+    // Capture user-submitted dates directly from form
+    $start_date = !empty($_POST['start_date']) ? $_POST['start_date'] : null; 
+    $end_date   = !empty($_POST['end_date']) ? $_POST['end_date'] : null; 
     
     // စရန်ငွေကို float အဖြစ် ပြောင်းလဲခြင်း
     $total_deposit_amount = isset($_POST['total_deposit']) ? floatval($_POST['total_deposit']) : 0.00;
@@ -49,12 +71,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['unit'])) {
     $insert_stmt->bind_param("iiissd", $form_user_id, $apartment_id, $hostel_room_id, $start_date, $end_date, $total_deposit_amount);
     
     if ($insert_stmt->execute()) {
-        // အသစ်ဝင်သွားတဲ့ Contract ရဲ့ ID ကို ယူခြင်း
         $new_contract_id = $conn->insert_id; 
-
         header("Location: installment_list.php?contract_id=" . $new_contract_id);
         exit();
-    
     } else {
         echo "<div style='color:red; padding:15px; background:#ffebee; border:1px solid red; margin:10px 0;'>
                 ဒေတာသိမ်းဆည်းရာတွင် အမှားအယွင်းရှိနေပါသည်: " . htmlspecialchars($insert_stmt->error) . "
@@ -63,28 +82,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['unit'])) {
     $insert_stmt->close();
 }
 
-// 2. Fetch current user details and verify role
-$user_id = $_SESSION['user_id'];
-$user_query = "SELECT name, role FROM users WHERE id = ?";
-$stmt = $conn->prepare($user_query);
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$user_result = $stmt->get_result();
-$user_data = $user_result->fetch_assoc();
-
-// 3. Strict Role Access Control Check
-if (!$user_data || $user_data['role'] !== 'renter') {
-    die("Access Denied: This dashboard is reserved for Renters only.");
-}
-
-$renter_name = $user_data['name'];
-
 // --- Capture Targeted URL Parameters from Clicking "Contract" ---
 $target_id   = isset($_GET['item_id']) ? intval($_GET['item_id']) : null;
 $target_type = isset($_GET['type']) ? $_GET['type'] : null;
 $target_key  = ($target_id && $target_type) ? $target_type . "_" . $target_id : "";
 
-// 4. Fetch available Apartments joined with their parent Rental House info & First Image
+// 5. Fetch available Apartments
 $apartments_query = "SELECT a.id, a.apartment_price, a.floor_level, a.max_occupy, a.deposit_amount, rh.title, rh.township, rh.amenities, img.image_url 
                      FROM apartments a
                      JOIN rental_houses rh ON a.rental_house_id = rh.id
@@ -95,7 +98,7 @@ $apartments_query = "SELECT a.id, a.apartment_price, a.floor_level, a.max_occupy
                      WHERE a.is_available = 1";
 $apartments_result = $conn->query($apartments_query);
 
-// 5. Fetch available Hostel Rooms joined with their parent Rental House info & First Image
+// 6. Fetch available Hostel Rooms
 $hostels_query = "SELECT h.id, h.monthly_price, h.room_num, h.room_type, h.sub_unit, h.deposit_amount, rh.title, rh.township, rh.amenities, img.image_url 
                   FROM hostel_rooms h
                   JOIN rental_houses rh ON h.rental_house_id = rh.id
@@ -106,7 +109,7 @@ $hostels_query = "SELECT h.id, h.monthly_price, h.room_num, h.room_type, h.sub_u
                   WHERE h.is_available = 1";
 $hostels_result = $conn->query($hostels_query);
 
-// 6. Build Arrays directly to prevent cursor exhausting issues during loops
+// 7. Build Arrays for JS & Dropdown
 $unit_metadata = [];
 $apartments_list = [];
 if ($apartments_result && $apartments_result->num_rows > 0) {
@@ -160,9 +163,9 @@ if ($hostels_result && $hostels_result->num_rows > 0) {
 </head>
 <body class="bg-[#faf9f6] font-classic flex flex-col h-screen text-gray-800 overflow-hidden">
 
-            <?php include 'homepageheader.php';?>
+    <?php include 'homepageheader.php';?>
 
-   <div class="flex-1 h-full w-full max-w-6xl mx-auto py-10 px-4 space-y-8 overflow-y-auto">
+    <div class="flex-1 h-full w-full max-w-6xl mx-auto py-10 px-4 space-y-8 overflow-y-auto">
         <div class="bg-white border border-gray-200 rounded-md p-6 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div class="md:hidden mb-4">
                 <button onclick="toggleMobileMenu()" class="bg-[#292515] text-white text-xs font-serif px-3 py-2 shadow-sm border border-stone-700">
@@ -226,13 +229,12 @@ if ($hostels_result && $hostels_result->num_rows > 0) {
                     </select>
                 </div>
 
-                <!-- 🖼 DYNAMIC UNIT PREVIEW CARD WITH IMAGE -->
+                <!-- DYNAMIC UNIT PREVIEW CARD WITH IMAGE -->
                 <div class="bg-white border border-gray-200 rounded-md p-4 relative overflow-hidden shadow-sm">
                     <div class="absolute top-0 right-0 bg-slate-900 text-white text-[9px] font-bold px-2.5 py-0.5 rounded-bl uppercase tracking-wider">
                         Unit Preview
                     </div>
                     <div class="flex flex-col sm:flex-row gap-5">
-                        <!-- Image Element Container -->
                         <div id="imagePreviewContainer" class="w-full sm:w-28 h-24 bg-stone-100 border border-gray-200 rounded overflow-hidden flex items-center justify-center shrink-0">
                             <img id="previewImage" src="" alt="Property" class="w-full h-full object-cover hidden">
                             <span id="noImageText" class="text-[10px] text-gray-400 uppercase tracking-wider font-medium">No Image</span>
@@ -280,8 +282,8 @@ if ($hostels_result && $hostels_result->num_rows > 0) {
 
                 <div class="flex justify-end pt-4 border-t gap-2 border-gray-100">
                     <a href="renterhomepage.php" class="bg-gray-100 hover:bg-slate-900 hover:text-gray-200 text-gray-700 font-semibold text-xs uppercase tracking-wider px-4 py-2.5 border border-gray-300 rounded transition-colors">
-                            Cancel
-                        </a>
+                        Cancel
+                    </a>
                     <button type="submit" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-6 py-3 rounded-sm uppercase tracking-wider transition-all shadow-sm">
                         🚀 စာချုပ်တောင်းဆိုချက် ပေးပို့မည်
                     </button>
@@ -307,7 +309,6 @@ if ($hostels_result && $hostels_result->num_rows > 0) {
             const pAmenities = document.getElementById('previewAmenities');
             const depositInput = document.getElementById('total_deposit_input');
             
-            // Image Preview Elements
             const pImage     = document.getElementById('previewImage');
             const noImageText = document.getElementById('noImageText');
 
@@ -325,7 +326,6 @@ if ($hostels_result && $hostels_result->num_rows > 0) {
                     depositInput.value = data.deposit ? data.deposit : 0;
                 }
 
-                // Handle Image Loading Dynamically
                 if (data.image_url && data.image_url !== "") {
                     pImage.src = data.image_url;
                     pImage.classList.remove('hidden');
@@ -346,38 +346,33 @@ if ($hostels_result && $hostels_result->num_rows > 0) {
 
             if (selector) {
                 if (targetId && targetType) {
-                    // URL parameter ပါလာပါက ၎င်းတန်ဖိုးကို select လုပ်သည်
                     const generatedKey = targetType + "_" + targetId;
                     selector.value = generatedKey;
                     
-                    // Fallback: အကယ်၍ matched မဖြစ်ဘဲ တန်ဖိုးလွတ်နေပါက ပထမဆုံး option ကို auto ရွေးရန်
                     if (selector.selectedIndex === -1) {
                         selector.selectedIndex = 0;
                     }
                 } else {
-                    // URL parameter မပါလာပါက ပထမဦးဆုံး option ကို auto ရွေးချယ်ပေးထားရန်
                     selector.selectedIndex = 0;
                 }
             }
-            // ရွေးချယ်ပြီးသား data ဖြင့် Preview Card ကို ချက်ချင်း Update ပြုလုပ်ရန်
             updatePreviewCard();
         });
+
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('tenantSidebar');
+            const overlay = document.getElementById('mobMenuOverlay');
+            
+            if (sidebar && sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                if(overlay) overlay.classList.remove('hidden');
+            } else if(sidebar) {
+                sidebar.classList.remove('translate-x-0');
+                sidebar.classList.add('-translate-x-full');
+                if(overlay) overlay.classList.add('hidden');
+            }
+        }
     </script>
-    <script>
-      function toggleMobileMenu() {
-          const sidebar = document.getElementById('tenantSidebar');
-          const overlay = document.getElementById('mobMenuOverlay');
-          
-          if (sidebar && sidebar.classList.contains('-translate-x-full')) {
-              sidebar.classList.remove('-translate-x-full');
-              sidebar.classList.add('translate-x-0');
-              if(overlay) overlay.classList.remove('hidden');
-          } else if(sidebar) {
-              sidebar.classList.remove('translate-x-0');
-              sidebar.classList.add('-translate-x-full');
-              if(overlay) overlay.classList.add('hidden');
-          }
-      }
-  </script>
 </body>
 </html>

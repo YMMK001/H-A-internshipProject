@@ -54,12 +54,14 @@ if ($type_lower === 'apartment') {
         ORDER BY c.id DESC LIMIT 1
     ";
 } else {
+    // 👈 Added r.gender_type to the SELECT query
     $sql = "
         SELECT 
             h.*, 
             r.id AS room_id,
             r.room_num, 
             r.room_type, 
+            r.gender_type,
             r.sub_unit, 
             r.monthly_price AS price, 
             r.deposit_amount, 
@@ -159,15 +161,28 @@ $is_available = (int)$details['is_available'] === 1;
                 </div>
 
                 <div class="p-6 md:p-8 bg-stone-50 border-b border-gray-200 relative">
-                    <div class="absolute top-6 right-6">
+                    <!-- Badges Container -->
+                    <div class="absolute top-6 right-6 flex flex-col sm:flex-row items-end gap-1.5">
                         <?php if ($type_lower === 'apartment'): ?>
                             <span class="bg-white text-stone-800 border border-stone-300 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm">Apartment</span>
                         <?php else: ?>
                             <span class="bg-white text-stone-800 border border-stone-300 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm">Hostel Room</span>
+                            
+                            <!-- 👈 Hostel Gender Badge Display -->
+                            <?php
+                            $gType = $details['gender_type'] ?? 'any';
+                            if ($gType === 'male_only') {
+                                echo '<span class="bg-blue-50 text-blue-800 border border-blue-300 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm">Male Only / ကျားသီးသန့်</span>';
+                            } elseif ($gType === 'female_only') {
+                                echo '<span class="bg-pink-50 text-pink-800 border border-pink-300 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm">Female Only / မသီးသန့်</span>';
+                            } else {
+                                echo '<span class="bg-purple-50 text-purple-800 border border-purple-300 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm">Any Gender / ကျား/မ မရွေး</span>';
+                            }
+                            ?>
                         <?php endif; ?>
                     </div>
 
-                    <h1 class="text-xl md:text-2xl font-bold tracking-tight text-stone-900 title-classic max-w-[75%] uppercase"><?= htmlspecialchars($details['title']) ?></h1>
+                    <h1 class="text-xl md:text-2xl font-bold tracking-tight text-stone-900 title-classic max-w-[70%] uppercase"><?= htmlspecialchars($details['title']) ?></h1>
                     <p class="text-stone-400 text-xs mt-2 flex items-center gap-1 font-medium tracking-wide">
                         📍 <?= htmlspecialchars($details['full_address'] ?? '') ?>၊ <?= htmlspecialchars($details['township']) ?>မြို့နယ်။
                     </p>
@@ -224,6 +239,21 @@ $is_available = (int)$details['is_available'] === 1;
                                 <div class="p-3.5 flex justify-between text-xs font-medium"><span class="text-stone-400 uppercase tracking-wider">Room Number / အဆောင်ခန်းနံပါတ်</span> <span class="font-bold text-stone-800">Room <?= htmlspecialchars($details['room_num']) ?></span></div>
                                 <div class="p-3.5 flex justify-between text-xs font-medium"><span class="text-stone-400 uppercase tracking-wider">Room Type / အခန်းအမျိုးအစား</span> <span class="font-bold text-stone-800"><?= htmlspecialchars($details['room_type']) ?></span></div>
                                 <div class="p-3.5 flex justify-between text-xs font-medium"><span class="text-stone-400 uppercase tracking-wider">Sub-Unit / အခန်းခွဲယူနစ်</span> <span class="font-bold text-stone-800"><?= $details['sub_unit'] ? htmlspecialchars($details['sub_unit']) : '-' ?></span></div>
+                                
+                                <!-- 👈 Added Gender Type Row -->
+                                <div class="p-3.5 flex justify-between text-xs font-medium">
+                                    <span class="text-stone-400 uppercase tracking-wider">Allowed Gender / နေထိုင်ခွင့်ပြုသည့် ကျား/မ</span> 
+                                    <span class="font-bold text-stone-800">
+                                        <?php 
+                                            $gMap = [
+                                                'male_only'   => 'Male Only (ကျားသီးသန့်)',
+                                                'female_only' => 'Female Only (မသီးသန့်)',
+                                                'any'         => 'Any Gender (ကျား/မ မရွေး)'
+                                            ];
+                                            echo htmlspecialchars($gMap[$details['gender_type']] ?? 'Any Gender');
+                                        ?>
+                                    </span>
+                                </div>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -342,7 +372,4 @@ $is_available = (int)$details['is_available'] === 1;
         }
     </script>
 </body>
-</html>
-
-
- 
+</html> 

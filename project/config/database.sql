@@ -39,6 +39,7 @@ CREATE TABLE `hostel_rooms`(
     `rental_house_id` INT NOT NULL,
     `room_num` VARCHAR(50) NOT NULL,
     `room_type` VARCHAR(100) NULL,
+    `gender_type` ENUM('male_only', 'female_only', 'any') NOT NULL DEFAULT 'any', -- 👈 Gender Column ထည့်သွင်းထားသည်
     `sub_unit` VARCHAR(50) NULL,
     `monthly_price` DECIMAL(10, 2) NOT NULL,
     `is_available` BOOLEAN NULL DEFAULT 1,
@@ -84,6 +85,7 @@ CREATE TABLE `payments`(
     `paid_amount` BIGINT NOT NULL,
     `payment_image` VARCHAR(255) NULL,
     `paid_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP());
+    
     CREATE TABLE `notifications` (
     `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user_id` INT NOT NULL,
@@ -93,6 +95,26 @@ CREATE TABLE `payments`(
     `is_read` BOOLEAN NULL DEFAULT 0,
     `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP(),
     CONSTRAINT `fk_notifications_users` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+);
+
+
+CREATE TABLE `preference_requests` (
+    `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `user_id` INT NOT NULL,
+    `rentable_type` VARCHAR(50) NOT NULL COMMENT 'apartment, hostel, or both',
+    `city` VARCHAR(100) NOT NULL,
+    `township` VARCHAR(100) NULL,
+    `min_price` DECIMAL(10, 2) NULL DEFAULT 0.00,
+    `max_price` DECIMAL(10, 2) NOT NULL,
+    `room_type` VARCHAR(100) NULL COMMENT 'Single, Shared, Studio, etc.',
+    `max_occupy` INT NULL COMMENT 'For apartment/room capacity',
+    `preferred_move_in_date` DATE NULL,
+    `desired_amenities` TEXT NULL COMMENT 'JSON or comma-separated amenities string',
+    `note` TEXT NULL,
+    `status` ENUM('pending', 'matched', 'closed') NULL DEFAULT 'pending',
+    `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP(),
+    `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+    CONSTRAINT `fk_preference_requests_users` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
 );
     
 ALTER TABLE

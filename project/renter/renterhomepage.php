@@ -5,9 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // ၂။ Null Parameter အမှားများမတက်စေရန် Session Username အား စစ်ဆေးပြင်ဆင်ခြင်း
-if (!isset($_SESSION['username'])) {
-    $_SESSION['username'] = "Renter";
-}
+
 
 // User Logged-in စစ်ဆေးခြင်း နှင့် User ID ရယူခြင်း
 $isLoggedIn = isset($_SESSION['user_id']) || isset($_SESSION['id']);
@@ -64,6 +62,7 @@ $query = "
         rh.city,
         ap.apartment_price AS price,
         CONCAT('Floor: ', ap.floor_level, ' | 👥 Max: ', ap.max_occupy, ' ဦး') AS unit_details,
+        NULL AS gender_type,
         ap.is_available,
         img.image_url,
         'apartment' AS type
@@ -87,6 +86,7 @@ $query = "
         rh.city,
         hr.monthly_price AS price,
         CONCAT('Room: ', hr.room_num, ' | ', hr.room_type, ' (', hr.sub_unit, ')') AS unit_details,
+        hr.gender_type AS gender_type,
         hr.is_available,
         img.image_url,
         'hostel' AS type
@@ -172,7 +172,7 @@ $paginatedHostels = array_slice($hostels, $hostelOffset, $itemsPerPage);
     ?>
 
     <!-- MAIN CONTENT CONTAINER -->
-    <main class="flex-1 w-full">
+   <main class="flex-1 w-full">
         
         <!-- HEADER / HERO INTRO -->
         <header class="relative bg-gradient-to-b from-[#fcfbf9] to-[#f4f1ea] rounded-3xl border border-stone-300/80 py-16 sm:py-20 text-center overflow-hidden font-serif shadow-2xl transition-all duration-500">
@@ -217,10 +217,8 @@ $paginatedHostels = array_slice($hostels, $hostelOffset, $itemsPerPage);
                     </button> 
                     <span class="text-stone-300">|</span>
                     
-                    <button onclick="quickSearch('Mandalay')" class="text-stone-900 hover:text-amber-900 font-bold underline underline-offset-4 decoration-amber-800/40 hover:decoration-amber-900 transition-all px-1.5">
-                        မန္တလေး
-                    </button> 
-                    <span class="text-stone-300">|</span>
+                    
+                    
                     
                     <button onclick="quickSearch('AVAILABLE')" class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 font-bold px-3 py-1 rounded-lg transition-all shadow-xs">
                         <i class="fa-solid fa-building text-[10px]"></i>
@@ -394,6 +392,19 @@ $paginatedHostels = array_slice($hostels, $hostelOffset, $itemsPerPage);
                                 $statusClass = $isAvailable ? 'text-emerald-700 border-emerald-200 bg-emerald-50' : 'text-stone-400 border-stone-200 bg-stone-50';
                                 $imagePath   = (!empty($row['image_url'])) ? htmlspecialchars($row['image_url']) : 'uploads/default.jpg';
                                 $opacityClass = $isAvailable ? 'opacity-100' : 'opacity-80';
+
+                                // Gender Label & Badge UI Setup
+                                $genderType = $row['gender_type'] ?? 'any';
+                                $genderLabel = '👥 Any Gender';
+                                $genderBadgeClass = 'bg-gray-100 text-gray-700 border-gray-200';
+
+                                if ($genderType === 'male_only') {
+                                    $genderLabel = '👨 Male Only';
+                                    $genderBadgeClass = 'bg-blue-50 text-blue-700 border-blue-200';
+                                } elseif ($genderType === 'female_only') {
+                                    $genderLabel = '👩 Female Only';
+                                    $genderBadgeClass = 'bg-rose-50 text-rose-700 border-rose-200';
+                                }
                             ?>
                             <div class="property-card bg-white border border-gray-200 rounded-md overflow-hidden hover:shadow-md transition-all flex flex-col justify-between <?php echo $opacityClass; ?>" 
                                  data-city="<?= htmlspecialchars(strtolower($row['city'])) ?>" 
@@ -404,12 +415,20 @@ $paginatedHostels = array_slice($hostels, $hostelOffset, $itemsPerPage);
                                     <div class="relative h-48 w-full overflow-hidden bg-stone-100">
                                         <img src="<?= $imagePath ?>" alt="Hostel" class="w-full h-full object-cover grayscale-[15%] hover:grayscale-0 transition-all duration-300" onerror="this.onerror=null; this.src='uploads/default.jpg';">
                                         <span class="absolute top-3 left-3 bg-stone-700 text-white text-[9px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-sm">Hostel</span>
+                                        
+                                        <!-- Gender Badge over image -->
+                                        <span class="absolute top-3 right-3 text-[10px] font-semibold border px-2 py-0.5 rounded-sm shadow-sm <?= $genderBadgeClass ?>">
+                                            <?= $genderLabel ?>
+                                        </span>
                                     </div>
                                     <div class="p-5">
                                         <h3 class="font-bold text-slate-800 text-base line-clamp-1 tracking-tight"><?= htmlspecialchars($row['title']) ?></h3>
                                         <p class="text-[11px] text-gray-400 mt-1 uppercase tracking-wider">📍 <?= htmlspecialchars($row['township']) ?>, <?= htmlspecialchars($row['city']) ?></p>
                                         <div class="my-4 bg-stone-50 p-3 rounded border border-stone-200/60 text-xs text-gray-600 font-medium">
                                             <?= htmlspecialchars($row['unit_details']) ?>
+                                            <div class="mt-1 pt-1 border-t border-stone-200/40 text-[11px] font-semibold text-stone-500">
+                                                အမျိုးအစား: <span class="text-stone-800"><?= $genderLabel ?></span>
+                                            </div>
                                         </div>
                                         <div class="flex items-center justify-between pt-2 border-t border-gray-100">
                                             <div>
@@ -458,10 +477,7 @@ $paginatedHostels = array_slice($hostels, $hostelOffset, $itemsPerPage);
     
     
             <!-- Table Layout Section -->
-            
-
-            <!-- Contact Section -->
-            <section class="mt-20 border-t border-stone-200 pt-14 max-w-6xl mx-auto">
+             <section class="mt-20 border-t border-stone-200 pt-14 max-w-6xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div class="space-y-3">
                         <span class="text-[10px] uppercase font-bold tracking-widest text-amber-800">Get In Touch</span>
@@ -515,9 +531,9 @@ $paginatedHostels = array_slice($hostels, $hostelOffset, $itemsPerPage);
             </div>
         </div>
     </footer>
-</div>
 
-<script>
+</div>
+ <script>
     function filterProperties() {
     const textValue = document.getElementById('citySearchInput').value.toLowerCase().trim();
     const selectValue = document.getElementById('typeSelect').value.toLowerCase().trim();

@@ -149,11 +149,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 foreach ($_POST['rooms'] as $index => $room) {
 
-                    $room_num       = htmlspecialchars($room['room_num']);
-                    $room_type      = htmlspecialchars($room['room_type']);
-                    $sub_unit       = htmlspecialchars($room['sub_unit']);
-                    $monthly_price  = (float)$room['monthly_price'];
-                    $deposit_amount = (float)$room['deposit_amount'];
+                    $room_num       = htmlspecialchars(trim($room['room_num'] ?? ''));
+                    $room_type      = htmlspecialchars(trim($room['room_type'] ?? ''));
+                    
+                    // Validate ENUM values ('male_only', 'female_only', 'any') strictly
+                    $allowed_genders = ['male_only', 'female_only', 'any'];
+                    $raw_gender      = $room['gender_type'] ?? 'any';
+                    $gender_type     = in_array($raw_gender, $allowed_genders, true) ? $raw_gender : 'any';
+
+                    $sub_unit       = htmlspecialchars(trim($room['sub_unit'] ?? ''));
+                    $monthly_price  = (float)($room['monthly_price'] ?? 0);
+                    $deposit_amount = (float)($room['deposit_amount'] ?? 0);
 
                     $roomFileFallback = null;
                     if (isset($_FILES['rooms']['name'][$index]['room_image'])) {
@@ -174,9 +180,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ]);
                     }
 
+                    // Query matches table schema columns exactly
                     $sql_hostel = "
-                        INSERT INTO hostel_rooms (rental_house_id, room_num, room_type, sub_unit, monthly_price, deposit_amount, is_available)
-                        VALUES (:rental_house_id, :room_num, :room_type, :sub_unit, :monthly_price, :deposit_amount, 1)
+                        INSERT INTO hostel_rooms 
+                        (rental_house_id, room_num, room_type, gender_type, sub_unit, monthly_price, deposit_amount, is_available)
+                        VALUES 
+                        (:rental_house_id, :room_num, :room_type, :gender_type, :sub_unit, :monthly_price, :deposit_amount, 1)
                     ";
 
                     $stmt_hostel = $pdo->prepare($sql_hostel);
@@ -184,6 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':rental_house_id' => $rental_house_id,
                         ':room_num'        => $room_num,
                         ':room_type'       => $room_type,
+                        ':gender_type'     => $gender_type,
                         ':sub_unit'        => $sub_unit,
                         ':monthly_price'   => $monthly_price,
                         ':deposit_amount'  => $deposit_amount
@@ -274,13 +284,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div id="step1-section" class="space-y-6">
                         <div>
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Post  Title <span class="text-red-600">*</span></label>
-                            <input type="text" name="title" required placeholder="ဥပမာ - စမ်းချောင်းမြို့နယ်ရှိ အဆင့်မြင့်ပြင်ဆင်ပြီး တိုက်ခန်း"
+                            <input type="text" name="title" required placeholder="For example - a high-end furnished apartment in Sanchaung Township"
                                    class="w-full px-3 py-2.5 border border-gray-300 rounded-none focus:border-gray-800 outline-none transition-all placeholder:text-gray-400 bg-white text-sm">
                         </div>
 
                         <div>
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Detail Description (Description)</label>
-                            <textarea name="description" rows="4" placeholder="အိမ် သို့မဟုတ် အဆောင်အကြောင်း အသေးစိတ် သိရှိလိုသည်များကို ရေးသားရန်..." 
+                            <textarea name="description" rows="4" placeholder=" Write down details you wish to know about the house or dormitory..." 
                                       class="w-full px-3 py-2.5 border border-gray-300 rounded-none outline-none focus:border-gray-800 transition-all placeholder:text-gray-400 bg-white text-sm"></textarea>
                         </div>
 
@@ -299,7 +309,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <input type="radio" name="rentable_type" value="Hostel" class="w-4 h-4 text-gray-800 focus:ring-0 mt-0.5 accent-gray-800">
                                     <div class="flex flex-col">
                                         <span class="font-bold text-gray-900 text-sm">🏫 Hostel</span>
-                                        <span class="text-[11px] text-gray-600 mt-1">အဆောင်ခန်းများ၊ အိပ်ဆောင်ကုတင်များ သီးသန့်စီခွဲငှားရန် Dormitories,dorm beds for rent individually</span>
+                                        <span class="text-[11px] text-gray-600 mt-1">Dormitories,dorm beds for rent individually</span>
                                     </div>
                                 </label>
                             </div>
@@ -309,8 +319,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div>
                                 <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">City<span class="text-red-600">*</span></label>
                                 <select name="city" class="w-full px-3 py-2.5 border border-gray-300 rounded-none outline-none bg-white focus:border-gray-800 transition-all text-sm">
-                                    <option value="Yangon">ရန်ကုန်</option>
-                                    <option value="Mandalay">မန္တလေး</option>
+                                    <option value="Yangon">Yangon</option>
+                                    
                                 </select>
                             </div>
                             <div>
@@ -321,7 +331,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <option value="Bahan">Bahan</option>
                                     <option value="Botahtaung">Botahtaung</option>
                                      <option value="Dagon">Dagon</option>
-                                   
+                                    <option value="Kyimyindaing">Kyimyindaing</option>
                                     <option value="Kamayut">Kamayut</option>
                                      <option value="Kyauktada">Kyauktada</option>
                                     <option value="Lanmadaw">Lanmadaw</option>
@@ -366,7 +376,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         <div>
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Full Address <span class="text-red-600">*</span></label>
-                            <textarea name="full_address" required rows="3" placeholder="လမ်းအမည်၊ အိမ်နံပါတ်၊ အနီးနားအမှတ်အသားများ အပြည့်အစုံရေးပါ..." 
+                            <textarea name="full_address" required rows="3" placeholder="Write the full street name, house number, and nearby landmarks..." 
                                       class="w-full px-3 py-2.5 border border-gray-300 rounded-none outline-none focus:border-gray-800 transition-all placeholder:text-gray-400 bg-white text-sm"></textarea>
                         </div>
 
@@ -404,7 +414,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <!-- APARTMENT DETAIL SECTION -->
                         <div id="apartment-fields" class="space-y-6">
                             <div class="pb-2 border-b-2 border-gray-800">
-                                <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider">🏢 Apartment အသေးစိတ်အချက်အလက်</h3>
+                                <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider">🏢 Apartment Details</h3>
                             </div>
                             
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -429,11 +439,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div>
                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Monthly Price(MMK) <span class="text-red-600">*</span></label>
-                                    <input type="number" id="apt_price" name="apartment_price" placeholder="ဥပမာ - 500000" class="w-full px-3 py-2.5 border border-gray-300 focus:border-gray-800 outline-none transition-all bg-white font-mono text-sm">
+                                    <input type="number" id="apt_price" name="apartment_price" placeholder="Eg - 500000" class="w-full px-3 py-2.5 border border-gray-300 focus:border-gray-800 outline-none transition-all bg-white font-mono text-sm">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Deposit / Security Deposit (MMK) <span class="text-red-600">*</span></label>
-                                    <input type="number" id="apt_deposit" name="deposit_amount_apt" placeholder="လစဉ်ကြေးဖြည့်လျှင် အလိုအလျောက်တွက်ပေးမည်" class="w-full px-3 py-2.5 border border-gray-300 bg-stone-50 outline-none font-mono text-sm" readonly>
+                                    <input type="number" id="apt_deposit" name="deposit_amount_apt" placeholder="It will be calculated automatically when you top up your monthly fee." class="w-full px-3 py-2.5 border border-gray-300 bg-stone-50 outline-none font-mono text-sm" readonly>
                                 </div>
                             </div>
 
@@ -455,73 +465,81 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
 
                         <!-- HOSTEL DETAIL SECTION -->
-                        <div id="hostel-fields" class="space-y-6 hidden">
-                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end pb-2 border-b-2 border-gray-800 gap-3">
-                                <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider">🏫 Hostel အဆောင်ခန်းများ ထည့်သွင်းရန်</h3>
-                                <button type="button" onclick="addHostelRow()" class="border border-gray-800 bg-gray-950 text-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider hover:bg-gray-800 transition-colors cursor-pointer">
-                                    ＋ Add New Hostel
-                                </button>
-                            </div>
+                       <div id="hostel-fields" class="space-y-6 hidden">
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end pb-2 border-b-2 border-gray-800 gap-3">
+        <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider">🏫 Hostel Details</h3>
+        <button type="button" onclick="addHostelRow()" class="border border-gray-800 bg-gray-950 text-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider hover:bg-gray-800 transition-colors cursor-pointer">
+            ＋ Add New Hostel
+        </button>
+    </div>
 
-                            <div class="bg-white border border-gray-300 overflow-hidden w-full">
-                                <div class="overflow-x-auto">
-                                    <table class="w-full text-left text-xs min-w-[800px] border-collapse">
-                                        <thead class="bg-gray-800 text-white font-semibold uppercase tracking-wider">
-                                            <tr>
-                                                <th class="p-3 border border-gray-700 w-[12%]">Room No</th>
-                                                <th class="p-3 border border-gray-700 w-[15%]">Type</th>
-                                                <th class="p-3 border border-gray-700 w-[10%]"> Sub</th>
-                                                <th class="p-3 border border-gray-700 w-[20%]">Monthly Price (MMK)</th>
-                                                <th class="p-3 border border-gray-700 w-[20%]">Deposit Amount (MMK)</th>
-                                                <th class="p-3 border border-gray-700 w-[15%]"> Image</th>
-                                                <th class="p-3 border border-gray-700 w-[8%] text-center">Delete</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="hostel-rooms-tbody" class="divide-y divide-gray-300 bg-white">
-                                            <tr class="room-row hover:bg-gray-50 transition-colors">
-                                                <td class="p-2 border-r border-gray-200"><input type="text" name="rooms[0][room_num]" placeholder="101" class="w-full px-2 py-1.5 border border-gray-300 outline-none focus:border-gray-800 text-xs font-mono"></td>
-                                                <td class="p-2 border-r border-gray-200">
-                                                    <select name="rooms[0][room_type]" class="w-full px-2 py-1.5 border border-gray-300 bg-white outline-none focus:border-gray-800 text-xs">
-                                                        <option value="Single">Single</option>
-                                                        <option value="Double">Double</option>
-                                                        <option value="Master">Master</option>
-                                                    </select>
-                                                </td>
-                                                <td class="p-2 border-r border-gray-200"><input type="text" name="rooms[0][sub_unit]" placeholder="A" class="w-full px-2 py-1.5 border border-gray-300 outline-none focus:border-gray-800 text-xs font-mono"></td>
-                                                <td class="p-2 border-r border-gray-200"><input type="number" name="rooms[0][monthly_price]" placeholder="150000" class="hostel-price w-full px-2 py-1.5 border border-gray-300 outline-none focus:border-gray-800 text-xs font-mono"></td>
-                                                <td class="p-2 border-r border-gray-200"><input type="number" name="rooms[0][deposit_amount]" placeholder="အလိုအလျောက်တွက်မည်" class="hostel-deposit w-full px-2 py-1.5 border border-gray-300 bg-stone-50 outline-none text-xs font-mono" readonly></td>
-                                                <td class="p-2 border-r border-gray-200"> 
-                                                    <input type="file" name="property_gallery[]" accept="image/*" multiple 
-                                                        class="w-full text-[11px] text-gray-600 file:mr-1 file:py-1 file:px-2 file:border file:border-gray-400 file:bg-gray-100 file:text-gray-800 border border-gray-300 p-0.5 bg-white">
-                                                </td>
-                                                <td class="p-2 text-center">
-                                                    <button type="button" onclick="removeHostelRow(this)" class="w-6 h-6 text-red-700 border border-gray-300 hover:text-red-900 hover:bg-red-50 flex items-center justify-center font-bold transition-all mx-auto cursor-pointer">✕</button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Step 2 Navigation Actions -->
-                        <div class="flex items-center gap-4 pt-6 border-t border-gray-300">
-                            <button type="button" onclick="goToStep1()" class="w-1/3 border border-gray-400 bg-gray-100 text-gray-800 font-bold uppercase tracking-wider py-3 px-6 hover:bg-gray-200 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer">
-                                <span>Next</span>
-                            </button>
-                            <button type="submit" class="w-2/3 border border-emerald-800 bg-emerald-700 text-white font-bold uppercase tracking-wider py-3 px-6 hover:bg-emerald-800 active:bg-emerald-900 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer">
-                                <span> Save Data</span>
-                            </button>
-                        </div>
-                    </div>
-
-                </form>
-            </div>
+    <div class="bg-white border border-gray-300 overflow-hidden w-full">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs min-w-[800px] border-collapse">
+                <thead class="bg-gray-800 text-white font-semibold uppercase tracking-wider">
+                    <tr>
+                        <th class="p-3 border border-gray-700 w-[12%]">Room No</th>
+                        <th class="p-3 border border-gray-700 w-[13%]">Type</th>
+                        <!-- 🚻 Added Gender Header without changing other elements -->
+                        <th class="p-3 border border-gray-700 w-[12%]">Gender</th>
+                        <th class="p-3 border border-gray-700 w-[8%]"> Sub</th>
+                        <th class="p-3 border border-gray-700 w-[18%]">Monthly Price (MMK)</th>
+                        <th class="p-3 border border-gray-700 w-[18%]">Deposit Amount (MMK)</th>
+                        <th class="p-3 border border-gray-700 w-[13%]"> Image</th>
+                        <th class="p-3 border border-gray-700 w-[6%] text-center">Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="hostel-rooms-tbody" class="divide-y divide-gray-300 bg-white">
+                    <tr class="room-row hover:bg-gray-50 transition-colors">
+                        <td class="p-2 border-r border-gray-200"><input type="text" name="rooms[0][room_num]" placeholder="101" class="w-full px-2 py-1.5 border border-gray-300 outline-none focus:border-gray-800 text-xs font-mono"></td>
+                        <td class="p-2 border-r border-gray-200">
+                            <select name="rooms[0][room_type]" class="w-full px-2 py-1.5 border border-gray-300 bg-white outline-none focus:border-gray-800 text-xs">
+                                <option value="Single">Single</option>
+                                <option value="Double">Double</option>
+                                <option value="Master">Master</option>
+                            </select>
+                        </td>
+                        <!-- 🚻 Added Gender Select Field -->
+                        <td class="p-2 border-r border-gray-200">
+                            <select name="rooms[0][gender_type]" class="w-full px-2 py-1.5 border border-gray-300 bg-white outline-none focus:border-gray-800 text-xs">
+                                <option value="any">Any</option>
+                                <option value="male_only">Male Only</option>
+                                <option value="female_only">Female Only</option>
+                            </select>
+                        </td>
+                        <td class="p-2 border-r border-gray-200"><input type="text" name="rooms[0][sub_unit]" placeholder="A" class="w-full px-2 py-1.5 border border-gray-300 outline-none focus:border-gray-800 text-xs font-mono"></td>
+                        <td class="p-2 border-r border-gray-200"><input type="number" name="rooms[0][monthly_price]" placeholder="150000" class="hostel-price w-full px-2 py-1.5 border border-gray-300 outline-none focus:border-gray-800 text-xs font-mono"></td>
+                        <td class="p-2 border-r border-gray-200"><input type="number" name="rooms[0][deposit_amount]" placeholder="auto calculate" class="hostel-deposit w-full px-2 py-1.5 border border-gray-300 bg-stone-50 outline-none text-xs font-mono" readonly></td>
+                        <td class="p-2 border-r border-gray-200"> 
+                            <input type="file" name="property_gallery[]" accept="image/*" multiple 
+                                class="w-full text-[11px] text-gray-600 file:mr-1 file:py-1 file:px-2 file:border file:border-gray-400 file:bg-gray-100 file:text-gray-800 border border-gray-300 p-0.5 bg-white">
+                        </td>
+                        <td class="p-2 text-center">
+                            <button type="button" onclick="removeHostelRow(this)" class="w-6 h-6 text-red-700 border border-gray-300 hover:text-red-900 hover:bg-red-50 flex items-center justify-center font-bold transition-all mx-auto cursor-pointer">✕</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-    
+    </div>
+</div>
 
+<!-- Step 2 Navigation Actions -->
+<div class="flex items-center gap-4 pt-6 border-t border-gray-300">
+    <button type="button" onclick="goToStep1()" class="w-1/3 border border-gray-400 bg-gray-100 text-gray-800 font-bold uppercase tracking-wider py-3 px-6 hover:bg-gray-200 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer">
+        <span>Next</span>
+    </button>
+    <button type="submit" class="w-2/3 border border-emerald-800 bg-emerald-700 text-white font-bold uppercase tracking-wider py-3 px-6 hover:bg-emerald-800 active:bg-emerald-900 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer">
+        <span> Save Data</span>
+    </button>
+</div>
+</div>
 
-    <script>
+</form>
+</div>
+</div>
+
+<script>
     const step1Section = document.getElementById('step1-section');
     const step2Section = document.getElementById('step2-section');
     const step1Badge = document.getElementById('step1-badge');
@@ -651,6 +669,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
     }
 
+    // Updated addHostelRow() to include gender_type input dynamically
     function addHostelRow() {
         const newRow = document.createElement('tr');
         newRow.className = 'room-row transition-colors hover:bg-gray-50/50';
@@ -661,6 +680,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <option value="Single">Single</option>
                     <option value="Double">Double</option>
                     <option value="Master">Master</option>
+                </select>
+            </td>
+            <td class="p-3">
+                <select name="rooms[${roomIndex}][gender_type]" class="w-28 px-3 py-2 border rounded-xl bg-white outline-none focus:border-blue-500 transition-all">
+                    <option value="any">Any</option>
+                    <option value="male_only">Male Only</option>
+                    <option value="female_only">Female Only</option>
                 </select>
             </td>
             <td class="p-3"><input type="text" name="rooms[${roomIndex}][sub_unit]" placeholder="B" class="w-16 px-3 py-2 border rounded-xl outline-none focus:border-blue-500 transition-all"></td>
@@ -683,21 +709,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 </script>
 <script>
-        function toggleMobileMenu() {
-            // This grabs the aside container inside your ownerheader file
-            const sidebar = document.querySelector('aside');
-            const overlay = document.getElementById('mobMenuOverlay');
-            
-            if (sidebar.classList.contains('-translate-x-full')) {
-                sidebar.classList.remove('-translate-x-full');
-                sidebar.classList.add('translate-x-0');
-                overlay.classList.remove('hidden');
-            } else {
-                sidebar.classList.remove('translate-x-0');
-                sidebar.classList.add('-translate-x-full');
-                overlay.classList.add('hidden');
-            }
+    function toggleMobileMenu() {
+        // This grabs the aside container inside your ownerheader file
+        const sidebar = document.querySelector('aside');
+        const overlay = document.getElementById('mobMenuOverlay');
+        
+        if (sidebar.classList.contains('-translate-x-full')) {
+            sidebar.classList.remove('-translate-x-full');
+            sidebar.classList.add('translate-x-0');
+            overlay.classList.remove('hidden');
+        } else {
+            sidebar.classList.remove('translate-x-0');
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
         }
-    </script>
+    }
+</script>
 </body>
 </html>

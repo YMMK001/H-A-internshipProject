@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // ထို့ကြောင့် စာချုပ်ချုပ်ဆိုသည့် စာမျက်နှာမှတစ်ဆင့်သာ Update ပြုလုပ်ရမည် ဖြစ်သည်။
 }
 
-// 3. SQL Query to combine both Apartments and Hostel Rooms
+// 3. SQL Query to combine both Apartments and Hostel Rooms (Added gender_type)
 $sql = "
     SELECT 
         a.id AS item_id, 
@@ -66,6 +66,7 @@ $sql = "
         'Apartment' AS type,
         a.floor_level AS unit_placement,
         a.max_occupy AS capacity_info,
+        NULL AS gender_type,
         a.apartment_price AS price,
         a.is_available AS availability
     FROM rental_houses h
@@ -82,6 +83,7 @@ $sql = "
         'Hostel' AS type,
         CONCAT(r.room_num, ' (', r.room_type, ')') AS unit_placement,
         r.sub_unit AS capacity_info,
+        r.gender_type AS gender_type,
         r.monthly_price AS price,
         r.is_available AS availability
     FROM rental_houses h
@@ -125,7 +127,6 @@ $rentals = $stmt->fetchAll();
                         <div class="hidden sm:flex items-center space-x-2 text-xs text-gray-500">
                             <span class="text-gray-900 font-bold text-3xl">Rental House</span>
                         </div>
-                        
                     </div>
 
                     <div class="flex items-center space-x-4 divide-x divide-gray-200">
@@ -173,7 +174,7 @@ $rentals = $stmt->fetchAll();
                                             <td class="p-3 pl-4 overflow-hidden text-ellipsis border-r border-gray-200">
                                                 <?php if ($row['type'] === 'Apartment'): ?>
                                                     <span class="border border-blue-400 text-blue-900 text-[11px] font-bold px-2 py-0.5 tracking-wide bg-blue-50/50">APARTMENT</span>
-                                                <?php   else: ?>
+                                                <?php else: ?>
                                                     <span class="border border-purple-400 text-purple-900 text-[11px] font-bold px-2 py-0.5 tracking-wide bg-purple-50/50">HOSTEL</span>
                                                 <?php endif; ?>
                                             </td>
@@ -185,10 +186,24 @@ $rentals = $stmt->fetchAll();
 
                                             <td class="p-3 font-medium text-gray-700 overflow-hidden text-ellipsis border-r border-gray-200">
                                                 <span class="font-bold"><?= htmlspecialchars($row['unit_placement']) ?></span>
+                                                
                                                 <?php if ($row['type'] === 'Apartment' && $row['capacity_info']): ?>
                                                     <span class="text-[10px] text-gray-500 block mt-0.5">Maximum <?= htmlspecialchars($row['capacity_info']) ?> ဦး</span>
-                                                <?php elseif ($row['type'] === 'Hostel' && $row['capacity_info']): ?>
-                                                    <div class="text-[10px] text-gray-500 mt-0.5">Room Type: <?= htmlspecialchars($row['capacity_info']) ?></div>
+                                                <?php elseif ($row['type'] === 'Hostel'): ?>
+                                                    <?php if ($row['capacity_info']): ?>
+                                                        <div class="text-[10px] text-gray-500 mt-0.5">Room Type: <?= htmlspecialchars($row['capacity_info']) ?></div>
+                                                    <?php endif; ?>
+                                                    
+                                                    <!-- Gender Badge Display for Hostel Rooms -->
+                                                    <div class="mt-1">
+                                                        <?php if ($row['gender_type'] === 'male_only'): ?>
+                                                            <span class="text-[10px] bg-blue-100 text-blue-800 border border-blue-300 px-1.5 py-0.2 rounded font-semibold">👦 Male Only</span>
+                                                        <?php elseif ($row['gender_type'] === 'female_only'): ?>
+                                                            <span class="text-[10px] bg-pink-100 text-pink-800 border border-pink-300 px-1.5 py-0.2 rounded font-semibold">👧 Female Only</span>
+                                                        <?php else: ?>
+                                                            <span class="text-[10px] bg-gray-100 text-gray-700 border border-gray-300 px-1.5 py-0.2 rounded font-semibold">👫 Any Gender</span>
+                                                        <?php endif; ?>
+                                                    </div>
                                                 <?php endif; ?>
                                             </td>
 
