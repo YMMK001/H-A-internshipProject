@@ -138,7 +138,7 @@ function renderMainContent($installments, $contract_id, $back_url, $is_profile_c
             <div>
                 <h1 class="text-xl font-serif font-bold text-stone-900 tracking-wide uppercase">INSTALLMENT SCHEDULE</h1>
                 <p class="text-stone-500 text-xs italic font-serif mt-1">
-                    စာချုပ် #<?= htmlspecialchars((string)$contract_id) ?> ၏ အရစ်ကျ ငွေပေးချေရန်စာရင်းနှင့် အခြေအနေများ
+                    အရစ်ကျ ငွေပေးချေရန်စာရင်းနှင့် အခြေအနေများ
                 </p>
             </div>
             

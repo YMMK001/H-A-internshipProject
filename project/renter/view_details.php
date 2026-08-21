@@ -36,6 +36,7 @@ if ($item_id <= 0 || !in_array($type_lower, ['apartment', 'hostel'])) {
 
 $details = null;
 
+// 👈 JOINed users table to retrieve owner's name, phone, email without changing query logic
 if ($type_lower === 'apartment') {
     $sql = "
         SELECT 
@@ -46,15 +47,18 @@ if ($type_lower === 'apartment') {
             a.apartment_price AS price, 
             a.deposit_amount, 
             a.is_available,
-            c.end_date AS reopen_date
+            c.end_date AS reopen_date,
+            u.name AS owner_name,
+            u.phone AS owner_phone,
+            u.email AS owner_email
         FROM apartments a
         INNER JOIN rental_houses h ON a.rental_house_id = h.id
+        INNER JOIN users u ON h.user_id = u.id
         LEFT JOIN contracts c ON a.id = c.apartment_id AND c.status = 'active'
         WHERE a.id = :item_id
         ORDER BY c.id DESC LIMIT 1
     ";
 } else {
-    // 👈 Added r.gender_type to the SELECT query
     $sql = "
         SELECT 
             h.*, 
@@ -66,9 +70,13 @@ if ($type_lower === 'apartment') {
             r.monthly_price AS price, 
             r.deposit_amount, 
             r.is_available,
-            c.end_date AS reopen_date
+            c.end_date AS reopen_date,
+            u.name AS owner_name,
+            u.phone AS owner_phone,
+            u.email AS owner_email
         FROM hostel_rooms r
         INNER JOIN rental_houses h ON r.rental_house_id = h.id
+        INNER JOIN users u ON h.user_id = u.id
         LEFT JOIN contracts c ON r.id = c.hostel_room_id AND c.status = 'active'
         WHERE r.id = :item_id
         ORDER BY c.id DESC LIMIT 1
@@ -90,6 +98,10 @@ $img_stmt->execute([':house_id' => $house_id]);
 $images = $img_stmt->fetchAll(PDO::FETCH_COLUMN);
 
 $is_available = (int)$details['is_available'] === 1;
+
+// 👈 Auto-formatting Viber Link (+95...)
+$raw_phone = preg_replace('/[^0-9]/', '', $details['owner_phone'] ?? '');
+$viber_phone = preg_replace('/^0/', '+95', $raw_phone);
 ?>
 
 <!DOCTYPE html>
@@ -168,7 +180,6 @@ $is_available = (int)$details['is_available'] === 1;
                         <?php else: ?>
                             <span class="bg-white text-stone-800 border border-stone-300 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm">Hostel Room</span>
                             
-                            <!-- 👈 Hostel Gender Badge Display -->
                             <?php
                             $gType = $details['gender_type'] ?? 'any';
                             if ($gType === 'male_only') {
@@ -230,19 +241,18 @@ $is_available = (int)$details['is_available'] === 1;
                     <?php endif; ?>
 
                     <div class="space-y-2">
-                        <h3 class="text-xs font-bold text-stone-900 uppercase tracking-widest border-b border-gray-100 pb-1">📐 Specifications / အခန်းအသေးစိတ်</h3>
+                        <h3 class="text-xs font-bold text-stone-900 uppercase tracking-widest border-b border-gray-100 pb-1">📐 Specifications </h3>
                         <div class="bg-white border border-gray-200 rounded-sm divide-y divide-gray-100">
                             <?php if ($type_lower === 'apartment'): ?>
-                                <div class="p-3.5 flex justify-between text-xs font-medium"><span class="text-stone-400 uppercase tracking-wider">Floor Level / အထပ်အဆင့်</span> <span class="font-bold text-stone-800"><?= htmlspecialchars($details['floor_level']) ?></span></div>
-                                <div class="p-3.5 flex justify-between text-xs font-medium"><span class="text-stone-400 uppercase tracking-wider">Max Occupants / နေထိုင်နိုင်မည့် ဦးရေ</span> <span class="font-bold text-stone-800"><?= htmlspecialchars($details['max_occupy']) ?> ဦး</span></div>
+                                <div class="p-3.5 flex justify-between text-xs font-medium"><span class="text-stone-400 uppercase tracking-wider">Floor Level </span> <span class="font-bold text-stone-800"><?= htmlspecialchars($details['floor_level']) ?></span></div>
+                                <div class="p-3.5 flex justify-between text-xs font-medium"><span class="text-stone-400 uppercase tracking-wider">Max Occupants </span> <span class="font-bold text-stone-800"><?= htmlspecialchars($details['max_occupy']) ?> ဦး</span></div>
                             <?php else: ?>
-                                <div class="p-3.5 flex justify-between text-xs font-medium"><span class="text-stone-400 uppercase tracking-wider">Room Number / အဆောင်ခန်းနံပါတ်</span> <span class="font-bold text-stone-800">Room <?= htmlspecialchars($details['room_num']) ?></span></div>
-                                <div class="p-3.5 flex justify-between text-xs font-medium"><span class="text-stone-400 uppercase tracking-wider">Room Type / အခန်းအမျိုးအစား</span> <span class="font-bold text-stone-800"><?= htmlspecialchars($details['room_type']) ?></span></div>
-                                <div class="p-3.5 flex justify-between text-xs font-medium"><span class="text-stone-400 uppercase tracking-wider">Sub-Unit / အခန်းခွဲယူနစ်</span> <span class="font-bold text-stone-800"><?= $details['sub_unit'] ? htmlspecialchars($details['sub_unit']) : '-' ?></span></div>
+                                <div class="p-3.5 flex justify-between text-xs font-medium"><span class="text-stone-400 uppercase tracking-wider">Room Number </span> <span class="font-bold text-stone-800">Room <?= htmlspecialchars($details['room_num']) ?></span></div>
+                                <div class="p-3.5 flex justify-between text-xs font-medium"><span class="text-stone-400 uppercase tracking-wider">Room Type </span> <span class="font-bold text-stone-800"><?= htmlspecialchars($details['room_type']) ?></span></div>
+                                <div class="p-3.5 flex justify-between text-xs font-medium"><span class="text-stone-400 uppercase tracking-wider">Sub-Unit </span> <span class="font-bold text-stone-800"><?= $details['sub_unit'] ? htmlspecialchars($details['sub_unit']) : '-' ?></span></div>
                                 
-                                <!-- 👈 Added Gender Type Row -->
                                 <div class="p-3.5 flex justify-between text-xs font-medium">
-                                    <span class="text-stone-400 uppercase tracking-wider">Allowed Gender / နေထိုင်ခွင့်ပြုသည့် ကျား/မ</span> 
+                                    <span class="text-stone-400 uppercase tracking-wider">Allowed Gender </span> 
                                     <span class="font-bold text-stone-800">
                                         <?php 
                                             $gMap = [
@@ -260,7 +270,7 @@ $is_available = (int)$details['is_available'] === 1;
 
                     <?php if (!empty($details['description'])): ?>
                         <div class="space-y-2">
-                            <h3 class="text-xs font-bold text-stone-900 uppercase tracking-widest border-b border-gray-100 pb-1">📝 Description / ဖော်ပြချက်</h3>
+                            <h3 class="text-xs font-bold text-stone-900 uppercase tracking-widest border-b border-gray-100 pb-1">📝 Description </h3>
                             <p class="text-xs text-stone-600 bg-stone-50/60 border border-gray-100 p-4 rounded-sm leading-relaxed whitespace-pre-line">
                                 <?= htmlspecialchars($details['description']) ?>
                             </p>
@@ -268,7 +278,7 @@ $is_available = (int)$details['is_available'] === 1;
                     <?php endif; ?>
 
                     <div class="space-y-2">
-                        <h3 class="text-xs font-bold text-stone-900 uppercase tracking-widest border-b border-gray-100 pb-1">✨ Amenities / ပါဝင်သော ဝန်ဆောင်မှုများ</h3>
+                        <h3 class="text-xs font-bold text-stone-900 uppercase tracking-widest border-b border-gray-100 pb-1">✨ Amenities </h3>
                         <div class="flex flex-wrap gap-2 pt-1">
                             <?php 
                             $amenities = array_filter(explode(',', $details['amenities'] ?? ''));
@@ -281,6 +291,40 @@ $is_available = (int)$details['is_available'] === 1;
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <span class="text-xs text-stone-400 italic">သီးသန့်ဖော်ပြထားသော ဝန်ဆောင်မှုမရှိပါ။</span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <!-- 👈 ADDED OWNER DIRECT CONTACT SECTION -->
+                    <div class="space-y-2">
+                        <h3 class="text-xs font-bold text-stone-900 uppercase tracking-widest border-b border-gray-100 pb-1">📞 Contact Owner </h3>
+                        <div class="bg-stone-50 border border-gray-200 p-4 rounded-sm space-y-3">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-stone-900"><?= htmlspecialchars($details['owner_name'] ?? 'Property Owner') ?></p>
+                                   
+                                </div>
+                                <span class="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold px-2 py-0.5 rounded-sm uppercase tracking-wider">Verified Contact</span>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                                <!-- Phone Direct Call -->
+                                <a href="tel:<?= htmlspecialchars($details['owner_phone'] ?? '') ?>" 
+                                   class="bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold py-2.5 px-3 rounded-sm text-center flex items-center justify-center gap-2 transition-all shadow-sm uppercase tracking-wider">
+                                    📞 <?= htmlspecialchars($details['owner_phone'] ?? 'N/A') ?>
+                                </a>
+
+                                <!-- Viber Direct Link -->
+                                <a href="viber://chat?number=<?= urlencode($viber_phone) ?>" 
+                                   class="bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold py-2.5 px-3 rounded-sm text-center flex items-center justify-center gap-2 transition-all shadow-sm uppercase tracking-wider">
+                                    💬 Viber Chat
+                                </a>
+                            </div>
+
+                            <?php if(!empty($details['owner_email'])): ?>
+                                <p class="text-[11px] text-stone-500 pt-1">
+                                    ✉ Email: <a href="mailto:<?= htmlspecialchars($details['owner_email']) ?>" class="underline text-stone-800"><?= htmlspecialchars($details['owner_email']) ?></a>
+                                </p>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -301,11 +345,11 @@ $is_available = (int)$details['is_available'] === 1;
                                 ?>
                                 <a href="<?= $contract_action ?>" 
                                    class="bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs px-6 py-3 rounded-sm uppercase tracking-wider transition-all shadow-sm inline-block text-center">
-                                    🚀 Apply Contract / စာချုပ်စတင်လျှောက်ထားမည်
+                                    🚀 Apply Contract 
                                 </a>
                             <?php else: ?>
                                 <button disabled class="bg-stone-200 text-stone-400 font-bold text-xs px-6 py-3 rounded-sm uppercase tracking-wider cursor-not-allowed">
-                                    🔒 Unavailable / ငှားရမ်းမှုပိတ်ထားပါသည်
+                                    🔒 Unavailable 
                                 </button>
                             <?php endif; ?>
                         </div>
@@ -372,4 +416,4 @@ $is_available = (int)$details['is_available'] === 1;
         }
     </script>
 </body>
-</html> 
+</html>

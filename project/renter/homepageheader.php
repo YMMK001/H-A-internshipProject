@@ -1,14 +1,25 @@
 <?php
-// ၁။ Session စနစ်အား ဖိုင်၏ ထိပ်ဆုံးတွင် မဖြစ်မနေ စတင်ဖွင့်လှစ်ခြင်း
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// ၃။ DATABASE CONFIGURATION & CONNECTION (PDO)
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+// DATABASE CONFIGURATION
 $host     = 'localhost';
 $db_name  = 'intern_test';
-$username = 'root';                     
-$password = '';                         
+$username = 'root';
+$password = '';                      
+
+// =========================================================
+// GLOBAL SEARCH VALUES
+// Search/filter values are sent to renterhomepage.php using GET.
+// renterhomepage.php will search the database BEFORE pagination.
+// =========================================================
+$currentSearch = trim($_GET['search'] ?? '');
+$currentFilter = trim($_GET['filter'] ?? '');
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8mb4", $username, $password);
@@ -156,72 +167,71 @@ $hostels    = array_filter($properties, function($item) { return $item['type'] =
                     </span>
                 </a>
 
-                <!-- INTEGRATED NAV SEARCH FILTERS WITH FLEXIBLE PREFERENCE BUTTON -->
-                <div class="hidden md:flex items-center gap-2 bg-stone-100/80 border border-stone-200 p-1.5 rounded-xl w-full lg:w-auto flex-1 max-w-3xl shadow-inner">
+                <!-- DATABASE SEARCH + FILTER -->
+                <form action="renterhomepage.php" method="GET"
+                      class="hidden md:flex items-center gap-2 bg-stone-100/80 border border-stone-200 p-1.5 rounded-xl w-full lg:w-auto flex-1 max-w-3xl shadow-inner">
+
                     <div class="relative flex-1 min-w-[150px]">
-                        <input type="text" id="citySearchInput" onkeyup="filterByCity()" placeholder="Search title or keyword..." class="w-full bg-white border border-stone-200 text-xs text-stone-800 px-3 py-2 rounded-lg outline-none focus:border-amber-800 focus:ring-2 focus:ring-amber-800/10 transition-all">
+                        <input
+                            type="text"
+                            id="citySearchInput"
+                            name="search"
+                            value="<?= htmlspecialchars($currentSearch, ENT_QUOTES, 'UTF-8') ?>"
+                            placeholder="Search title, township or keyword..."
+                            class="w-full bg-white border border-stone-200 text-xs text-stone-800 px-3 py-2 rounded-lg outline-none focus:border-amber-800 focus:ring-2 focus:ring-amber-800/10 transition-all"
+                        >
                     </div>
-                    
-                    <select id="typeSelect" onchange="filterProperties()" class="bg-white border border-stone-200 text-xs text-stone-700 px-3 py-2 rounded-lg outline-none cursor-pointer focus:border-amber-800 transition-all shrink-0">
+
+                    <select
+                        id="typeSelect"
+                        name="filter"
+                        class="bg-white border border-stone-200 text-xs text-stone-700 px-3 py-2 rounded-lg outline-none cursor-pointer focus:border-amber-800 transition-all shrink-0"
+                    >
                         <option value="">All Locations & Types</option>
+
                         <optgroup label="Townships">
-                            <option value="Ahlone">Ahlone</option>
-                            <option value="Bahan">Bahan</option>
-                            <option value="Botahtaung">Botahtaung</option>
-                            <option value="Dagon">Dagon</option>
-                            <option value="Kamayut">Kamayut</option>
-                            <option value="Kyauktada">Kyauktada</option>
-                            <option value="Lanmadaw">Lanmadaw</option>
-                            <option value="Latha">Latha</option>
-                            <option value="Pabedan">Pabedan</option>
-                            <option value="Sanchaung">Sanchaung</option>
-                            <option value="Dawbon">Dawbon</option>
-                            <option value="Mingala Taungyunt">Mingala Taungyunt</option>
-                            <option value="Pazundaung">Pazundaung</option>
-                            <option value="Tamwe">Tamwe</option>
-                            <option value="Thaketa">Thaketa</option>
-                            <option value="Thingangyun">Thingangyun</option>
-                            <option value="Yankin">Yankin</option>
-                            <option value="Hlaing">Hlaing</option>
-                            <option value="Insein">Insein</option>
-                            <option value="Mayangone">Mayangone</option>
-                            <option value="Mingaladon">Mingaladon</option>
-                            <option value="North Okkalapa">North Okkalapa</option>
-                            <option value="Shwepyita">Shwepyita</option>
-                            <option value="South Okkalapa">South Okkalapa</option>
-                            <option value="Dagon Seikkan">Dagon Seikkan</option>
-                            <option value="East Dagon">East Dagon</option>
-                            <option value="North Dagon">North Dagon</option>
-                            <option value="South Dagon">South Dagon</option>
-                            <option value="Hlaingthaya East">Hlaingthaya East</option>
-                            <option value="Hlaingthaya West">Hlaingthaya West</option>
-                            <option value="Dala">Dala</option>
-                            <option value="Seikkyi Kanaungto">Seikkyi Kanaungto</option>
-                            <option value="Hlegu">Hlegu</option>
-                            <option value="Hmawbi">Hmawbi</option>
-                            <option value="Htantabin">Htantabin</option>
-                            <option value="Taikkyi">Taikkyi</option>
-                            <option value="Kawhmu">Kawhmu</option>
-                            <option value="Kayan">Kayan</option>
-                            <option value="Kungyangon">Kungyangon</option>
-                            <option value="Kyauktan">Kyauktan</option>
-                            <option value="Thanlyin">Thanlyin</option>
-                            <option value="Thongwa">Thongwa</option>
+                            <?php
+                            $townships = [
+                                'Ahlone', 'Bahan', 'Botahtaung', 'Dagon', 'Dagon Seikkan', 'Dala',
+'Dawbon', 'East Dagon', 'Hlaing', 'Hlaingthaya East', 'Hlaingthaya West', 'Hlegu',
+'Hmawbi', 'Htantabin', 'Insein', 'Kamayut', 'Kawhmu', 'Kayan',
+'Kungyangon', 'Kyauktada', 'Kyauktan', 'Kyeemyindaing', 'Lanmadaw', 'Latha',
+'Mayangone', 'Mingala Taungyunt', 'Mingaladon', 'North Dagon', 'North Okkalapa', 'Pabedan',
+'Pazundaung', 'Sanchaung', 'Seikkyi Kanaungto', 'Shwepyita', 'South Dagon', 'South Okkalapa',
+'Taikkyi', 'Tamwe', 'Thaketa', 'Thanlyin', 'Thingangyun', 'Thongwa',
+'Yankin'
+                            ];
+
+                            foreach ($townships as $township):
+                            ?>
+                                <option
+                                    value="<?= htmlspecialchars($township, ENT_QUOTES, 'UTF-8') ?>"
+                                    <?= strcasecmp($currentFilter, $township) === 0 ? 'selected' : '' ?>
+                                >
+                                    <?= htmlspecialchars($township) ?>
+                                </option>
+                            <?php endforeach; ?>
                         </optgroup>
+
                         <optgroup label="Property Types">
-                            <option value="apartment">Apartment</option>
-                            <option value="hostel">Hostel</option>
+                            <option value="apartment" <?= strtolower($currentFilter) === 'apartment' ? 'selected' : '' ?>>
+                                Apartment
+                            </option>
+                            <option value="hostel" <?= strtolower($currentFilter) === 'hostel' ? 'selected' : '' ?>>
+                                Hostel
+                            </option>
                         </optgroup>
                     </select>
 
-                    <a href="../renter/renterhomepage.php" class="bg-white border border-stone-200 text-xs text-stone-700 hover:text-amber-900 hover:border-amber-800/40 px-3 py-2 rounded-lg font-medium transition-all shrink-0">
+                    <a href="../renter/renterhomepage.php"
+                       class="bg-white border border-stone-200 text-xs text-stone-700 hover:text-amber-900 hover:border-amber-800/40 px-3 py-2 rounded-lg font-medium transition-all shrink-0">
                         Home
                     </a>
 
                     <button type="button" onclick="openPreferenceModal()" class="px-6 py-3 text-xs font-bold tracking-wider text-white uppercase bg-[#2D2319] hover:bg-[#423425] rounded-xl shadow-md transition">
-                        ရှာဖွေမှု စတင်မည်
+                        Match Preference
                     </button>
-                </div>
+                </form>
 
                 <!-- USER AUTH & PROFILE DROPDOWN MENU -->
                 <div class="flex items-center gap-3 shrink-0">
@@ -571,6 +581,78 @@ $hostels    = array_filter($properties, function($item) { return $item['type'] =
     }
     function filterProperties() { 
         // Implement property/township filter logic here
+    }
+    function openPreferenceModal() {
+        const modal = document.getElementById('preferenceModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+    }
+
+    function closePreferenceModal() {
+        const modal = document.getElementById('preferenceModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('preferenceModal');
+        if (event.target === modal) {
+            closePreferenceModal();
+        }
+    }
+    
+    // Toggle Profile Dropdown
+    function toggleProfileDropdown() {
+        const dropdown = document.getElementById('profileDropdown');
+        const notifDropdown = document.getElementById('notificationDropdown');
+        if (notifDropdown) notifDropdown.classList.add('hidden'); 
+        if (dropdown) {
+            dropdown.classList.toggle('hidden');
+        }
+    }
+
+    // Toggle Notification Dropdown
+    function toggleNotificationDropdown() {
+        const notifDropdown = document.getElementById('notificationDropdown');
+        const profileDropdown = document.getElementById('profileDropdown');
+        if (profileDropdown) profileDropdown.classList.add('hidden'); 
+        if (notifDropdown) {
+            notifDropdown.classList.toggle('hidden');
+        }
+    }
+
+    // Fixed Dropdown Close Handler
+    window.addEventListener('click', function(e) {
+        const profileDropdown = document.getElementById('profileDropdown');
+        const notifDropdown = document.getElementById('notificationDropdown');
+
+        if (!e.target.closest('#profileDropdown') && !e.target.closest('button[onclick*="toggleProfileDropdown"]')) {
+            if (profileDropdown) profileDropdown.classList.add('hidden');
+        }
+        if (!e.target.closest('#notificationDropdown') && !e.target.closest('button[onclick*="toggleNotificationDropdown"]')) {
+            if (notifDropdown) notifDropdown.classList.add('hidden');
+        }
+    });
+
+    // =========================================================
+    // DATABASE SEARCH
+    // =========================================================
+    // Search is handled by the GET form above.
+    // renterhomepage.php receives:
+    //   ?search=keyword&filter=township-or-property-type
+    // The renter page should filter database records first, then paginate.
+    const searchForm = document.querySelector('form[action="renterhomepage.php"][method="GET"]');
+    const typeSelect = document.getElementById('typeSelect');
+
+    // Optional convenience: selecting a township/type immediately searches.
+    if (typeSelect && searchForm) {
+        typeSelect.addEventListener('change', function () {
+            searchForm.submit();
+        });
     }
 </script>
 </body>

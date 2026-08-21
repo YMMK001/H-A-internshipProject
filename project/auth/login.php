@@ -7,8 +7,8 @@ if (session_status() === PHP_SESSION_NONE) {
 // Database Configuration
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'intern_test'); 
-define('DB_USER', 'root');        
-define('DB_PASS', '');            
+define('DB_USER', 'root');         
+define('DB_PASS', '');             
 
 $error = '';
 $email = ''; // Initialized to prevent undefined variable notices in HTML value attribute
@@ -18,7 +18,7 @@ $redirect_to  = $_REQUEST['redirect'] ?? $_REQUEST['redirect_to'] ?? 'homepage';
 $property_id  = $_REQUEST['property_id'] ?? '';
 $type         = $_REQUEST['type'] ?? '';
 
-// Dynamic Query String ပြန်လည်တည်ဆောက်ခြင်း (Register Link သို့မဟုတ် Form Action အတွက်)
+// Dynamic Query String Rebuilding
 $queryParams = [];
 if (!empty($redirect_to)) $queryParams['redirect'] = $redirect_to;
 if (!empty($property_id)) $queryParams['property_id'] = $property_id;
@@ -81,9 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             header("Location: ../admin/owner_dashboard.php");
                             exit;
                         } else {
-                            // Convenience routing matched with homepage trackers
                             if ($redirect_to === 'contract') {
-                                // Redirect URL တွင် property_id နှင့် type တို့ ပါမပါ စစ်ဆေးပြီး ပေါင်းစပ်ပေးခြင်း
                                 $contractParams = [];
                                 if (!empty($property_id)) $contractParams['property_id'] = $property_id;
                                 if (!empty($type))        $contractParams['type'] = $type;
@@ -118,6 +116,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RentalHub - Authentication Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-[#fbfaf7] text-stone-900 antialiased min-h-screen flex flex-col justify-between">
 
@@ -169,11 +169,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 <div class="flex flex-col gap-1.5">
                     <label class="text-stone-700 text-xs font-semibold uppercase tracking-wider" for="userpassword">Password</label>
-                    <input class="p-2 bg-[#faf9f6] border border-stone-300 focus:outline-none focus:border-slate-900 focus:bg-white text-stone-900 font-sans transition-all rounded-xs" 
-                           type="password" 
-                           id="userpassword" 
-                           name="user_password" 
-                           required>
+                    <div class="relative flex items-center">
+                        <input class="p-2 pr-10 w-full bg-[#faf9f6] border border-stone-300 focus:outline-none focus:border-slate-900 focus:bg-white text-stone-900 font-sans transition-all rounded-xs" 
+                               type="password" 
+                               id="userpassword" 
+                               name="user_password" 
+                               required>
+                        <button type="button" 
+                                id="togglePassword" 
+                                class="absolute right-3 text-stone-500 hover:text-slate-900 focus:outline-none cursor-pointer">
+                            <i class="fa-solid fa-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="flex justify-between items-center text-sm font-serif mt-1">
@@ -197,10 +204,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </main>
 
-    <!-- FOOTER PLACEHOLDER OR BOTTOM MARGIN -->
     <footer class="py-4 text-center text-xs text-stone-400 font-serif">
         &copy; <?php echo date('Y'); ?> RentalHub. All rights reserved.
     </footer>
 
+    <!-- JAVASCRIPT FOR EYE ICON TOGGLE -->
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const passwordInput = document.querySelector('#userpassword');
+        const eyeIcon = document.querySelector('#eyeIcon');
+
+        togglePassword.addEventListener('click', function () {
+            // Toggle input type between password and text
+            const isPassword = passwordInput.getAttribute('type') === 'password';
+            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+            
+            // Toggle Font Awesome icon classes
+            eyeIcon.classList.toggle('fa-eye');
+            eyeIcon.classList.toggle('fa-eye-slash');
+        });
+    </script>
 </body>
 </html>

@@ -32,7 +32,7 @@ try {
     $db = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8mb4", $username_db, $password_db);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // --- COMPREHENSIVE CONTRACT AND LEASED UNIT DETAILS ---
+    // --- COMPREHENSIVE CONTRACT AND LEASED UNIT DETAILS WITH OWNER CONTACT ---
     $contract_query = "
         SELECT 
             c.id AS contract_id,
@@ -49,11 +49,15 @@ try {
             hr.id AS hostel_room_id,
             hr.room_num,
             hr.room_type,
-            hr.monthly_price AS hr_price
+            hr.monthly_price AS hr_price,
+            u.username AS owner_name,
+            u.phone AS owner_phone,
+            u.email AS owner_email
         FROM contracts c
         LEFT JOIN apartments ap ON c.apartment_id = ap.id
         LEFT JOIN hostel_rooms hr ON c.hostel_room_id = hr.id
         LEFT JOIN rental_houses rh ON (ap.rental_house_id = rh.id OR hr.rental_house_id = rh.id)
+        LEFT JOIN users u ON rh.user_id = u.id
         WHERE c.user_id = :user_id
         ORDER BY c.end_date DESC
     ";
@@ -174,6 +178,10 @@ function renderDashboardBody($overdue_installments, $active_lease, $installments
             $is_ap = !empty($active_lease['apartment_id']);
             $monthly_rent = $is_ap ? $active_lease['ap_price'] : $active_lease['hr_price'];
             $specs = $is_ap ? "Floor level: " . $active_lease['floor_level'] : "Room Num: " . $active_lease['room_num'] . " (" . $active_lease['room_type'] . ")";
+            
+            // Format owner phone for Viber link (+959 format)
+            $raw_phone = $active_lease['owner_phone'] ?? '';
+            $viber_phone = preg_replace('/^09/', '+959', preg_replace('/\s+/', '', $raw_phone));
         ?>
             <div class="bg-white border border-stone-300 shadow-xs p-6 space-y-6 rounded-none">
                 <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
@@ -206,6 +214,31 @@ function renderDashboardBody($overdue_installments, $active_lease, $installments
                     <div>
                         <span class="block text-stone-400 text-[10px] uppercase font-bold tracking-wider">Maturity Expiry</span>
                         <span class="font-medium text-emerald-700 font-bold font-sans"><?= date('d M Y', strtotime($active_lease['end_date'])) ?></span>
+                    </div>
+                </div>
+
+                <!-- OWNER CONTACT INFORMATION BOX -->
+                <div class="p-4 border border-amber-200 bg-amber-50/40 text-xs rounded-none">
+                    <span class="block text-amber-900 text-[10px] uppercase font-bold tracking-wider mb-2">Property Manager / Landlord Contact</span>
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        <div>
+                            <span class="font-serif font-bold text-stone-900 text-sm block"><?= htmlspecialchars($active_lease['owner_name'] ?? 'Property Owner') ?></span>
+                            <?php if (!empty($active_lease['owner_email'])): ?>
+                                <span class="text-stone-500 text-[11px] block"><?= htmlspecialchars($active_lease['owner_email']) ?></span>
+                            <?php endif; ?>
+                        </div>
+                        <?php if (!empty($raw_phone)): ?>
+                            <div class="flex items-center gap-2">
+                                <a href="tel:<?= htmlspecialchars($raw_phone) ?>" class="px-3 py-1.5 bg-stone-900 text-stone-100 font-sans font-semibold text-[11px] hover:bg-black transition flex items-center gap-1.5 shadow-xs">
+                                    📞 Call <?= htmlspecialchars($raw_phone) ?>
+                                </a>
+                                <a href="viber://chat?number=<?= urlencode($viber_phone) ?>" class="px-3 py-1.5 bg-[#7360f2] text-white font-sans font-semibold text-[11px] hover:bg-[#5945d8] transition flex items-center gap-1.5 shadow-xs">
+                                    💬 Viber Chat
+                                </a>
+                            </div>
+                        <?php else: ?>
+                            <span class="text-stone-400 italic text-[11px]">No contact number provided</span>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -418,18 +451,12 @@ function renderDashboardBody($overdue_installments, $active_lease, $installments
                        class="nav-item px-3 py-2.5 text-stone-700 hover:bg-stone-50 hover:text-stone-900 transition-colors">
                        📄 My Contracts
                     </a>
-                    <?php if ($active_contract_id): ?>
-                        <a href="renter_payment.php?contract_id=<?= $active_contract_id ?>" 
-                           onclick="loadContent(event, 'renter_payment.php?contract_id=<?= $active_contract_id ?>')" 
-                           data-url="renter_payment.php?contract_id=<?= $active_contract_id ?>"
-                           class="nav-item px-3 py-2.5 text-stone-700 hover:bg-stone-50 hover:text-stone-900 transition-colors">
-                           💳 Payment Ledgers
-                        </a>
-                    <?php else: ?>
-                        <a href="" onclick="alert('No active lease framework detected.'); return false;" class="px-3 py-2.5 text-stone-400 cursor-not-allowed italic">
-                           💳 Payment Ledgers
-                        </a>
-                    <?php endif; ?>
+                    <a href="renter_payment.php"
+   onclick="loadContent(event, 'renter_payment.php')"
+   data-url="renter_payment.php"
+   class="nav-item px-3 py-2.5 text-stone-700 hover:bg-stone-50 hover:text-stone-900 transition-colors">
+    💳 Payment Ledgers
+</a>
                     
                 </nav>
             </div>

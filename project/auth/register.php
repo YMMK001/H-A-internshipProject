@@ -192,177 +192,301 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <select id="nrc_township" name="nrc_township" class="p-2.5 bg-[#eef2ff] border border-stone-300 focus:outline-none focus:border-[#0f172a] text-xs text-stone-800 cursor-pointer disabled:opacity-60 rounded-none" required disabled>
                             <option value="" disabled selected>Township</option>
                             
-                            <option data-region="1/" value="bmn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'bmn') ? 'selected' : ''; ?>>BAMANA (Bhamo)</option>
-                            <option data-region="1/" value="khf" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'khf') ? 'selected' : ''; ?>>KHAPHANA (Chipwi)</option>
-                            <option data-region="1/" value="mkn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mkn') ? 'selected' : ''; ?>>MAKHANA (Myitkyina)</option>
-                            <option data-region="1/" value="mgn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mgn') ? 'selected' : ''; ?>>MAGHANA (Mogaung)</option>
-                            <option data-region="1/" value="mvn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mvn') ? 'selected' : ''; ?>>MANYANA (Mohnyin)</option>
-                            <option data-region="1/" value="ptn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ptn') ? 'selected' : ''; ?>>PATANA (Putao)</option>
-                            <option data-region="1/" value="wmn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'wmn') ? 'selected' : ''; ?>>WAMANA (Waingmaw)</option>
-                             <option data-region="2/" value="dmn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'dmn') ? 'selected' : ''; ?>>DAMANA (Demawso)</option>
-                        <option data-region="2/" value="lkn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'lkn') ? 'selected' : ''; ?>>LAKANA (Loikaw)</option>
-                        <option data-region="2/" value="msn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'msn') ? 'selected' : ''; ?>>MASANA (Mese)</option>
-                        <option data-region="2/" value="ytn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ytn') ? 'selected' : ''; ?>>YATHANA (Bawlakhe)</option>
+                            <!-- Region 1 / Kachin State Townships -->
+<option data-region="1/" value="ahna" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ahna') ? 'selected' : ''; ?>>AHNAHTA (Injangyang)</option>
+<option data-region="1/" value="bmn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'bmn') ? 'selected' : ''; ?>>BAMANA (Bhamo)</option>
+<option data-region="1/" value="hpa" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hpa') ? 'selected' : ''; ?>>HAPANA (Hpakant)</option>
+<option data-region="1/" value="khf" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'khf') ? 'selected' : ''; ?>>KHAPHANA (Chipwi)</option>
+<option data-region="1/" value="kba" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kba') ? 'selected' : ''; ?>>KABANA (Kawa / Khawbude)</option>
+<option data-region="1/" value="kmn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kmn') ? 'selected' : ''; ?>>KAMANA (Kamaing)</option>
+<option data-region="1/" value="mkn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mkn') ? 'selected' : ''; ?>>MAKHANA (Myitkyina)</option>
+<option data-region="1/" value="mgn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mgn') ? 'selected' : ''; ?>>MAGHANA (Mogaung)</option>
+<option data-region="1/" value="mvn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mvn') ? 'selected' : ''; ?>>MANYANA (Mohnyin)</option>
+<option data-region="1/" value="msn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'msn') ? 'selected' : ''; ?>>MASANA (Mansi)</option>
+<option data-region="1/" value="mka" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mka') ? 'selected' : ''; ?>>MAKANA (Machanbaw)</option>
+<option data-region="1/" value="nmn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'nmn') ? 'selected' : ''; ?>>NAMANA (Nawngmun)</option>
+<option data-region="1/" value="ptn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ptn') ? 'selected' : ''; ?>>PATANA (Putao)</option>
+<option data-region="1/" value="sba" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'sba') ? 'selected' : ''; ?>>SABANA (Sumprabum)</option>
+<option data-region="1/" value="sga" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'sga') ? 'selected' : ''; ?>>SAGANA (Shwegu)</option>
+<option data-region="1/" value="tsn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tsn') ? 'selected' : ''; ?>>TASANA (Tanai)</option>
+<option data-region="1/" value="wmn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'wmn') ? 'selected' : ''; ?>>WAMANA (Waingmaw)</option>
+<option data-region="1/" value="yka" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'yka') ? 'selected' : ''; ?>>YAKANA (Yebyu / border)</option><!-- Region 2 / Kayah State Townships -->
+<option data-region="2/" value="lkn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'lkn') ? 'selected' : ''; ?>>LAKANA (Loikaw)</option>
+<option data-region="2/" value="msn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'msn') ? 'selected' : ''; ?>>MASANA (Mese)</option>
+<option data-region="2/" value="pso" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pso') ? 'selected' : ''; ?>>PASANA (Demoso)</option>
+<option data-region="2/" value="pas" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pas') ? 'selected' : ''; ?>>PASANA (Pasawng)</option>
+<option data-region="2/" value="pru" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pru') ? 'selected' : ''; ?>>PHARASA (Pruso)</option>
+<option data-region="2/" value="sya" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'sya') ? 'selected' : ''; ?>>SHAYANA (Shadaw)</option>
+<option data-region="2/" value="ytn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ytn') ? 'selected' : ''; ?>>YATHANA (Bawlakhe)</option>
+                       <!-- Region 3 / Kayin State Townships -->
+<option data-region="3/" value="ban" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ban') ? 'selected' : ''; ?>>BAAHNA (Hpa-an)</option>
+<option data-region="3/" value="kam" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kam') ? 'selected' : ''; ?>>KAMANA (Kamamaung)</option>
+<option data-region="3/" value="kky" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kky') ? 'selected' : ''; ?>>KAKAYA (Kawkareik)</option>
+<option data-region="3/" value="krt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'krt') ? 'selected' : ''; ?>>KARATA (Kyainseikgyi)</option>
+<option data-region="3/" value="lae" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'lae') ? 'selected' : ''; ?>>LATANA (Leiktho)</option>
+<option data-region="3/" value="mwt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mwt') ? 'selected' : ''; ?>>MAWATHTA (Myawaddy)</option>
+<option data-region="3/" value="ppn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ppn') ? 'selected' : ''; ?>>PAPANA (Hpapun)</option>
+<option data-region="3/" value="pwn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pwn') ? 'selected' : ''; ?>>PAWANA (Payathonzu)</option>
+<option data-region="3/" value="sba" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'sba') ? 'selected' : ''; ?>>SABANA (Shwegyin / Kayin border)</option>
+<option data-region="3/" value="tha" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tha') ? 'selected' : ''; ?>>TAHANA (Thandaunggyi)</option>
+<option data-region="3/" value="ttn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ttn') ? 'selected' : ''; ?>>THATANA (Thaton / Border area)</option>
+                        <!-- Region 4 / Chin State Townships -->
+<option data-region="4/" value="fnn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'fnn') ? 'selected' : ''; ?>>PHANANA (Falam)</option>
+<option data-region="4/" value="hkh" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hkh') ? 'selected' : ''; ?>>HAKHANA (Hakha)</option>
+<option data-region="4/" value="hpn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hpn') ? 'selected' : ''; ?>>HPANA (Htantlang)</option>
+<option data-region="4/" value="kan" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kan') ? 'selected' : ''; ?>>KANANA (Kanpetlet)</option>
+<option data-region="4/" value="mtn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mtn') ? 'selected' : ''; ?>>MATANA (Matupi)</option>
+<option data-region="4/" value="mup" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mup') ? 'selected' : ''; ?>>MAPANA (Mindat)</option>
+<option data-region="4/" value="pln" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pln') ? 'selected' : ''; ?>>PALANA (Paletwa)</option>
+<option data-region="4/" value="phn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'phn') ? 'selected' : ''; ?>>PAHANA (Rikhawdar / Tedim)</option>
+<option data-region="4/" value="tat" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tat') ? 'selected' : ''; ?>>TATANA (Tiddim / Tedim)</option>
+<option data-region="4/" value="tzn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tzn') ? 'selected' : ''; ?>>TAZANA (Tonzang)</option>
+                        <!-- Region 5 / Sagaing Region Townships -->
+<option data-region="5/" value="atn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'atn') ? 'selected' : ''; ?>>AHTANA (Ayadaw)</option>
+<option data-region="5/" value="bam" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'bam') ? 'selected' : ''; ?>>BAMANA (Bhamo / Region 5 border)</option>
+<option data-region="5/" value="btl" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'btl') ? 'selected' : ''; ?>>BATALA (Budalin)</option>
+<option data-region="5/" value="hml" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hml') ? 'selected' : ''; ?>>HAMANA (Homalin)</option>
+<option data-region="5/" value="kba" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kba') ? 'selected' : ''; ?>>KABANA (Kyunhla)</option>
+<option data-region="5/" value="kln" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kln') ? 'selected' : ''; ?>>KALANA (Kalay)</option>
+<option data-region="5/" value="klw" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'klw') ? 'selected' : ''; ?>>KALANA (Kalewa)</option>
+<option data-region="5/" value="kna" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kna') ? 'selected' : ''; ?>>KANANA (Kani)</option>
+<option data-region="5/" value="ktn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ktn') ? 'selected' : ''; ?>>KATHANA (Katha)</option>
+<option data-region="5/" value="kwr" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kwr') ? 'selected' : ''; ?>>KAWANA (Kawlin)</option>
+<option data-region="5/" value="kbb" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kbb') ? 'selected' : ''; ?>>KABANA (Khampat)</option>
+<option data-region="5/" value="kba" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kba') ? 'selected' : ''; ?>>KABANA (Khin-U)</option>
+<option data-region="5/" value="mln" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mln') ? 'selected' : ''; ?>>MALANA (Monywa)</option>
+<option data-region="5/" value="mya" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mya') ? 'selected' : ''; ?>>MAYANA (Myinmu)</option>
+<option data-region="5/" value="mgn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mgn') ? 'selected' : ''; ?>>MAGANA (Mingin)</option>
+<option data-region="5/" value="pnn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pnn') ? 'selected' : ''; ?>>PANANA (Pinlebu)</option>
+<option data-region="5/" value="pba" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pba') ? 'selected' : ''; ?>>PABANA (Phaungbyin)</option>
+<option data-region="5/" value="skn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'skn') ? 'selected' : ''; ?>>SAKANA (Sagaing)</option>
+<option data-region="5/" value="sbn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'sbn') ? 'selected' : ''; ?>>SHABANA (Shwebo)</option>
+<option data-region="5/" value="slt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'slt') ? 'selected' : ''; ?>>SALANA (Salingyi)</option>
+<option data-region="5/" value="tmn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tmn') ? 'selected' : ''; ?>>TAMANA (Tamu)</option>
+<option data-region="5/" value="tze" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tze') ? 'selected' : ''; ?>>TAZANA (Taze)</option>
+<option data-region="5/" value="wth" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'wth') ? 'selected' : ''; ?>>WATANA (Wetlet)</option>
+<option data-region="5/" value="yna" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'yna') ? 'selected' : ''; ?>>YABANA (Yinmabin)</option>
+<option data-region="5/" value="yam" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'yam') ? 'selected' : ''; ?>>YAMANA (Ye-U)</option>
+                       <!-- Region 6 / Tanintharyi Region Townships -->
+<option data-region="6/" value="dth" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'dth') ? 'selected' : ''; ?>>DATHANA (Dawei)</option>
+<option data-region="6/" value="kth" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kth') ? 'selected' : ''; ?>>KATHANA (Kawthaung)</option>
+<option data-region="6/" value="kya" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kya') ? 'selected' : ''; ?>>KAYANA (Kyunsu)</option>
+<option data-region="6/" value="lae" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'lae') ? 'selected' : ''; ?>>LATANA (Launglon)</option>
+<option data-region="6/" value="mmn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mmn') ? 'selected' : ''; ?>>MAMANA (Myeik)</option>
+<option data-region="6/" value="plw" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'plw') ? 'selected' : ''; ?>>PALANA (Palaw)</option>
+<option data-region="6/" value="pna" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pna') ? 'selected' : ''; ?>>PANANA (Pyigyimandaing)</option>
+<option data-region="6/" value="tth" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tth') ? 'selected' : ''; ?>>TATANA (Tanintharyi)</option>
+<option data-region="6/" value="thm" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'thm') ? 'selected' : ''; ?>>THANA (Thayetchaung)</option>
+<option data-region="6/" value="yby" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'yby') ? 'selected' : ''; ?>>YABANA (Yebyu)</option>
+<option data-region="6/" value="kba" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kba') ? 'selected' : ''; ?>>KABANA (Bokpyin)</option>
+                        <!-- Region 7 / Bago Region Townships -->
+<option data-region="7/" value="ahpa" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ahpa') ? 'selected' : ''; ?>>AHPANA (Aunglan / Region 7 border)</option>
+<option data-region="7/" value="bkn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'bkn') ? 'selected' : ''; ?>>BAKANA (Bago)</option>
+<option data-region="7/" value="ddn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ddn') ? 'selected' : ''; ?>>DADANA (Daik-U)</option>
+<option data-region="7/" value="kck" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kck') ? 'selected' : ''; ?>>KACANA (Kawkareik / Bago division)</option>
+<option data-region="7/" value="kwa" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kwa') ? 'selected' : ''; ?>>KASANA (Kyauktaga)</option>
+<option data-region="7/" value="kwn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kwn') ? 'selected' : ''; ?>>KAAHNNA (Kawa)</option>
+<option data-region="7/" value="kat" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kat') ? 'selected' : ''; ?>>KAPANA (Kawa East)</option>
+<option data-region="7/" value="mna" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mna') ? 'selected' : ''; ?>>MANANA (Minhla)</option>
+<option data-region="7/" value="nat" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'nat') ? 'selected' : ''; ?>>NATANA (Nattalin)</option>
+<option data-region="7/" value="nln" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'nln') ? 'selected' : ''; ?>>NYALANA (Nyaunglebin)</option>
+<option data-region="7/" value="okp" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'okp') ? 'selected' : ''; ?>>OKPO (Okpho / Okpo)</option>
+<option data-region="7/" value="pda" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pda') ? 'selected' : ''; ?>>PADANA (Padaung)</option>
+<option data-region="7/" value="pnn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pnn') ? 'selected' : ''; ?>>PANANA (Paukkhaung)</option>
+<option data-region="7/" value="pkn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pkn') ? 'selected' : ''; ?>>PAKHANA (Paungde)</option>
+<option data-region="7/" value="pyu" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pyu') ? 'selected' : ''; ?>>PAYANA (Pyu)</option>
+<option data-region="7/" value="pya" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pya') ? 'selected' : ''; ?>>PALANA (Pyay)</option>
+<option data-region="7/" value="skt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'skt') ? 'selected' : ''; ?>>SAKANA (Shwedaung)</option>
+<option data-region="7/" value="tgo" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tgo') ? 'selected' : ''; ?>>TAHANA (Taungoo)</option>
+<option data-region="7/" value="thn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'thn') ? 'selected' : ''; ?>>THANAPA (Thanatpin)</option>
+<option data-region="7/" value="tns" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tns') ? 'selected' : ''; ?>>TASANA (Tantabin)</option>
+<option data-region="7/" value="the" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'the') ? 'selected' : ''; ?>>THANA (Tharrawaddy)</option>
+<option data-region="7/" value="tyo" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tyo') ? 'selected' : ''; ?>>TAYANA (Thegon)</option>
+<option data-region="7/" value="yba" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'yba') ? 'selected' : ''; ?>>YABANA (Yedashe)</option>
+<option data-region="7/" value="ztn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ztn') ? 'selected' : ''; ?>>ZATANA (Zigon)</option>
+                        <!-- Region 8 / Magway Region Townships -->
+<option data-region="8/" value="aln" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'aln') ? 'selected' : ''; ?>>AHLANA (Aunglan)</option>
+<option data-region="8/" value="ckn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ckn') ? 'selected' : ''; ?>>CHAKHANA (Chauk)</option>
+<option data-region="8/" value="gag" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'gag') ? 'selected' : ''; ?>>GAGANA (Gangaw)</option>
+<option data-region="8/" value="kma" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kma') ? 'selected' : ''; ?>>KAMANA (Kamma)</option>
+<option data-region="8/" value="ksn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ksn') ? 'selected' : ''; ?>>KASANA (Kyaukhtu)</option>
+<option data-region="8/" value="mbn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mbn') ? 'selected' : ''; ?>>MABANA (Magway)</option>
+<option data-region="8/" value="mbw" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mbw') ? 'selected' : ''; ?>>MALANA (Minbu)</option>
+<option data-region="8/" value="mdn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mdn') ? 'selected' : ''; ?>>MATANA (Mindon)</option>
+<option data-region="8/" value="mhn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mhn') ? 'selected' : ''; ?>>MAHANA (Minhla)</option>
+<option data-region="8/" value="mmy" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mmy') ? 'selected' : ''; ?>>MAMANA (Myaing)</option>
+<option data-region="8/" value="myn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'myn') ? 'selected' : ''; ?>>MAYANA (Myothit)</option>
+<option data-region="8/" value="nmm" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'nmm') ? 'selected' : ''; ?>>NAMANA (Natmauk)</option>
+<option data-region="8/" value="ngp" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ngp') ? 'selected' : ''; ?>>NGAPANA (Ngaphe)</option>
+<option data-region="8/" value="pku" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pku') ? 'selected' : ''; ?>>PAKHANA (Pakokku)</option>
+<option data-region="8/" value="pkn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pkn') ? 'selected' : ''; ?>>PAKKANA (Pauk)</option>
+<option data-region="8/" value="sfa" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'sfa') ? 'selected' : ''; ?>>SAFANA (Salin)</option>
+<option data-region="8/" value="say" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'say') ? 'selected' : ''; ?>>SAYANA (Saw)</option>
+<option data-region="8/" value="spt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'spt') ? 'selected' : ''; ?>>SAPATA (Sinbaungwe)</option>
+<option data-region="8/" value="skt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'skt') ? 'selected' : ''; ?>>SAKATA (Seikphyu)</option>
+<option data-region="8/" value="ttg" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ttg') ? 'selected' : ''; ?>>TATHANA (Taungdwingyi)</option>
+<option data-region="8/" value="thn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'thn') ? 'selected' : ''; ?>>TAHANA (Thayet)</option>
+<option data-region="8/" value="til" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'til') ? 'selected' : ''; ?>>TILANA (Tilin)</option>
+<option data-region="8/" value="yen" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'yen') ? 'selected' : ''; ?>>YENANA (Yenangyaung)</option>
+<option data-region="8/" value="yes" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'yes') ? 'selected' : ''; ?>>YESANA (Yesagyo)</option>
+                        <!-- Region 9/ Mandalay Townships -->
+<option data-region="9/" value="ahsa" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ahsa') ? 'selected' : ''; ?>>AHSANA (Asan)</option>
+<option data-region="9/" value="amy" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'amy') ? 'selected' : ''; ?>>AHMAYA (Amarapura)</option>
+<option data-region="9/" value="amz" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'amz') ? 'selected' : ''; ?>>AHMAZA (Aungmyethazan)</option>
+<option data-region="9/" value="cmt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'cmt') ? 'selected' : ''; ?>>CHANMYATHA (Chanmyathazi)</option>
+<option data-region="9/" value="kpd" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kpd') ? 'selected' : ''; ?>>KAPANA (Kyaukpadaung)</option>
+<option data-region="9/" value="kse" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kse') ? 'selected' : ''; ?>>KASENA (Kyaukse)</option>
+<option data-region="9/" value="kth" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kth') ? 'selected' : ''; ?>>KATHANA (Kume)</option>
+<option data-region="9/" value="mam" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mam') ? 'selected' : ''; ?>>MAHAMA (Maha Aungmye)</option>
+<option data-region="9/" value="mgk" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mgk') ? 'selected' : ''; ?>>MAHHANA (Mogok)</option>
+<option data-region="9/" value="mdy" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mdy') ? 'selected' : ''; ?>>MALANA (Mandalay Core)</option>
+<option data-region="9/" value="mty" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mty') ? 'selected' : ''; ?>>MATANA (Mattaya)</option>
+<option data-region="9/" value="mtl" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mtl') ? 'selected' : ''; ?>>METHTANA (Meiktila)</option>
+<option data-region="9/" value="mha" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mha') ? 'selected' : ''; ?>>MAHTANA (Mahlaing)</option>
+<option data-region="9/" value="myg" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'myg') ? 'selected' : ''; ?>>MAYANA (Myingyan)</option>
+<option data-region="9/" value="mth" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mth') ? 'selected' : ''; ?>>MATANA (Myittha)</option>
+<option data-region="9/" value="nat" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'nat') ? 'selected' : ''; ?>>NATANA (Natogyi)</option>
+<option data-region="9/" value="nyu" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'nyu') ? 'selected' : ''; ?>>NYAOUNA (Nyaung-U / Bagan)</option>
+<option data-region="9/" value="pka" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pka') ? 'selected' : ''; ?>>PAKANA (Patheingyi)</option>
+<option data-region="9/" value="pgt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pgt') ? 'selected' : ''; ?>>PYIGYITHA (Pyigyidagun)</option>
+<option data-region="9/" value="pno" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pno') ? 'selected' : ''; ?>>PANANA (Pyawbwe)</option>
+<option data-region="9/" value="pol" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pol') ? 'selected' : ''; ?>>PULANA (Pyin Oo Lwin)</option>
+<option data-region="9/" value="sga" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'sga') ? 'selected' : ''; ?>>SAGANA (Singu)</option>
+<option data-region="9/" value="sta" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'sta') ? 'selected' : ''; ?>>SATANA (Sadaung)</option>
+<option data-region="9/" value="tba" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tba') ? 'selected' : ''; ?>>TABANA (Tada-U)</option>
+<option data-region="9/" value="tha" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tha') ? 'selected' : ''; ?>>TAHANA (Taungtha)</option>
+<option data-region="9/" value="tzi" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tzi') ? 'selected' : ''; ?>>TAZANA (Thazi)</option>
+<option data-region="9/" value="tkn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tkn') ? 'selected' : ''; ?>>TAKANA (Thabeikkyin)</option>
+<option data-region="9/" value="wte" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'wte') ? 'selected' : ''; ?>>WATANA (Wundwin)</option>
+<option data-region="9/" value="yam" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'yam') ? 'selected' : ''; ?>>YAMANA (Yamethin)</option>
 
-                        <option data-region="3/" value="ban" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ban') ? 'selected' : ''; ?>>BAAHNA (Hpa-an)</option>
-                        <option data-region="3/" value="kky" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kky') ? 'selected' : ''; ?>>KAKAYA (Kawkareik)</option>
-                        <option data-region="3/" value="mwt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mwt') ? 'selected' : ''; ?>>MAWATHTA (Myawaddy)</option>
-                        <option data-region="3/" value="ppn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ppn') ? 'selected' : ''; ?>>PAPANA (Hpapun)</option>
-                        <option data-region="3/" value="ttn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ttn') ? 'selected' : ''; ?>>THATANA (Thaton)</option>
-
-                        <option data-region="4/" value="hkh" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hkh') ? 'selected' : ''; ?>>HAKHANA (Hakha)</option>
-                        <option data-region="4/" value="hpn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hpn') ? 'selected' : ''; ?>>HPANA (Htantlang)</option>
-                        <option data-region="4/" value="mtn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mtn') ? 'selected' : ''; ?>>MATANA (Matupi)</option>
-                        <option data-region="4/" value="pln" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pln') ? 'selected' : ''; ?>>PALANA (Paletwa)</option>
-                        <option data-region="4/" value="fnn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'fnn') ? 'selected' : ''; ?>>PHANANA (Falam)</option>
-
-                        <option data-region="5/" value="atn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'atn') ? 'selected' : ''; ?>>AHTANA (Ayadaw)</option>
-                        <option data-region="5/" value="kln" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kln') ? 'selected' : ''; ?>>KALANA (Kalay)</option>
-                        <option data-region="5/" value="ktn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ktn') ? 'selected' : ''; ?>>KATHANA (Katha)</option>
-                        <option data-region="5/" value="mln" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mln') ? 'selected' : ''; ?>>MALANA (Monywa)</option>
-                        <option data-region="5/" value="skn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'skn') ? 'selected' : ''; ?>>SAKANA (Sagaing)</option>
-                        <option data-region="5/" value="sbn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'sbn') ? 'selected' : ''; ?>>SHABANA (Shwebo)</option>
-                        <option data-region="5/" value="tmn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tmn') ? 'selected' : ''; ?>>TAMANA (Tamu)</option>
-
-                        <option data-region="6/" value="dth" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'dth') ? 'selected' : ''; ?>>DATHANA (Dawei)</option>
-                        <option data-region="6/" value="kth" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kth') ? 'selected' : ''; ?>>KATHANA (Kawthaung)</option>
-                        <option data-region="6/" value="mmn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mmn') ? 'selected' : ''; ?>>MAMANA (Myeik)</option>
-                        <option data-region="6/" value="plw" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'plw') ? 'selected' : ''; ?>>PALANA (Palaw)</option>
-
-                        <option data-region="7/" value="bkn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'bkn') ? 'selected' : ''; ?>>BAKANA (Bago)</option>
-                        <option data-region="7/" value="ddn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ddn') ? 'selected' : ''; ?>>DADANA (Daik-U)</option>
-                        <option data-region="7/" value="kwn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kwn') ? 'selected' : ''; ?>>KAAHNNA (Kawa)</option>
-                        <option data-region="7/" value="nln" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'nln') ? 'selected' : ''; ?>>NYALANA (Nyaunglebin)</option>
-                        <option data-region="7/" value="thn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'thn') ? 'selected' : ''; ?>>THANAPA (Thanatpin)</option>
-                        <option data-region="7/" value="tgo" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tgo') ? 'selected' : ''; ?>>TAHANA (Taungoo)</option>
-
-                        <option data-region="8/" value="aln" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'aln') ? 'selected' : ''; ?>>AHLANA (Aunglan)</option>
-                        <option data-region="8/" value="ckn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ckn') ? 'selected' : ''; ?>>CHAKHANA (Chauk)</option>
-                        <option data-region="8/" value="mbn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mbn') ? 'selected' : ''; ?>>MABANA (Magway)</option>
-                        <option data-region="8/" value="mbw" <?php echo (isset($POST['nrc_township']) && $_POST['nrc_township'] == 'mbw') ? 'selected' : ''; ?>>MALANA (Minbu)</option>
-                        <option data-region="8/" value="nmm" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'nmm') ? 'selected' : ''; ?>>NAMANA (Natmauk)</option>
-                        <option data-region="8/" value="pku" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pku') ? 'selected' : ''; ?>>PAKHANA (Pakokku)</option>
-                        <option data-region="8/" value="ttg" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ttg') ? 'selected' : ''; ?>>TATHANA (Taungdwingyi)</option>
-
-                        <option data-region="9/" value="amy" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'amy') ? 'selected' : ''; ?>>AHMAYA (Amarapura)</option>
-                        <option data-region="9/" value="amz" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'amz') ? 'selected' : ''; ?>>AHMAZA (Aungmyethazan)</option>
-                        <option data-region="9/" value="cmt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'cmt') ? 'selected' : ''; ?>>CHANMYATHA (Chanmyathazi)</option>
-                        <option data-region="9/" value="kpd" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kpd') ? 'selected' : ''; ?>>KAPANA (Kyaukpadaung)</option>
-                        <option data-region="9/" value="mam" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mam') ? 'selected' : ''; ?>>MAHAMA (Maha Aungmye)</option>
-                        <option data-region="9/" value="mgk" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mgk') ? 'selected' : ''; ?>>MAHHANA (Mogok)</option>
-                        <option data-region="9/" value="mdy" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mdy') ? 'selected' : ''; ?>>MALANA (Mandalay Core)</option>
-                        <option data-region="9/" value="mty" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mty') ? 'selected' : ''; ?>>MATANA (Mattaya)</option>
-                        <option data-region="9/" value="mtl" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mtl') ? 'selected' : ''; ?>>METHTANA (Meiktila)</option>
-                        <option data-region="9/" value="nyu" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'nyu') ? 'selected' : ''; ?>>NYAOUNA (Nyaung-U / Bagan)</option>
-                        <option data-region="9/" value="pgt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pgt') ? 'selected' : ''; ?>>PYIGYITHA (Pyigyidagun)</option>
-
-                        <option data-region="10/" value="bln" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'bln') ? 'selected' : ''; ?>>BILANA (Bilin)</option>
-                        <option data-region="10/" value="kmw" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kmw') ? 'selected' : ''; ?>>KAMANA (Kyaikmaraw)</option>
-                        <option data-region="10/" value="kto" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kto') ? 'selected' : ''; ?>>KHANANA (Kyaikto)</option>
-                        <option data-region="10/" value="mlm" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mlm') ? 'selected' : ''; ?>>MALANA (Mawlamyine)</option>
-                        <option data-region="10/" value="mdn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mdn') ? 'selected' : ''; ?>>MUDANA (Mudon)</option>
-                        <option data-region="10/" value="png" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'png') ? 'selected' : ''; ?>>PATHANA (Paung)</option>
-
-                        <option data-region="11/" value="stw" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'stw') ? 'selected' : ''; ?>>SATANA (Sittwe)</option>
-                        <option data-region="11/" value="btd" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'btd') ? 'selected' : ''; ?>>BATHANA (Buthidaung)</option>
-                        <option data-region="11/" value="gwa" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'gwa') ? 'selected' : ''; ?>>GAAHNNA (Gwa)</option>
-                        <option data-region="11/" value="kpp" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kpp') ? 'selected' : ''; ?>>KAPANA (Kyaukpyu)</option>
-                        <option data-region="11/" value="kta" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kta') ? 'selected' : ''; ?>>KATANA (Kyauktaw)</option>
-                        <option data-region="11/" value="mtd" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mtd') ? 'selected' : ''; ?>>MAAHNA (Maungdaw)</option>
-                        <option data-region="11/" value="mnb" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mnb') ? 'selected' : ''; ?>>MABANA (Minbya)</option>
-                        <option data-region="11/" value="mpu" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mpu') ? 'selected' : ''; ?>>MAPANA (Myebon)</option>
-                        <option data-region="11/" value="mru" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mru') ? 'selected' : ''; ?>>MAOUNA (Mrauk-U)</option>
-                        <option data-region="11/" value="mra" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mra') ? 'selected' : ''; ?>>MAKANA (Manaung)</option>
-                        <option data-region="11/" value="png" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'png') ? 'selected' : ''; ?>>PANANA (Ponnagyun)</option>
-                        <option data-region="11/" value="pauk" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pauk') ? 'selected' : ''; ?>>PATANA (Pauktaw)</option>
-                        <option data-region="11/" value="ram" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ram') ? 'selected' : ''; ?>>RAMANA (Ramree)</option>
-                        <option data-region="11/" value="rtd" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'rtd') ? 'selected' : ''; ?>>YATHANA (Rathedaung)</option>
-                        <option data-region="11/" value="tdw" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tdw') ? 'selected' : ''; ?>>THANANA (Thandwe)</option>
-                        <option data-region="11/" value="tgo" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tgo') ? 'selected' : ''; ?>>TAKANA (Toungup)</option>      
-
-                        <option data-region="12/" value="aln" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'aln') ? 'selected' : ''; ?>>ALANA (Ahlone)</option>
-                        <option data-region="12/" value="bhn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'bhn') ? 'selected' : ''; ?>>BAHANA (Bahan)</option>
-                        <option data-region="12/" value="btt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'btt') ? 'selected' : ''; ?>>BATAHHTA (Botahtaung)</option>
-                        <option data-region="12/" value="coc" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'coc') ? 'selected' : ''; ?>>COCOKHA (Cocokyun)</option>
-                        <option data-region="12/" value="dgn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'dgn') ? 'selected' : ''; ?>>DAGANA (Dagon)</option>
-                        <option data-region="12/" value="dgm" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'dgm') ? 'selected' : ''; ?>>DAGAMA (Dagon Seikkan)</option>
-                        <option data-region="12/" value="dge" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'dge') ? 'selected' : ''; ?>>DAGANA (East Dagon)</option>
-                        <option data-region="12/" value="dgn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'dgn') ? 'selected' : ''; ?>>DAGANA (North Dagon)</option>
-                        <option data-region="12/" value="sdg" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'sdg') ? 'selected' : ''; ?>>DAGATA (South Dagon)</option>
-                        <option data-region="12/" value="dla" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'dla') ? 'selected' : ''; ?>>DALANA (Dala)</option>
-                        <option data-region="12/" value="dab" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'dab') ? 'selected' : ''; ?>>DAWANA (Dawbon)</option>
-                        <option data-region="12/" value="hlg" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hlg') ? 'selected' : ''; ?>>LATHANA (Hlaing)</option>
-                        <option data-region="12/" value="hlt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hlt') ? 'selected' : ''; ?>>HLATHA (Hlaingthaya)</option>
-                        <option data-region="12/" value="hlg" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hlg') ? 'selected' : ''; ?>>HLAGANA (Hlegu)</option>
-                        <option data-region="12/" value="hmb" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hmb') ? 'selected' : ''; ?>>HMAWBI (Hmawbi)</option>
-                        <option data-region="12/" value="htb" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'htb') ? 'selected' : ''; ?>>HTATANA (Htantabin)</option>
-                        <option data-region="12/" value="isn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'isn') ? 'selected' : ''; ?>>AHSANA (Insein)</option>
-                        <option data-region="12/" value="kmy" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kmy') ? 'selected' : ''; ?>>KAMAYA (Kamayut)</option>
-                        <option data-region="12/" value="khm" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'khm') ? 'selected' : ''; ?>>KHAMANA (Kawhmu)</option>
-                        <option data-region="12/" value="kya" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kya') ? 'selected' : ''; ?>>KAYANA (Kayan)</option>
-                        <option data-region="12/" value="ktd" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ktd') ? 'selected' : ''; ?>>KATAFA (Kyauktada)</option>
-                        <option data-region="12/" value="ktn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ktn') ? 'selected' : ''; ?>>KATANA (Kyauktan)</option>
-                        <option data-region="12/" value="kya" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kya') ? 'selected' : ''; ?>>KAGANA (Kungyangon)</option>
-                        <option data-region="12/" value="lmd" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'lmd') ? 'selected' : ''; ?>>LAMANA (Lanmadaw)</option>
-                        <option data-region="12/" value="lth" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'lth') ? 'selected' : ''; ?>>LATHA (Latha)</option>
-                        <option data-region="12/" value="myg" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'myg') ? 'selected' : ''; ?>>MAYAKA (Mayangone)</option>
-                        <option data-region="12/" value="mgl" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mgl') ? 'selected' : ''; ?>>MAGADA (Mingaladon)</option>
-                        <option data-region="12/" value="mgt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mgt') ? 'selected' : ''; ?>>MGTANA (Mingala Taungnyunt)</option>
-                        <option data-region="12/" value="nok" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'nok') ? 'selected' : ''; ?>>OKKANA (North Okkalapa)</option>
-                        <option data-region="12/" value="pbd" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pbd') ? 'selected' : ''; ?>>PABADA (Pabedan)</option>
-                        <option data-region="12/" value="pzd" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pzd') ? 'selected' : ''; ?>>PAZANA (Pazundaung)</option>
-                        <option data-region="12/" value="scg" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'scg') ? 'selected' : ''; ?>>SATHANA (Sanchaung)</option>
-                        <option data-region="12/" value="skk" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'skk') ? 'selected' : ''; ?>>SAKANA (Seikkyi Kanaungto)</option>
-                        <option data-region="12/" value="spt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'spt') ? 'selected' : ''; ?>>SAKANA (Shwepyitha)</option>
-                        <option data-region="12/" value="sok" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'sok') ? 'selected' : ''; ?>>OKTANA (South Okkalapa)</option>
-                        <option data-region="12/" value="tky" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tky') ? 'selected' : ''; ?>>TAFAKA (Taikkyi)</option>
-                        <option data-region="12/" value="tmw" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tmw') ? 'selected' : ''; ?>>TAMANA (Tamwe)</option>
-                        <option data-region="12/" value="tly" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tly') ? 'selected' : ''; ?>>THALANA (Thanlyin)</option>
-                        <option data-region="12/" value="tkt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tkt') ? 'selected' : ''; ?>>THAKATA (Thaketa)</option>
-                        <option data-region="12/" value="tgw" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tgw') ? 'selected' : ''; ?>>THAGANA (Thongwa)</option>
-                        <option data-region="12/" value="tgk" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tgk') ? 'selected' : ''; ?>>THAGANA (Thingangyun)</option>
-                        <option data-region="12/" value="twn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'twn') ? 'selected' : ''; ?>>TWATANA (Twante)</option>
-                        <option data-region="12/" value="ykn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ykn') ? 'selected' : ''; ?>>YAKANA (Yankin)</option>
-
-                        <option data-region="13/" value="tgy" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tgy') ? 'selected' : ''; ?>>TAYANA (Taunggyi)</option>
-                        <option data-region="13/" value="klw" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'klw') ? 'selected' : ''; ?>>KALANA (Kalaw)</option>
-                        <option data-region="13/" value="hho" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hho') ? 'selected' : ''; ?>>HEHONA (Heho)</option>
-                        <option data-region="13/" value="hop" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hop') ? 'selected' : ''; ?>>HAPANA (Hopong)</option>
-                        <option data-region="13/" value="hsh" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hsh') ? 'selected' : ''; ?>>HASANA (Hsihseng)</option>
-                        <option data-region="13/" value="lsk" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'lsk') ? 'selected' : ''; ?>>LASANA (Lawksawk)</option>
-                        <option data-region="13/" value="llo" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'llo') ? 'selected' : ''; ?>>LOLANA (Loilen)</option>
-                        <option data-region="13/" value="nsh" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'nsh') ? 'selected' : ''; ?>>NASANA (Nyaungshwe)</option>
-                        <option data-region="13/" value="pkh" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pkh') ? 'selected' : ''; ?>>PAKHANA (Pekon)</option>
-                        <option data-region="13/" value="pdy" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pdy') ? 'selected' : ''; ?>>PADANA (Pindaya)</option>
-                        <option data-region="13/" value="plg" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'plg') ? 'selected' : ''; ?>>PALANA (Pinlaung)</option>
-                        <option data-region="13/" value="ywa" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ywa') ? 'selected' : ''; ?>>YAWANA (Ywangan)</option>
-                        <option data-region="13/" value="lso" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'lso') ? 'selected' : ''; ?>>LALANA (Lashio)</option>
-                        <option data-region="13/" value="hsn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hsn') ? 'selected' : ''; ?>>HASANA (Hsenwi)</option>
-                        <option data-region="13/" value="hsp" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hsp') ? 'selected' : ''; ?>>HASAPA (Hsipaw)</option>
-
-                        <option data-region="14/" value="pat" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pat') ? 'selected' : ''; ?>>PATHANA (Pathein)</option>
-                        <option data-region="14/" value="hth" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hth') ? 'selected' : ''; ?>>HATHANA (Hinthada)</option>
-                        <option data-region="14/" value="mya" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mya') ? 'selected' : ''; ?>>MYANA (Myaungmya)</option>
-                        <option data-region="14/" value="lab" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'lab') ? 'selected' : ''; ?>>LATANA (Labutta)</option>
-                        <option data-region="14/" value="mgn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mgn') ? 'selected' : ''; ?>>MAGANA (Maubin)</option>
-                        <option data-region="14/" value="pyn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pyn') ? 'selected' : ''; ?>>PYANANA (Pyapon)</option>
-                        <option data-region="14/" value="bgh" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'bgh') ? 'selected' : ''; ?>>BAGALANA (Boghale)</option>
-                        <option data-region="14/" value="dad" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'dad') ? 'selected' : ''; ?>>DADANA (Dedaye)</option>
-                        <option data-region="14/" value="fap" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'fap') ? 'selected' : ''; ?>>HAPANA (Phapon)</option>
-                        <option data-region="14/" value="kan" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kan') ? 'selected' : ''; ?>>KATANA (Kyangin)</option>
-                        <option data-region="14/" value="kda" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kda') ? 'selected' : ''; ?>>KADANA (Kyaiklat)</option>
-                        <option data-region="14/" value="kln" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kln') ? 'selected' : ''; ?>>KALANA (Kalaung)</option>
-                        <option data-region="14/" value="kpt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kpt') ? 'selected' : ''; ?>>KAPANA (Kyongpyaw)</option>
-                        <option data-region="14/" value="lap" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'lap') ? 'selected' : ''; ?>>LAPANA (Lemyethna)</option>
-                        <option data-region="14/" value="mam" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mam') ? 'selected' : ''; ?>>MAMANA (Mawlamyinegyun)</option>
-                        <option data-region="14/" value="mna" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mna') ? 'selected' : ''; ?>>MANANA (Myanaung)</option>
-                        <option data-region="14/" value="nga" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'nga') ? 'selected' : ''; ?>>NGAPANA (Ngapudaw)</option>
-                        <option data-region="14/" value="ntn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ntn') ? 'selected' : ''; ?>>NATANA (Nyaungdon)</option>
-                        <option data-region="14/" value="ptn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ptn') ? 'selected' : ''; ?>>PATANA (Pantannaw)</option>
-                        <option data-region="14/" value="ttn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ttn') ? 'selected' : ''; ?>>THATANA (Thabaung)</option>
-                        <option data-region="14/" value="wkm" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'wkm') ? 'selected' : ''; ?>>WAKAMA (Wakema)</option>
-                        <option data-region="14/" value="yna" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'yna') ? 'selected' : ''; ?>>YANAUNA (Yegyi)</option>
-                   
+                        <!-- Region 10 / Mon State Townships -->
+<option data-region="10/" value="bln" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'bln') ? 'selected' : ''; ?>>BILANA (Bilin)</option>
+<option data-region="10/" value="kmw" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kmw') ? 'selected' : ''; ?>>KAMANA (Kyaikmaraw)</option>
+<option data-region="10/" value="kto" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kto') ? 'selected' : ''; ?>>KHANANA (Kyaikto)</option>
+<option data-region="10/" value="kmm" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kmm') ? 'selected' : ''; ?>>KAMANA (Khamawkasik / Chaungzon)</option>
+<option data-region="10/" value="czn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'czn') ? 'selected' : ''; ?>>CHANA (Chaungzon)</option>
+<option data-region="10/" value="lam" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'lam') ? 'selected' : ''; ?>>LAMANA (Lamine)</option>
+<option data-region="10/" value="mlm" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mlm') ? 'selected' : ''; ?>>MALANA (Mawlamyine)</option>
+<option data-region="10/" value="mdn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mdn') ? 'selected' : ''; ?>>MUDANA (Mudon)</option>
+<option data-region="10/" value="png" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'png') ? 'selected' : ''; ?>>PATHANA (Paung)</option>
+<option data-region="10/" value="twn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'twn') ? 'selected' : ''; ?>>TATANA (Thanbyuzayat)</option>
+<option data-region="10/" value="ttn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ttn') ? 'selected' : ''; ?>>THATANA (Thaton)</option>
+<option data-region="10/" value="yam" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'yam') ? 'selected' : ''; ?>>YAMANA (Ye)</option>
+                       <!-- Region 11 / Rakhine State Townships -->
+<option data-region="11/" value="btd" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'btd') ? 'selected' : ''; ?>>BATHANA (Buthidaung)</option>
+<option data-region="11/" value="gwa" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'gwa') ? 'selected' : ''; ?>>GAAHNNA (Gwa)</option>
+<option data-region="11/" value="kpp" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kpp') ? 'selected' : ''; ?>>KAPANA (Kyaukpyu)</option>
+<option data-region="11/" value="kta" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kta') ? 'selected' : ''; ?>>KATANA (Kyauktaw)</option>
+<option data-region="11/" value="mra" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mra') ? 'selected' : ''; ?>>MAKANA (Manaung)</option>
+<option data-region="11/" value="mtd" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mtd') ? 'selected' : ''; ?>>MAAHNA (Maungdaw)</option>
+<option data-region="11/" value="mnb" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mnb') ? 'selected' : ''; ?>>MABANA (Minbya)</option>
+<option data-region="11/" value="mru" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mru') ? 'selected' : ''; ?>>MAOUNA (Mrauk-U)</option>
+<option data-region="11/" value="mpu" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mpu') ? 'selected' : ''; ?>>MAPANA (Myebon)</option>
+<option data-region="11/" value="pnn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pnn') ? 'selected' : ''; ?>>PANANA (Ponnagyun)</option>
+<option data-region="11/" value="pauk" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pauk') ? 'selected' : ''; ?>>PATANA (Pauktaw)</option>
+<option data-region="11/" value="ram" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ram') ? 'selected' : ''; ?>>RAMANA (Ramree)</option>
+<option data-region="11/" value="rtd" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'rtd') ? 'selected' : ''; ?>>YATHANA (Rathedaung)</option>
+<option data-region="11/" value="stw" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'stw') ? 'selected' : ''; ?>>SATANA (Sittwe)</option>
+<option data-region="11/" value="tdw" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tdw') ? 'selected' : ''; ?>>THANANA (Thandwe)</option>
+<option data-region="11/" value="tgo" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tgo') ? 'selected' : ''; ?>>TAKANA (Toungup)</option>
+                        <!-- Region 12 / Yangon Region Townships -->
+<option data-region="12/" value="aln" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'aln') ? 'selected' : ''; ?>>ALANA (Ahlone)</option>
+<option data-region="12/" value="bhn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'bhn') ? 'selected' : ''; ?>>BAHANA (Bahan)</option>
+<option data-region="12/" value="btt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'btt') ? 'selected' : ''; ?>>BATAHHTA (Botahtaung)</option>
+<option data-region="12/" value="coc" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'coc') ? 'selected' : ''; ?>>COCOKHA (Cocokyun)</option>
+<option data-region="12/" value="dgn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'dgn') ? 'selected' : ''; ?>>DAGANA (Dagon)</option>
+<option data-region="12/" value="dgm" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'dgm') ? 'selected' : ''; ?>>DAGAMA (Dagon Seikkan)</option>
+<option data-region="12/" value="dge" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'dge') ? 'selected' : ''; ?>>DAGANA (East Dagon)</option>
+<option data-region="12/" value="dgn_north" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'dgn_north') ? 'selected' : ''; ?>>DAGANA (North Dagon)</option>
+<option data-region="12/" value="sdg" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'sdg') ? 'selected' : ''; ?>>DAGATA (South Dagon)</option>
+<option data-region="12/" value="dla" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'dla') ? 'selected' : ''; ?>>DALANA (Dala)</option>
+<option data-region="12/" value="dab" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'dab') ? 'selected' : ''; ?>>DAWANA (Dawbon)</option>
+<option data-region="12/" value="hlg" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hlg') ? 'selected' : ''; ?>>LATHANA (Hlaing)</option>
+<option data-region="12/" value="hlt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hlt') ? 'selected' : ''; ?>>HLATHA (Hlaingthaya)</option>
+<option data-region="12/" value="hlg_tw" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hlg_tw') ? 'selected' : ''; ?>>HLAGANA (Hlegu)</option>
+<option data-region="12/" value="hmb" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hmb') ? 'selected' : ''; ?>>HMAWBI (Hmawbi)</option>
+<option data-region="12/" value="htb" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'htb') ? 'selected' : ''; ?>>HTATANA (Htantabin)</option>
+<option data-region="12/" value="isn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'isn') ? 'selected' : ''; ?>>AHSANA (Insein)</option>
+<option data-region="12/" value="kmy" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kmy') ? 'selected' : ''; ?>>KAMAYA (Kamayut)</option>
+<option data-region="12/" value="khm" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'khm') ? 'selected' : ''; ?>>KHAMANA (Kawhmu)</option>
+<option data-region="12/" value="kyn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kyn') ? 'selected' : ''; ?>>KAYANA (Kayan)</option>
+<option data-region="12/" value="ktd" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ktd') ? 'selected' : ''; ?>>KATAFA (Kyauktada)</option>
+<option data-region="12/" value="ktn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ktn') ? 'selected' : ''; ?>>KATANA (Kyauktan)</option>
+<option data-region="12/" value="kya" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kya') ? 'selected' : ''; ?>>KAGANA (Kungyangon)</option>
+<option data-region="12/" value="lmd" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'lmd') ? 'selected' : ''; ?>>LAMANA (Lanmadaw)</option>
+<option data-region="12/" value="lth" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'lth') ? 'selected' : ''; ?>>LATHA (Latha)</option>
+<option data-region="12/" value="myg" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'myg') ? 'selected' : ''; ?>>MAYAKA (Mayangone)</option>
+<option data-region="12/" value="mgl" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mgl') ? 'selected' : ''; ?>>MAGADA (Mingaladon)</option>
+<option data-region="12/" value="mgt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mgt') ? 'selected' : ''; ?>>MGTANA (Mingala Taungnyunt)</option>
+<option data-region="12/" value="nok" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'nok') ? 'selected' : ''; ?>>OKKANA (North Okkalapa)</option>
+<option data-region="12/" value="pbd" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pbd') ? 'selected' : ''; ?>>PABADA (Pabedan)</option>
+<option data-region="12/" value="pzd" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pzd') ? 'selected' : ''; ?>>PAZANA (Pazundaung)</option>
+<option data-region="12/" value="scg" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'scg') ? 'selected' : ''; ?>>SATHANA (Sanchaung)</option>
+<option data-region="12/" value="skk" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'skk') ? 'selected' : ''; ?>>SAKANA (Seikkyi Kanaungto)</option>
+<option data-region="12/" value="spt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'spt') ? 'selected' : ''; ?>>SAKANA (Shwepyitha)</option>
+<option data-region="12/" value="sok" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'sok') ? 'selected' : ''; ?>>OKTANA (South Okkalapa)</option>
+<option data-region="12/" value="tky" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tky') ? 'selected' : ''; ?>>TAFAKA (Taikkyi)</option>
+<option data-region="12/" value="tmw" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tmw') ? 'selected' : ''; ?>>TAMANA (Tamwe)</option>
+<option data-region="12/" value="tly" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tly') ? 'selected' : ''; ?>>THALANA (Thanlyin)</option>
+<option data-region="12/" value="tkt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tkt') ? 'selected' : ''; ?>>THAKATA (Thaketa)</option>
+<option data-region="12/" value="tgw" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tgw') ? 'selected' : ''; ?>>THAGANA (Thongwa)</option>
+<option data-region="12/" value="tgk" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tgk') ? 'selected' : ''; ?>>THAGANA (Thingangyun)</option>
+<option data-region="12/" value="twn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'twn') ? 'selected' : ''; ?>>TWATANA (Twante)</option>
+<option data-region="12/" value="ykn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ykn') ? 'selected' : ''; ?>>YAKANA (Yankin)</option>
+                        <!-- Region 13 / Shan State Townships -->
+<option data-region="13/" value="hho" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hho') ? 'selected' : ''; ?>>HEHONA (Heho)</option>
+<option data-region="13/" value="hop" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hop') ? 'selected' : ''; ?>>HAPANA (Hopong)</option>
+<option data-region="13/" value="hsh" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hsh') ? 'selected' : ''; ?>>HASANA (Hsihseng)</option>
+<option data-region="13/" value="hsn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hsn') ? 'selected' : ''; ?>>HASANA (Hsenwi)</option>
+<option data-region="13/" value="hsp" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hsp') ? 'selected' : ''; ?>>HASAPA (Hsipaw)</option>
+<option data-region="13/" value="klw" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'klw') ? 'selected' : ''; ?>>KALANA (Kalaw)</option>
+<option data-region="13/" value="kht" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kht') ? 'selected' : ''; ?>>KHATANA (Kengtung)</option>
+<option data-region="13/" value="knh" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'knh') ? 'selected' : ''; ?>>KANANA (Kyaukme)</option>
+<option data-region="13/" value="klh" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'klh') ? 'selected' : ''; ?>>KALANA (Kunlong)</option>
+<option data-region="13/" value="llo" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'llo') ? 'selected' : ''; ?>>LOLANA (Loilen)</option>
+<option data-region="13/" value="lsk" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'lsk') ? 'selected' : ''; ?>>LASANA (Lawksawk)</option>
+<option data-region="13/" value="lso" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'lso') ? 'selected' : ''; ?>>LALANA (Lashio)</option>
+<option data-region="13/" value="lka" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'lka') ? 'selected' : ''; ?>>LAKANA (Laukkaing)</option>
+<option data-region="13/" value="mkt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mkt') ? 'selected' : ''; ?>>MAKANA (Mongmit)</option>
+<option data-region="13/" value="mhy" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mhy') ? 'selected' : ''; ?>>MAHANA (Monghsu)</option>
+<option data-region="13/" value="msn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'msn') ? 'selected' : ''; ?>>MASANA (Mongsat)</option>
+<option data-region="13/" value="mtn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mtn') ? 'selected' : ''; ?>>MATANA (Mongton)</option>
+<option data-region="13/" value="mya" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mya') ? 'selected' : ''; ?>>MAYANA (Mongmou)</option>
+<option data-region="13/" value="mkn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mkn') ? 'selected' : ''; ?>>MAKANA (Mu Se)</option>
+<option data-region="13/" value="nsh" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'nsh') ? 'selected' : ''; ?>>NASANA (Nyaungshwe)</option>
+<option data-region="13/" value="nms" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'nms') ? 'selected' : ''; ?>>NAMANA (Namhsan)</option>
+<option data-region="13/" value="nkm" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'nkm') ? 'selected' : ''; ?>>NAKANA (Nawnghkio)</option>
+<option data-region="13/" value="pdy" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pdy') ? 'selected' : ''; ?>>PADANA (Pindaya)</option>
+<option data-region="13/" value="pkh" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pkh') ? 'selected' : ''; ?>>PAKHANA (Pekon)</option>
+<option data-region="13/" value="plg" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'plg') ? 'selected' : ''; ?>>PALANA (Pinlaung)</option>
+<option data-region="13/" value="pnk" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pnk') ? 'selected' : ''; ?>>PANANA (Panghsang)</option>
+<option data-region="13/" value="tgy" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tgy') ? 'selected' : ''; ?>>TAYANA (Taunggyi)</option>
+<option data-region="13/" value="tck" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'tck') ? 'selected' : ''; ?>>TACANA (Tachileik)</option>
+<option data-region="13/" value="ywa" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ywa') ? 'selected' : ''; ?>>YAWANA (Ywangan)</option>
+                       <!-- Region 14 / Ayeyarwady Region Townships -->
+<option data-region="14/" value="bgh" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'bgh') ? 'selected' : ''; ?>>BAGALANA (Bogale)</option>
+<option data-region="14/" value="dad" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'dad') ? 'selected' : ''; ?>>DADANA (Dedaye)</option>
+<option data-region="14/" value="fap" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'fap') ? 'selected' : ''; ?>>HAPANA (Pyapon / Phapon)</option>
+<option data-region="14/" value="hth" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'hth') ? 'selected' : ''; ?>>HATHANA (Hinthada)</option>
+<option data-region="14/" value="kan" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kan') ? 'selected' : ''; ?>>KATANA (Kyangin)</option>
+<option data-region="14/" value="kda" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kda') ? 'selected' : ''; ?>>KADANA (Kyaiklat)</option>
+<option data-region="14/" value="kln" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kln') ? 'selected' : ''; ?>>KALANA (Kyangin / Kalaung)</option>
+<option data-region="14/" value="kpt" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'kpt') ? 'selected' : ''; ?>>KAPANA (Kyongpyaw)</option>
+<option data-region="14/" value="lab" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'lab') ? 'selected' : ''; ?>>LATANA (Labutta)</option>
+<option data-region="14/" value="lap" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'lap') ? 'selected' : ''; ?>>LAPANA (Lemyethna)</option>
+<option data-region="14/" value="mgn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mgn') ? 'selected' : ''; ?>>MAGANA (Maubin)</option>
+<option data-region="14/" value="mam" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mam') ? 'selected' : ''; ?>>MAMANA (Mawlamyinegyun)</option>
+<option data-region="14/" value="mna" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mna') ? 'selected' : ''; ?>>MANANA (Myanaung)</option>
+<option data-region="14/" value="mya" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'mya') ? 'selected' : ''; ?>>MYANA (Myaungmya)</option>
+<option data-region="14/" value="nga" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'nga') ? 'selected' : ''; ?>>NGAPANA (Ngapudaw)</option>
+<option data-region="14/" value="ntn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ntn') ? 'selected' : ''; ?>>NATANA (Nyaungdon)</option>
+<option data-region="14/" value="pat" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pat') ? 'selected' : ''; ?>>PATHANA (Pathein)</option>
+<option data-region="14/" value="ptn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ptn') ? 'selected' : ''; ?>>PATANA (Pantanaw)</option>
+<option data-region="14/" value="pyn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'pyn') ? 'selected' : ''; ?>>PYANANA (Pyapon)</option>
+<option data-region="14/" value="ttn" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'ttn') ? 'selected' : ''; ?>>THATANA (Thabaung)</option>
+<option data-region="14/" value="wkm" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'wkm') ? 'selected' : ''; ?>>WAKAMA (Wakema)</option>
+<option data-region="14/" value="yna" <?php echo (isset($_POST['nrc_township']) && $_POST['nrc_township'] == 'yna') ? 'selected' : ''; ?>>YANAUNA (Yegyi)</option>
                         </select>
 
                         <input class="p-2.5 bg-[#eef2ff] border border-stone-300 focus:outline-none focus:border-[#0f172a] text-stone-900 font-mono text-xs rounded-none" 
